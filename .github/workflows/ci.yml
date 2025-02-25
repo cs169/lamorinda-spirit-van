@@ -106,4 +106,38 @@ jobs:
         env:
           RAILS_ENV: test
         run: bundle exec cucumber
-
+        
+  rspec:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install Ruby (3.4)
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: .ruby-version
+    - name: Build and test with RSpec
+      run: |
+        gem install bundler
+        bundle install --jobs 4 --retry 3
+        bundle exec rspec
+        
+  codeclimate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Ruby (3.4)
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+      - name: Set up gem environment
+        run: |
+          gem install bundler
+          bundle install --jobs 4 --retry 3
+          
+      - name: Test & publish code coverage
+        uses: paambaati/codeclimate-action@v9.0.0
+        env:
+          CC_TEST_REPORTER_ID: c59906436459490bc1b25f332c52a4a5483316284a4def7f386f3c8c66fd575c
+        with:
+          coverageCommand: bundle exec cucumber; bundle exec rspec;
+          debug: true
