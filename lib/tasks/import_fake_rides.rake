@@ -12,6 +12,10 @@ namespace :import do
       exit
     end
 
+    # Delete existing rides
+    Ride.delete_all
+    puts "Deleted all existing rides."
+
     puts "Importing fake rides from #{file_path}..."
 
     CSV.foreach(file_path, headers: true) do |row|
