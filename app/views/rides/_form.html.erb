@@ -1,0 +1,57 @@
+<%= form_with(model: @ride, local: true) do |form| %>
+  <% if @ride.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@ride.errors.count, "error") %> prohibited this ride from being saved:</h2>
+      <ul>
+        <% @ride.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Day</th>
+        <th>Date</th>
+        <th>Driver</th>
+        <th>Van</th>
+        <th>Passenger Name & Phone</th>
+        <th>Passenger Address</th>
+        <th>Destination</th>
+        <th>Notes to Driver</th>
+        <th>Hours</th>
+        <th>Amount Paid</th>
+        <th>Ride Count</th>
+        <th>C</th>
+        <th>Notes/Date Reserved</th>
+        <th>Confirmed w/ Passenger</th>
+        <th>Driver Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><%= form.text_field :day %></td>
+        <td><%= form.date_select :date %></td>
+        <td><%= form.text_field :driver %></td>
+        <td><%= form.number_field :van %></td>
+        <td><%= form.text_field :passenger_name_and_phone %></td>
+        <td><%= form.text_field :passenger_address %></td>
+        <td><%= form.text_field :destination %></td>
+        <td><%= form.text_area :notes_to_driver %></td>
+        <td><%= form.number_field :hours, step: 0.1 %></td>
+        <td><%= form.number_field :amount_paid, step: 0.01 %></td>
+        <td><%= form.number_field :ride_count %></td>
+        <td><%= form.text_field :c %></td>
+        <td><%= form.text_field :notes_date_reserved %></td>
+        <td><%= form.text_field :confirmed_with_passenger %></td>
+        <td><%= form.text_field :driver_email %></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
