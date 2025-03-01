@@ -1,57 +1,54 @@
-<div id="<%= dom_id driver %>">
-  <p>
-    <strong>Name:</strong>
-    <%= driver.name %>
-  </p>
+<!-- Card Grid -->
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+  <% @drivers.each do |driver| %>
+    <div class="col">
 
-  <p>
-    <strong>Phone:</strong>
-    <%= driver.phone %>
-  </p>
+      <div class="card driver-card">
 
-  <p>
-    <strong>Email:</strong>
-    <%= driver.email %>
-  </p>
+        <!-- Card header -->
+        <div class="driver-card-header">
+          <h5 class="card-title mb-0"><%= driver.name %></h5>
+          <small><%= driver.email.presence || "No email provided" %></small>
+        </div>
 
-  <p>
-    <strong>Sunday Shifts:</strong>
-    <%= driver.shifts['sun'].join(', ') %>
-  </p>
+        <!-- Card body -->
+        <div class="driver-card-body">
+          <p class="mb-2">
+            <strong>Phone:</strong> <%= driver.phone.presence || "No phone number provided" %>
+          </p>
+          <hr/>
 
-  <p>
-    <strong>Monday Shifts:</strong>
-    <%= driver.shifts['mon'].join(', ') %>
-  </p>
+          <% day_mapping = {
+            "Sunday" => "sun",
+            "Monday" => "mon",
+            "Tuesday" => "tue",
+            "Wednesday" => "wed",
+            "Thursday" => "thu",
+            "Friday" => "fri",
+            "Saturday" => "sat"
+          } %>
 
-  <p>
-    <strong>Tuesday Shifts:</strong>
-    <%= driver.shifts['tue'].join(', ') %>
-  </p>
+          <% day_mapping.each do |day_name, shift_key| %>
+            <% raw_shifts = (driver.shifts || {})[shift_key] || [] %>
+            <% shifts_for_day = raw_shifts.reject(&:blank?).join(", ") %>
+            <% shifts_for_day = "" if shifts_for_day.blank? %>
 
-  <p>
-    <strong>Wednesday Shifts:</strong>
-    <%= driver.shifts['wed'].join(', ') %>
-  </p>
+            <strong><%= day_name %> Shifts:</strong> <%= shifts_for_day %><br/>
+          <% end %>
 
-  <p>
-    <strong>Thursday Shifts:</strong>
-    <%= driver.shifts['thu'].join(', ') %>
-  </p>
+          <hr/>
+          <strong>Active:</strong> <%= driver.active? ? "Yes" : "No" %>
+        </div>
 
-  <p>
-    <strong>Friday Shifts:</strong>
-    <%= driver.shifts['fri'].join(', ') %>
-  </p>
-
-  <p>
-    <strong>Saturday Shifts:</strong>
-    <%= driver.shifts['sat'].join(', ') %>
-  </p>
-
-  <p>
-    <strong>Active:</strong>
-    <%= driver.active %>
-  </p>
-
+        <!-- Card footer -->
+        <div class="driver-card-footer">
+          <%= link_to "Edit", edit_driver_path(driver), class: "btn btn-sm btn-outline-primary" %>
+          <%= link_to "Delete", driver, 
+              data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' },
+              class: "btn btn-sm btn-outline-danger"
+          %>
+        </div>
+      </div>
+    </div>
+  <% end %>
 </div>
