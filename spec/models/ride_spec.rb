@@ -70,24 +70,24 @@ RSpec.describe Ride, type: :model do
     end
   end
 
-  describe '.filtered_rides' do
+  describe '.driver_today_view' do
     it 'returns rides that match driver_name_text' do
-      rides = Ride.filtered_rides('Driver A', nil)
+      rides = Ride.driver_today_view('Driver A', nil)
       expect(rides).to match_array([ @ride1, @ride3 ])
     end
 
     it 'returns rides that match driver_name_select' do
-      rides = Ride.filtered_rides(nil, 'Driver B')
+      rides = Ride.driver_today_view(nil, 'Driver B')
       expect(rides).to match_array([ @ride2 ])
     end
 
     it 'returns rides that match either driver_name_text OR driver_name_select' do
-      rides = Ride.filtered_rides('Driver A', 'Driver B')
+      rides = Ride.driver_today_view('Driver A', 'Driver B')
       expect(rides).to match_array([ @ride1, @ride2, @ride3 ])
     end
 
     it 'returns all rides when no filters are applied' do
-      rides = Ride.filtered_rides(nil, nil)
+      rides = Ride.driver_today_view(nil, nil)
       expect(rides).to match_array([ @ride1, @ride2, @ride3 ])
     end
   end

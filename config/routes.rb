@@ -14,11 +14,13 @@ Rails.application.routes.draw do
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
 
   # Defines the root path route ("/")
-  root "rides#filter"
+  root "rides#today"
 
   resources :rides do
     collection do
+      get "today"
       get "filter"
+      get "filter_results"
     end
   end
 end

@@ -1,5 +1,6 @@
 <h1>All Rides</h1>
 <%= link_to 'New Ride', new_ride_path, class: 'btn btn-primary' %>
+<%= link_to 'Filter Rides', filter_rides_path, class: 'btn btn-primary' %>
 <table>
   
   <thead>
@@ -36,4 +37,4 @@
   </tbody>
 </table>
 
-<%= link_to 'Filter Rides', filter_rides_path, class: 'btn btn-primary' %>
+<%= link_to "Today's Rides", today_rides_path, class: 'btn btn-primary' %>

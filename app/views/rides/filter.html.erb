@@ -1,48 +1,59 @@
 <div class="filter-page">
-  <%= stylesheet_link_tag "rides", media: "all", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "rides", media: "all", "data-turbo-track": "reload" %>
 
-  <h1>Filtered Rides for <%= Time.zone.today.strftime("%m/%d/%Y") %></h1>
+    <h1>Filter Rides</h1>
 
-  <%= form_with url: filter_rides_path, method: :get, local: true, class: "filter-form" do |form| %>
-    <div class="form-group">
-      <%= form.label :driver_name, "Filter by Driver Name", class: "form-label" %>
-      <%= form.text_field :driver_name_text, value: params[:driver_name_text], class: "form-control", placeholder: "Enter driver name" %>
-      <%= form.select :driver_name_select, options_for_select(@drivers, params[:driver_name_select]), { include_blank: "Select a driver" }, class: "form-control" %>
-    </div>
-    <div class="button-group">
-      <%= form.submit 'Filter', class: 'btn btn-primary' %>
-      <%= link_to 'Clear', filter_rides_path, class: 'btn btn-secondary' %>
-    </div>
-  <% end %>
+    <%= form_with url: filter_results_rides_path, method: :get, remote: true, id: "filter-form" do |form|  %>
+        <div class="form-group">
 
-  <%= link_to 'Back to All Rides', rides_path, class: 'btn btn-secondary back-btn' %>
-  <%= link_to 'Drivers', drivers_path, class: 'btn btn-primary' %>
-  <%= link_to 'Passengers', passengers_path, class: 'btn btn-primary' %>
+            <label class="form-label">Destination:</label>
+            <%= form.text_field "filters[destination]", value: params.dig(:filters, :destination), class: "form-control" %>
 
-  <% if @rides.present? %>
+            <label class="form-label">Start Date:</label>
+            <%= date_field_tag "filters[date_start]", params.dig(:filters, :date_start) %>
+
+            <label class="form-label">End Date:</label>
+            <%= date_field_tag "filters[date_end]", params.dig(:filters, :date_end)%>
+
+            <label class="form-label">Van:</label>
+            <%= select_tag "filters[van]", options_for_select(@vans, params.dig(:filters, :van)), include_blank: "All" %>
+        </div>
+
+        <div class="button-group">
+            <%= form.submit 'Filter', class: 'btn btn-primary' %>
+            <%= link_to 'Clear', filter_rides_path, class: 'btn btn-secondary' %>
+        </div>
+
+    <% end %>
+
+
+
+    <%= link_to 'Back to All Rides', rides_path, class: 'btn btn-secondary back-btn' %>
+
+    <% if @rides.present? %>
     <table class="rides-table">
-      <thead>
+        <thead>
         <tr>
-          <th>Day</th>
-          <th>Date</th>
-          <th>Driver</th>
-          <th>Van</th>
-          <th>Passenger Name & Phone</th>
-          <th>Passenger Address</th>
-          <th>Destination</th>
-          <th>Notes to Driver</th>
-          <th>Hours</th>
-          <th>Amount Paid</th>
-          <th>Ride Count</th>
-          <th>C</th>
-          <th>Notes Date Reserved</th>
-          <th>Confirmed with Passenger</th>
-          <th>Driver Email</th>
+            <th>Day</th>
+            <th>Date</th>
+            <th>Driver</th>
+            <th>Van</th>
+            <th>Passenger Name & Phone</th>
+            <th>Passenger Address</th>
+            <th>Destination</th>
+            <th>Notes to Driver</th>
+            <th>Hours</th>
+            <th>Amount Paid</th>
+            <th>Ride Count</th>
+            <th>C</th>
+            <th>Notes Date Reserved</th>
+            <th>Confirmed with Passenger</th>
+            <th>Driver Email</th>
         </tr>
-      </thead>
-      <tbody>
+        </thead>
+        <tbody>
         <% @rides.each do |ride| %>
-          <tr>
+            <tr>
             <td><%= ride.day %></td>
             <td><%= ride.date.strftime("%m/%d/%Y") %></td>
             <td><%= ride.driver %></td>
@@ -58,11 +69,11 @@
             <td><%= ride.notes_date_reserved %></td>
             <td><%= ride.confirmed_with_passenger %></td>
             <td><%= ride.driver_email %></td>
-          </tr>
+            </tr>
         <% end %>
-      </tbody>
+        </tbody>
     </table>
-  <% else %>
-    <p class="no-rides">No rides found for today.</p>
-  <% end %>
+    <% else %>
+    <p class="no-rides">No rides found.</p>
+    <% end %>
 </div>

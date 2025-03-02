@@ -15,34 +15,34 @@ RSpec.describe RidesController, type: :controller do
     @ride3 = Ride.create(day: weekday_abbreviation, date: today, driver: @driver1.name, van: 6, passenger_name_and_phone: 'Brown, Patricia (555-475-3199)', passenger_address: '143 Pine Rd.', destination: 'Walnut Creek', notes_to_driver: 'Bring a mask', driver_initials: 'JD', hours: 1.5, amount_paid: 20.0, ride_count: 1, c: 'C', notes_date_reserved: '02/27/2025', confirmed_with_passenger: 'Yes', driver_email: 'sent')
   end
 
-  describe 'GET #filter' do
-    # Tests if filtering by both driver_name_text and driver_name_select returns correct rides
+  describe 'GET #today' do
+    # Tests if todaying by both driver_name_text and driver_name_select returns correct rides
     it 'returns rides matching either driver_name_text OR driver_name_select' do
-      get :filter, params: { driver_name_text: 'Driver A', driver_name_select: 'Driver B' }
+      get :today, params: { driver_name_text: 'Driver A', driver_name_select: 'Driver B' }
       expect(assigns(:rides)).to match_array([ @ride1, @ride2, @ride3 ])
     end
 
-    # Tests filtering by only driver_name_text
+    # Tests todaying by only driver_name_text
     it 'returns rides matching driver_name_text' do
-      get :filter, params: { driver_name_text: 'Driver A' }
+      get :today, params: { driver_name_text: 'Driver A' }
       expect(assigns(:rides)).to match_array([ @ride1, @ride3 ])
     end
 
-    # Tests filtering by only driver_name_select
+    # Tests todaying by only driver_name_select
     it 'returns rides matching driver_name_select' do
-      get :filter, params: { driver_name_select: 'Driver B' }
+      get :today, params: { driver_name_select: 'Driver B' }
       expect(assigns(:rides)).to match_array([ @ride2 ])
     end
 
-    # Tests when no filter parameters are provided, all rides should be returned
-    it 'returns all rides when no filter is applied' do
-      get :filter
+    # Tests when no today parameters are provided, all rides should be returned
+    it 'returns all rides when no today is applied' do
+      get :today
       expect(assigns(:rides)).to match_array([ @ride1, @ride2, @ride3 ])
     end
 
     # Tests if all drivers are assigned correctly to @drivers variable
     it 'assigns all drivers to @drivers' do
-      get :filter
+      get :today
       expect(assigns(:drivers)).to match_array([ 'Driver A', 'Driver B' ])
     end
   end
