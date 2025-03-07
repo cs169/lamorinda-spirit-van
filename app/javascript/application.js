@@ -1,6 +1,13 @@
 // Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
-import "@hotwired/turbo-rails"
-import "controllers"
+import "@hotwired/turbo-rails";
+import "controllers";
+
+function selectPassenger(name, phone, address, city) {
+  document.getElementById("passenger_name").value = name;
+  document.getElementById("passenger_phone").value = phone;
+  document.getElementById("passenger_address").value = address;
+  document.getElementById("passenger_city").value = city;
+}
 
 document.addEventListener('turbo:load', () => {
   // Make table rows clickable (except for links/buttons inside them)
@@ -23,3 +30,6 @@ document.addEventListener('turbo:load', () => {
     }, 5000); 
   }
 });
+
+window.selectPassenger = selectPassenger;
+

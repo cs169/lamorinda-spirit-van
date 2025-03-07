@@ -1,6 +1,59 @@
 <!-- app/views/rides/new.html.erb -->
-<div class="container my-4" style="max-width: 80%;">
-  <h1 class="mb-4">New Ride</h1>
 
-  <%= render 'form' %>
+<div class="container my-4">
+
+      <!-- Main Title -->
+      <h1 class="mb-4 text-center">New Ride</h1>
+
+      <!-- Step 1 Container -->
+      <div id="step-1" style="display: block;">
+        <h2>Step 1: Which passenger needs a ride?</h2>
+
+        <!-- Form for capturing passenger details for the Ride -->
+        <%= form_with(model: @ride, url: rides_path, local: true, html: { id: "step1-form" }) do |f| %>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <%= f.label :passenger_name, "Passenger Name" %>
+              <%= f.text_field :passenger_name, class: "form-control disabled-input", id: "passenger_name", disabled: true %>
+            </div>
+        
+            <div class="col-md-6 mb-3">
+              <%= f.label :passenger_phone, "Passenger Phone" %>
+              <%= f.text_field :passenger_phone, class: "form-control disabled-input", id: "passenger_phone", disabled: true %>
+            </div>
+          </div>
+        
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <%= f.label :passenger_address, "Passenger Address" %>
+              <%= f.text_field :passenger_address, class: "form-control disabled-input", id: "passenger_address", disabled: true %>
+            </div>
+        
+            <div class="col-md-6 mb-3">
+              <%= f.label :passenger_city, "Passenger City" %>
+              <%= f.text_field :passenger_city, class: "form-control disabled-input", id: "passenger_city", disabled: true %>
+            </div>
+          </div>
+        
+          <div class="mb-3 form-check">
+            <%= f.check_box :passenger_confirmed, id: "passenger_confirmed", class: "form-check-input" %>
+            <%= f.label :passenger_confirmed, "Confirmed with passenger?", class: "form-check-label" %>
+          </div>
+        <% end %>
+        
+
+        <!-- Passenger Selection Table (Limited Size) -->
+        <div id="passenger-results" class="mt-4 mx-auto" style="height: 50vh;">
+          <%= render 'passengers_selection', passengers: @passengers %>
+        </div>
+
+        <!-- “Next” button to move to Step 2 -->
+        <div class="text-center mt-3">
+          <button type="button" class="btn btn-primary btn-lg" onclick="goToStep(2)">Next &raquo;</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </div>
+

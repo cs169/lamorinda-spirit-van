@@ -11,6 +11,8 @@ class RidesController < ApplicationController
     # new (GET Request, displays form)
     def new
         @ride = Ride.new
+        @passengers = Passenger.all
+        @drivers = Driver.all
     end
 
     def create
