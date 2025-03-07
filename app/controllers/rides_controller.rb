@@ -17,7 +17,7 @@ class RidesController < ApplicationController
         @ride = Ride.new(ride_params)
 
         if @ride.save
-            redirect_to rides_path, notice: "Ride was successfully created."
+            redirect_to @ride, notice: "Ride was successfully created."
         else
             render :new
         end
@@ -29,7 +29,7 @@ class RidesController < ApplicationController
     def update
         if @ride.update(ride_params)
             flash[:notice] = "Ride was successfully updated."
-            redirect_to edit_ride_path(@ride)
+            redirect_to @ride
         else
             flash[:alert] = "There was an error updating the ride."
             render :edit, status: :unprocessable_entity

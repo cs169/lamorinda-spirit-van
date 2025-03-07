@@ -1,6 +1,11 @@
-<!-- app/views/rides/edit.html.erb -->
-<div class="container my-4" style="max-width: 80%;">
-  <h1 class="mb-4">Edit Ride</h1>
+<% content_for :title, "Editing ride" %>
 
-  <%= render 'form' %>
+<h1>Editing ride</h1>
+
+<%= render "form", ride: @ride %>
+
+<br>
+
+<div>
+  <%= link_to "Back to rides", rides_path %>
 </div>

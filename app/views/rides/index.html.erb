@@ -1,8 +1,39 @@
-<!-- Rides History -->
-<div class="container my-4" style="max-width: 80%; height: 70vh;">
-  <h1 class="mb-4">Rides History</h1>
+<h1>All Rides</h1>
+<%= link_to 'New Ride', new_ride_path, class: 'btn btn-primary' %>
+<table>
+  
+  <thead>
+    <tr>
+      <th>Day</th>
+      <th>Date</th>
+      <th>Driver</th>
+      <th>Van</th>
+      <th>Passenger Name & Phone</th>
+      <th>Passenger Address</th>
+      <th>Destination</th>
+      <th>Notes to Driver</th>
+      <th>Hours</th>
+      <th>Amount Paid</th>
+      <th>Ride Count</th>
+      <th>C</th>
+      <th>Notes/Date Reserved</th>
+      <th>Confirmed w/ Passenger</th>
+      <th>Driver Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @rides.each do |ride| %>
+      <tr>
+        <%= render ride %>
+        <td>
+          <%= link_to 'Edit', edit_ride_path(ride), class: 'btn btn-warning btn-sm' %>
 
-  <%= render 'ride' %>
+          <%= link_to 'Delete', ride_path(ride), data: { turbo_method: :delete, turbo_confirm: 'Are you sure you want to delete this row?' } %>
 
-  <%= link_to 'Add a ride', new_ride_path, class: "btn btn-success mt-3" %>
-</div>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to 'Filter Rides', filter_rides_path, class: 'btn btn-primary' %>

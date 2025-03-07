@@ -1,19 +1,17 @@
-<div class="container my-4">
-  <h1 class="mb-4">Drivers</h1>
+<p style="color: green"><%= notice %></p>
 
-  <!-- Flash messages -->
-  <% if flash[:notice].present? %>
-    <div class="alert alert-success"><%= flash[:notice] %></div>
-  <% elsif flash[:alert].present? %>
-    <div class="alert alert-danger"><%= flash[:alert] %></div>
+<% content_for :title, "Drivers" %>
+
+<h1>Drivers</h1>
+
+<div id="drivers">
+  <% @drivers.each do |driver| %>
+    <%= render driver %>
+    <p>
+      <%= link_to "Show this driver", driver %>
+    </p>
   <% end %>
-
-  <!-- UI Buttons -->
-  <div class="mb-3">
-    <%= link_to "New Driver", new_driver_path, class: "btn btn-primary" %>
-    <%= link_to 'Back to Home', filter_rides_path, class: 'btn btn-secondary back-btn' %>
-  </div>
-
-  <%= render 'driver' %>
-
 </div>
+
+<%= link_to "New driver", new_driver_path %>
+<%= link_to 'Home Page', filter_rides_path, class: 'btn btn-secondary back-btn' %>

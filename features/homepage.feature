@@ -5,4 +5,4 @@ Feature: Homepage available
 
     Scenario: Successful Visit
         Given I visit the Homepage
-        Then I should see "Rides"
+        Then I should see "All Rides"

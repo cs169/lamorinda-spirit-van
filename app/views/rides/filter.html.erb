@@ -1,35 +1,68 @@
-<!-- app/views/rides/filter.html.erb -->
-<div class="container my-4 filter-page">
-  <h1 class="mb-3">
-    Rides for Today: <%= Date.today.strftime("%m/%d/%Y") %>
-  </h1>
+<div class="filter-page">
+  <%= stylesheet_link_tag "rides", media: "all", "data-turbo-track": "reload" %>
 
-  <%= form_with url: filter_rides_path, method: :get, local: true, class: "row g-3 align-items-end" do |form| %>
-    <!-- Driver Name Field -->
-    <div class="col-sm-4">
+  <h1>Filtered Rides for <%= Time.zone.today.strftime("%m/%d/%Y") %></h1>
+
+  <%= form_with url: filter_rides_path, method: :get, local: true, class: "filter-form" do |form| %>
+    <div class="form-group">
       <%= form.label :driver_name, "Filter by Driver Name", class: "form-label" %>
-      <%= form.text_field :driver_name, value: params[:driver_name], class: "form-control" %>
+      <%= form.text_field :driver_name_text, value: params[:driver_name_text], class: "form-control", placeholder: "Enter driver name" %>
+      <%= form.select :driver_name_select, options_for_select(@drivers, params[:driver_name_select]), { include_blank: "Select a driver" }, class: "form-control" %>
     </div>
-
-    <!-- Buttons -->
-    <div class="col-auto">
-      <%= form.submit 'Filter', class: 'btn btn-primary me-2' %>
+    <div class="button-group">
+      <%= form.submit 'Filter', class: 'btn btn-primary' %>
       <%= link_to 'Clear', filter_rides_path, class: 'btn btn-secondary' %>
     </div>
   <% end %>
 
-  <hr>
+  <%= link_to 'Back to All Rides', rides_path, class: 'btn btn-secondary back-btn' %>
+  <%= link_to 'Drivers', drivers_path, class: 'btn btn-primary' %>
+  <%= link_to 'Passengers', passengers_path, class: 'btn btn-primary' %>
 
-  <!-- Results -->
   <% if @rides.present? %>
-    <!-- Render your partial that displays rides -->
-    <%= render 'ride' %>
+    <table class="rides-table">
+      <thead>
+        <tr>
+          <th>Day</th>
+          <th>Date</th>
+          <th>Driver</th>
+          <th>Van</th>
+          <th>Passenger Name & Phone</th>
+          <th>Passenger Address</th>
+          <th>Destination</th>
+          <th>Notes to Driver</th>
+          <th>Hours</th>
+          <th>Amount Paid</th>
+          <th>Ride Count</th>
+          <th>C</th>
+          <th>Notes Date Reserved</th>
+          <th>Confirmed with Passenger</th>
+          <th>Driver Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @rides.each do |ride| %>
+          <tr>
+            <td><%= ride.day %></td>
+            <td><%= ride.date.strftime("%m/%d/%Y") %></td>
+            <td><%= ride.driver %></td>
+            <td><%= ride.van %></td>
+            <td><%= ride.passenger_name_and_phone %></td>
+            <td><%= ride.passenger_address %></td>
+            <td><%= ride.destination %></td>
+            <td><%= ride.notes_to_driver %></td>
+            <td><%= ride.hours %></td>
+            <td><%= number_to_currency(ride.amount_paid) %></td>
+            <td><%= ride.ride_count %></td>
+            <td><%= ride.c %></td>
+            <td><%= ride.notes_date_reserved %></td>
+            <td><%= ride.confirmed_with_passenger %></td>
+            <td><%= ride.driver_email %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
   <% else %>
-    <p class="text-muted mt-3">No rides found for today.</p>
+    <p class="no-rides">No rides found for today.</p>
   <% end %>
-
-  <!-- Back Link -->
-  <div class="mt-4">
-    <%= link_to 'Back to All Rides', rides_path, class: 'btn btn-primary me-2' %>
-  </div>
 </div>

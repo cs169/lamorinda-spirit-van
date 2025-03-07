@@ -1,85 +1,42 @@
-<!-- Display error messages if validations fail -->
-<% if @driver.errors.any? %>
-  <div class="alert alert-danger">
-    <h4><%= pluralize(@driver.errors.count, "error") %> prohibited this driver from being saved:</h4>
-    <ul>
-      <% @driver.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-    </ul>
-  </div>
-<% end %>
+<%= form_with(model: driver) do |form| %>
+  <% if driver.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(driver.errors.count, "error") %> prohibited this driver from being saved:</h2>
 
-<!-- Display success flash (if any) -->
-<% if flash[:notice].present? %>
-  <div class="alert alert-success">
-    <%= flash[:notice] %>
-  </div>
-<% end %>
-
-<%= form_with(model: @driver, local: true) do |f| %>
-  <div class="row">
-    <!-- Left Column (Basic Info) with vertical border -->
-    <div class="col-md-6 border-end pe-4">
-      <div class="mb-3">
-        <%= f.label :name, raw("Name <span class='text-danger'>*</span>") %>
-        <%= f.text_field :name, class: "form-control" %>
-      </div>
-
-      <div class="mb-3">
-        <%= f.label :phone, raw("Phone <span class='text-danger'>*</span>") %>
-        <%= f.text_field :phone, class: "form-control" %>
-      </div>
-
-      <div class="mb-3">
-        <%= f.label :email, "Email" %>
-        <%= f.email_field :email, class: "form-control" %>
-      </div>
-
-      <div class="mb-3 form-check">
-        <%= f.check_box :active, class: "form-check-input", id: "driver_active" %>
-        <%= f.label :active, "Active", class: "form-check-label" %>
-      </div>
+      <ul>
+        <% driver.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
     </div>
+  <% end %>
 
-    <!-- Right Column (Shifts JSON) -->
-    <div class="col-md-6 ps-4">
-      <h5 class="fw-bold">Shifts</h5>
-      <hr />
-      
-      <% day_mapping = {
-        "Sunday"    => "sun",
-        "Monday"    => "mon",
-        "Tuesday"   => "tue",
-        "Wednesday" => "wed",
-        "Thursday"  => "thu",
-        "Friday"    => "fri",
-        "Saturday"  => "sat"
-      } %>
-
-      <!-- Loop over each day to build shift fields -->
-      <% day_mapping.each do |day_name, key| %>
-        <% existing_shifts = (@driver.shifts || {})[key] || [] %>
-        <% shifts_string = existing_shifts.join(", ") %>
-
-        <div class="mb-3">
-          <label for="driver_shifts_<%= key %>">
-            <strong><%= day_name %> Shifts</strong>
-          </label>
-          <input type="text"
-                 name="driver[shifts][<%= key %>]"
-                 id="driver_shifts_<%= key %>"
-                 value="<%= shifts_string %>"
-                 class="form-control" />
-        </div>
-      <% end %>
-    </div>
+  <div>
+    <%= form.label :name, style: "display: block" %>
+    <%= form.text_field :name %>
   </div>
 
-  <!-- Action Buttons -->
-  <div class="mt-3">
-    <%= f.submit(@driver.new_record? ? "Create Driver" : "Update Driver", class: @driver.new_record? ? 'btn btn-success' : 'btn btn-primary') %>
-    <%= link_to "Cancel", drivers_path, class: "btn btn-secondary" %>
+  <div>
+    <%= form.label :phone, style: "display: block" %>
+    <%= form.text_field :phone %>
   </div>
 
+  <div>
+    <%= form.label :email, style: "display: block" %>
+    <%= form.text_field :email %>
+  </div>
+
+  <div>
+    <%= form.label :shifts, style: "display: block" %>
+    <%= form.text_field :shifts %>
+  </div>
+
+  <div>
+    <%= form.label :active, style: "display: block" %>
+    <%= form.check_box :active %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
 <% end %>

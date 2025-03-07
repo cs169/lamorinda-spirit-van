@@ -51,7 +51,7 @@ RSpec.describe RidesController, type: :controller do
     # Tests successful creation of a ride
     it 'creates a new ride and redirects' do
       post :create, params: { ride: { day: 'F', date: '2025-03-01', driver: 'Driver A', van: 6, passenger_name_and_phone: 'John Doe (555-123-4567)', passenger_address: '456 Oak St.', destination: 'Pleasant Hill', notes_to_driver: 'Call before arriving', driver_initials: 'JD', hours: 2.0, amount_paid: 25.0, ride_count: 1, c: 'C', notes_date_reserved: '02/29/2025', confirmed_with_passenger: 'Yes', driver_email: 'sent' } }
-      expect(response).to redirect_to(rides_path)
+      expect(response).to redirect_to(assigns(:ride))
       expect(flash[:notice]).to eq('Ride was successfully created.')
     end
 
@@ -66,7 +66,7 @@ RSpec.describe RidesController, type: :controller do
     # Tests successful update of a ride
     it 'updates the ride and redirects' do
       put :update, params: { id: @ride1.id, ride: { driver: 'Updated Driver' } }
-      expect(response).to redirect_to(edit_ride_path(@ride1))
+      expect(response).to redirect_to(@ride1)
       expect(flash[:notice]).to eq('Ride was successfully updated.')
     end
 
