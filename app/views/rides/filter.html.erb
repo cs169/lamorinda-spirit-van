@@ -18,7 +18,11 @@
     </div>
   <% end %>
 
-  <hr>
+
+  <%= link_to 'Back to All Rides', rides_path, class: 'btn btn-secondary back-btn' %>
+  <%= link_to 'Drivers', drivers_path, class: 'btn btn-primary' %>
+  <%= link_to 'Passengers', passengers_path, class: 'btn btn-primary' %>
+  <%= link_to 'Shifts', shifts_path, class: 'btn btn-primary' %>
 
   <!-- Results -->
   <% if @rides.present? %>

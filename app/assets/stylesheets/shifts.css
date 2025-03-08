@@ -1,0 +1,32 @@
+/* app/assets/stylesheets/shifts.css */
+
+#shifts-calendar {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#shifts-calendar th {
+    background-color: #f0f0f0;
+    padding: 10px;
+    text-align: center;
+}
+
+#shifts-calendar td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    vertical-align: top;
+}
+
+#shifts-calendar .day {
+    height: 100px;
+}
+
+#shifts-calendar .today {
+    background-color: #ffffcc;
+}
+
+#shifts-calendar .prev-month,
+#shifts-calendar .next-month {
+    background-color: #f9f9f9;
+    color: #ccc;
+}

@@ -10,12 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_02_24_022846) do
+ActiveRecord::Schema[7.2].define(version: 2025_03_06_220111) do
   create_table "drivers", force: :cascade do |t|
     t.string "name"
     t.string "phone"
     t.string "email"
-    t.json "shifts"
     t.boolean "active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -60,4 +59,15 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_24_022846) do
     t.text "confirmed_with_passenger"
     t.string "driver_email"
   end
+
+  create_table "shifts", force: :cascade do |t|
+    t.date "shift_date"
+    t.string "shift_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "driver_id", null: false
+    t.index ["driver_id"], name: "index_shifts_on_driver_id"
+  end
+
+  add_foreign_key "shifts", "drivers"
 end
