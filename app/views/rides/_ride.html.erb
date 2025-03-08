@@ -49,7 +49,7 @@
             <td><%= ride.driver_email %></td>
             
             <!-- Actions should remain separate -->
-            <td><%= link_to 'Info', edit_ride_path(ride), class: "btn btn-sm btn-primary" %></td>
+            <td><%= link_to 'Edit', edit_ride_path(ride), class: "btn btn-sm btn-primary" %></td>
             <td>
               <%= link_to 'Delete', ride,
                   data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' },

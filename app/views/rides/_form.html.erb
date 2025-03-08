@@ -116,7 +116,7 @@
   <!-- Action Buttons -->
   <div class="mt-4">
     <%= f.submit(@ride.new_record? ? "Create Ride" : "Update Ride", class: @ride.new_record? ? "btn btn-success" : "btn btn-primary") %>
-    <%= link_to "Cancel", rides_path, class: "btn btn-secondary" %>
+    <%= link_to "Back to Rides", rides_path, class: "btn btn-secondary" %>
   </div>
   
 <% end %>
