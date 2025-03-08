@@ -4,7 +4,6 @@ class CreateDrivers < ActiveRecord::Migration[7.2]
       t.string :name
       t.string :phone
       t.string :email
-      t.json :shifts
       t.boolean :active
 
       t.timestamps

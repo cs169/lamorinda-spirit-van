@@ -1,0 +1,29 @@
+<%= form_with(model: shift) do |form| %>
+  <% if shift.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(shift.errors.count, "error") %> prohibited this shift from being saved:</h2>
+
+      <ul>
+        <% shift.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :shift_date, style: "display: block" %>
+    <%= form.date_field :shift_date, required: true %>
+  </div>
+
+  <div>
+    <%= form.label :driver_id, "Driver", style: "display: block" %>
+    <%= form.collection_select :driver_id, Driver.all, :id, :name, { prompt: "Select a driver" }, required: true %>
+    <%= form.label :shift_type, style: "display: block" %>
+    <%= form.text_field :shift_type, required: true %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -4,8 +4,8 @@ require "rails_helper"
 
 RSpec.describe Ride, type: :model do
   before(:each) do
-    @driver1 = Driver.create(name: "Driver A", phone: "1234567890", shifts: "pm", email: "jd@lamorinda.com", active: true)
-    @driver2 = Driver.create(name: "Driver B", phone: "1234567890", shifts: "pm", email: "jd@lamorinda.com", active: true)
+    @driver1 = Driver.create(name: "Driver A", phone: "1234567890", email: "jd@lamorinda.com", active: true)
+    @driver2 = Driver.create(name: "Driver B", phone: "1234567890", email: "jd@lamorinda.com", active: true)
 
     today = Time.zone.today
     weekday_abbreviation = today.strftime("%a")
