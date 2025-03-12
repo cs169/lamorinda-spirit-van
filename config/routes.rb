@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  resources :passengers
+  resources :passengers do
+    get 'autocomplete', on: :collection
+  end
   resources :drivers
   resources :shifts
   get "posts/index"

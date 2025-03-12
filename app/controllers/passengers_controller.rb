@@ -59,6 +59,13 @@ class PassengersController < ApplicationController
     end
   end
 
+  #for use with the autocomplete feature in the ride creation form
+  def autocomplete
+    query = params[:query]
+    passengers = Passenger.where('full_name LIKE ?', "%#{query}%").limit(10)
+    render json: passengers.map { |passenger| { value: passenger.full_name, address: passenger.address } }
+  end
+
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_passenger
