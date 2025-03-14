@@ -10,6 +10,24 @@ function selectPassenger(name, phone, address, city) {
 }
 
 document.addEventListener('turbo:load', () => {
+  const tableElement = document.querySelector('#passengers-table');
+  if (tableElement) {
+    if ($.fn.DataTable.isDataTable('#passengers-table')) {
+      $('#passengers-table').DataTable().destroy();
+    }
+    
+    $('#passengers-table').DataTable({
+      paging: true,
+      searching: true,
+      ordering: true,
+      pageLength: 10,  
+      order: [[0, 'asc']],
+      language: {
+        searchPlaceholder: "Search passengers..."
+      }
+    });
+  }
+
   // Make table rows clickable (except for links/buttons inside them)
   document.querySelectorAll('.clickable-row').forEach(row => {
     row.addEventListener('click', function(event) {
@@ -32,4 +50,3 @@ document.addEventListener('turbo:load', () => {
 });
 
 window.selectPassenger = selectPassenger;
-
