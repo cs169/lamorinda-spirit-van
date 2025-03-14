@@ -24,7 +24,8 @@ document.addEventListener('turbo:load', () => {
       order: [[0, 'asc']],
       language: {
         searchPlaceholder: "Search passengers..."
-      }
+      },
+      scrollX: true
     });
   }
 
