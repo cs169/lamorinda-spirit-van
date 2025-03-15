@@ -25,7 +25,38 @@ document.addEventListener('turbo:load', () => {
       language: {
         searchPlaceholder: "Search passengers..."
       },
-      scrollX: true
+
+      buttons: [
+        {
+          extend: 'csv',
+          text: 'Export CSV',
+          className: 'btn btn-sm btn-outline-secondary'
+        },
+        {
+          extend: 'excel',
+          text: 'Export Excel',
+          className: 'btn btn-sm btn-outline-secondary'
+        },
+        {
+          extend: 'pdf',
+          title: 'RideData',
+          messageTop: 'List of rides',
+          orientation: 'landscape',
+          pageSize: 'A4',
+          exportOptions: {
+            columns: ':visible' // Export only visible columns
+          }
+        },
+        {
+          extend: 'print',
+          text: 'Print',
+          className: 'btn btn-sm btn-outline-secondary'
+        }
+      ],
+      scrollX: true,
+      dom: "<'row'<'col-md-6'l><'col-md-6'Bf>>" + 
+      "<'row'<'col-md-12'tr>>" + 
+      "<'row'<'col-md-6'i><'col-md-6'p>>"
     });
   }
 

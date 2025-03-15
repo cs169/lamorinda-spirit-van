@@ -1,48 +1,51 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= content_for(:title) || "Lamorinda" %></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title><%= content_for(:title) || "Lamorinda" %></title>
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta name="apple-mobile-web-app-capable" content="yes">
+      <%= csrf_meta_tags %>
+      <%= csp_meta_tag %>
 
-    <%= yield :head %>
+      <%= yield :head %>
 
-    <link rel="manifest" href="/manifest.json">
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
+      <link rel="manifest" href="/manifest.json">
+      <link rel="icon" href="/icon.png" type="image/png">
+      <link rel="icon" href="/icon.svg" type="image/svg+xml">
+      <link rel="apple-touch-icon" href="/icon.png">
+      <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+      <%= javascript_importmap_tags %>
+
+      <!-- jQuery (Required for DataTables) -->
+      <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+      <!-- DataTables JS + Bootstrap 5 Integration -->
+      <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
+      <script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>
     
-  </head>
+      <!-- Buttons Extension -->
+      <script src="https://cdn.datatables.net/buttons/3.2.2/js/dataTables.buttons.js"></script>
+      <script src="https://cdn.datatables.net/buttons/3.2.2/js/buttons.bootstrap5.js"></script>
 
-  <body>
-    <%= yield %>
-  </body>
-</html>
+      <!-- JSZip (For Excel Export) -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
-<!-- Below is for bootstrap integration -->
+      <!-- PDFMake (For PDF Export) -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 
-<head>
-  <%= csrf_meta_tags %>
-  <%= csp_meta_tag %>
+      <!-- HTML5 Buttons (For Exporting) -->
+      <script src="https://cdn.datatables.net/buttons/3.2.2/js/buttons.html5.min.js"></script>
+      <script src="https://cdn.datatables.net/buttons/3.2.2/js/buttons.print.min.js"></script>
 
-  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-  <%= javascript_importmap_tags %>
+      <!-- DataTables CSS -->
+      <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css">
+      <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.2.2/css/buttons.dataTables.css">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <!-- jQuery (Required for DataTables) -->
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    </head>
 
-  <!-- DataTables JavaScript CDN -->
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-
-  <!-- Bootstrap CSS CDN -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  <!-- DataTables CSS CDN (Bootstrap 5 Integration) -->
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-
-</head>
+    <body>
+      <%= yield %>
+    </body>
+  </html>
