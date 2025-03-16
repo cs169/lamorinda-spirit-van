@@ -9,6 +9,30 @@ function selectPassenger(name, phone, address, city) {
   document.getElementById("passenger_city").value = city;
 }
 
+// Generate checkboxes for showing/hiding DataTable columns
+const initiateCheckboxes = (table) => {
+    const columnToggleContainer = document.getElementById('column-toggle-container');
+    columnToggleContainer.innerHTML = '';
+
+    table.columns().every(function (index) {
+      if (index < table.columns().count() - 2) {
+        columnToggleContainer.innerHTML += `
+          <div class="form-check form-check-inline">
+            <input type="checkbox" class="form-check-input" id="col-${index}" ${table.column(index).visible() ? 'checked' : ''}>
+            <label class="form-check-label" for="col-${index}">${table.column(index).header().textContent}</label>
+          </div>`;
+      }
+    });
+
+    // Event delegation for checkboxes
+    document.addEventListener('change', (event) => {
+      if (event.target.matches('.form-check-input')) {
+        const index = event.target.id.replace('col-', '');
+        table.column(index).visible(event.target.checked);
+      }
+    });
+  };
+
 document.addEventListener('turbo:load', () => {
   const tableElement = document.querySelector('#passengers-table');
   if (tableElement) {
@@ -16,14 +40,14 @@ document.addEventListener('turbo:load', () => {
       $('#passengers-table').DataTable().destroy();
     }
     
-    $('#passengers-table').DataTable({
+    const passengerTable = $('#passengers-table').DataTable({
       paging: true,
       searching: true,
       ordering: true,
       pageLength: 10,  
       order: [[0, 'asc']],
       language: {
-        searchPlaceholder: "Search passengers..."
+        searchPlaceholder: "Search..."
       },
 
       buttons: [
@@ -56,8 +80,10 @@ document.addEventListener('turbo:load', () => {
       scrollX: true,
       dom: "<'row'<'col-md-6'l><'col-md-6'Bf>>" + 
       "<'row'<'col-md-12'tr>>" + 
-      "<'row'<'col-md-6'i><'col-md-6'p>>"
+      "<'row'<'col-md-6'i><'col-md-6'p>>",
     });
+    
+    initiateCheckboxes(passengerTable);
   }
 
   // Make table rows clickable (except for links/buttons inside them)
