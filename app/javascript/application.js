@@ -2,19 +2,14 @@
 import "@hotwired/turbo-rails";
 import "controllers";
 
-function selectPassenger(name, phone, address, city) {
-  document.getElementById("passenger_name").value = name;
-  document.getElementById("passenger_phone").value = phone;
-  document.getElementById("passenger_address").value = address;
-  document.getElementById("passenger_city").value = city;
-}
+
 
 // Generate checkboxes for showing/hiding DataTable columns
 const initiateCheckboxes = (table) => {
     const columnToggleContainer = document.getElementById('column-toggle-container');
     columnToggleContainer.innerHTML = '';
 
-    table.columns().every(function (index) {
+    table.columns().every((index) => {
       if (index < table.columns().count() - 2) {
         columnToggleContainer.innerHTML += `
           <div class="form-check form-check-inline">
@@ -106,5 +101,12 @@ document.addEventListener('turbo:load', () => {
     }, 5000); 
   }
 });
+
+const selectPassenger = (name, phone, address, city) => {
+  document.getElementById("passenger_name").value = name;
+  document.getElementById("passenger_phone").value = phone;
+  document.getElementById("passenger_address").value = address;
+  document.getElementById("passenger_city").value = city;
+}
 
 window.selectPassenger = selectPassenger;
