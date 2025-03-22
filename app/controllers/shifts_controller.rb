@@ -10,6 +10,13 @@ class ShiftsController < ApplicationController
     @shifts = Shift.where(shift_date: @date.beginning_of_month..@date.end_of_month)
   end
 
+  # GET /read_only_shifts
+  # Read-only view for drivers
+  def read_only
+    @date = params[:start_date] ? Date.parse(params[:start_date]) : Date.today
+    @shifts = Shift.where(shift_date: @date.beginning_of_month..@date.end_of_month)
+  end
+
   # GET /shifts/1 or /shifts/1.json
   def show
   end
@@ -22,6 +29,11 @@ class ShiftsController < ApplicationController
 
   # GET /shifts/1/edit
   def edit
+  end
+
+  # GET /shifts/1/feedback
+  def feedback
+    @shift = Shift.find(params[:id])
   end
 
   # POST /shifts or /shifts.json
@@ -80,6 +92,6 @@ class ShiftsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def shift_params
-    params.require(:shift).permit(:shift_date, :shift_type, :driver_id)
+    params.require(:shift).permit(:shift_date, :shift_type, :driver_id, :van, :pu_time, :do_time, :odo_pre, :odo_pst)
   end
 end

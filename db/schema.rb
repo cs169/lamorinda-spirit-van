@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_03_15_042409) do
+ActiveRecord::Schema[7.2].define(version: 2025_03_20_232838) do
   create_table "addresses", force: :cascade do |t|
     t.string "street"
     t.string "city"
@@ -72,6 +72,11 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_15_042409) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "driver_id", null: false
+    t.integer "van"
+    t.string "pu_time"
+    t.string "do_time"
+    t.string "odo_pre"
+    t.string "odo_pst"
     t.index ["driver_id"], name: "index_shifts_on_driver_id"
   end
 

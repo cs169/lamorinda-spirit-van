@@ -52,16 +52,6 @@ class RidesController < ApplicationController
       redirect_to rides_url, status: :unprocessable_entity
   end
 
-  def today
-    @current_date = begin
-                      Date.parse(params[:date])
-                    rescue ArgumentError, TypeError
-                      Time.zone.today
-                    end
-
-    @rides = Ride.driver_today_view(@current_date)
-  end
-
   def filter
     @rides = Ride.all
   end

@@ -16,14 +16,6 @@ RSpec.describe RidesController, type: :controller do
      @ride4 = FactoryBot.create(:ride, date: Date.today - 5.days)
    end
 
-  describe "GET #today" do
-    # Tests when no today parameters are provided, all rides should be returned
-    it "returns all rides when no today is applied" do
-      get :today
-      expect(assigns(:rides)).to match_array([ @ride1, @ride2, @ride3 ])
-    end
-  end
-
   describe "POST #create" do
     context "with valid attributes" do
       let(:valid_attributes) do
@@ -112,7 +104,5 @@ RSpec.describe RidesController, type: :controller do
   end
 
   after(:each) do
-    Ride.delete_all
-    Driver.delete_all
   end
 end

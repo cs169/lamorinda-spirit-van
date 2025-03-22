@@ -6,6 +6,13 @@ RSpec.describe DriversController, type: :controller do
   before(:each) do
     @driver1 = FactoryBot.create(:driver)
     @driver2 = FactoryBot.create(:driver)
+
+    @address1 = FactoryBot.create(:address)
+
+    @passenger1 = FactoryBot.create(:passenger)
+    @ride1 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1)
+    @ride2 = FactoryBot.create(:ride, driver: @driver2, passenger: @passenger1)
+    @ride3 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1)
   end
 
   describe "GET #index" do
@@ -17,6 +24,13 @@ RSpec.describe DriversController, type: :controller do
     it "renders the index template" do
       get :index
       expect(response).to render_template(:index)
+    end
+  end
+
+  describe "GET #today" do
+    it "returns all rides when no date is applied" do
+      get :today, params: { id: @driver1.id }
+      expect(assigns(:rides)).to match_array([ @ride1, @ride3 ])
     end
   end
 
@@ -59,6 +73,13 @@ RSpec.describe DriversController, type: :controller do
     it "renders the edit template" do
       get :edit, params: { id: @driver1.id }
       expect(response).to render_template(:edit)
+    end
+  end
+
+  describe "GET #all_shifts" do
+    it "assigns the requested driver to @driver" do
+      get :all_shifts, params: { id: @driver1.id }
+      expect(assigns(:driver)).to eq(@driver1)
     end
   end
 
@@ -135,6 +156,5 @@ RSpec.describe DriversController, type: :controller do
   end
 
   after(:each) do
-    Driver.delete_all
   end
 end

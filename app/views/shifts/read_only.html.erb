@@ -11,15 +11,13 @@
   'week_calendar' or 'month_calendar' or 'calendar' %>
   <%= month_calendar(attribute: :shift_date, events: @shifts) do |date, shifts| %>
     <%= date %>
-    <%= link_to "New shift", new_shift_path(:date => date) %>
-
     <% shifts.each do |shift| %>
       <div>
         <strong>
-          <%= link_to shift.driver.name, all_shifts_driver_path(shift.driver) %>
+          <%= shift.driver.name %>
         </strong>
          - 
-        <%= link_to shift.shift_type, shift, style: "color: blue; text-decoration: underline;" %>
+        <%= shift.shift_type %>
       </div>
     <% end %>
   <% end %>

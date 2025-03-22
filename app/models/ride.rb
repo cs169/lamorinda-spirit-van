@@ -22,9 +22,9 @@ class Ride < ApplicationRecord
     rides
   end
 
-  def self.driver_today_view(date = nil)
+  def self.today_driver_view(driver_id, date = nil)
     date = date.presence || Time.zone.today
-    rides = rides_by_date(Ride.all, date)
+    rides = rides_by_date(rides_by_driver(Ride.all, driver_id), date)
     rides
   end
 

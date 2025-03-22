@@ -58,6 +58,11 @@ h1 {
     margin-left: auto;
 }
 
+.today-page #btn-shift {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
 /* Table for PC */
 .today-page .rides-table {
     width: 100%;

@@ -10,6 +10,24 @@ class DriversController < ApplicationController
     # @drivers = @drivers.filter_by_name(params[:name])
   end
 
+  # GET /drivers/:driver_id/shifts
+  # Display all shifts for a certain driver
+  def all_shifts
+    @driver = Driver.find(params[:id])
+    @shifts = @driver.shifts
+  end
+
+  def today
+    @current_date = begin
+                      Date.parse(params[:date])
+                    rescue ArgumentError, TypeError
+                      Time.zone.today
+                    end
+
+    @driver = Driver.find(params[:id])
+    @rides = Ride.today_driver_view(params[:id], @current_date)
+  end
+
   # GET /drivers/1 or /drivers/1.json
   def show
   end

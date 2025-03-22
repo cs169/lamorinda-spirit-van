@@ -54,9 +54,9 @@ RSpec.describe Ride, type: :model do
     end
   end
 
-  describe ".driver_today_view" do
+  describe ".today_driver_view" do
     it "returns all rides when no filters are applied" do
-      rides = Ride.driver_today_view(nil)
+      rides = Ride.today_driver_view(nil)
       expect(rides).to match_array([ @ride2 ])
     end
   end
