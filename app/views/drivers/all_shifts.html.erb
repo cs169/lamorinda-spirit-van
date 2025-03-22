@@ -1,0 +1,16 @@
+<h1>All Shifts for <%= @driver.name %> (Total: <%= @shifts.count %>)</h1>
+
+<ul>
+  <% @shifts.each do |shift| %>
+    <li>
+      <strong>Date:</strong> <%= shift.shift_date %>,
+      <strong>Type:</strong> <%= shift.shift_type %>
+      <%= link_to "View Shift", shift_path(shift) %>
+    </li>
+  <% end %>
+</ul>
+
+<!-- If there are no shifts, display a message -->
+<% if @shifts.empty? %>
+  <p>No shifts assigned for this driver yet</p>
+<% end %>

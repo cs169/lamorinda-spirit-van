@@ -29,10 +29,27 @@
           <% @rides.each do |ride| %>
             <tr>
               <td><%= ride.van %></td>
-              <td><%= ride.passenger_name_and_phone %></td>
-              <td><%= ride.passenger_address %></td>
-              <td><%= ride.destination %></td>
-              <td><%= ride.notes_to_driver %></td>
+              <td>
+                <%= ride.passenger&.name %>
+                <%= ride.passenger&.phone %>
+              </td>
+              <td>
+                <% if ride.passenger&.address %>
+                  <%= ride.passenger.address.street %>, <%= ride.passenger.address.city %>,
+                  <%= ride.passenger.address.state %> <%= ride.passenger.address.zip %>
+                <% else %>
+                  No address
+                <% end %>
+              </td>
+              <td>
+                <% if ride.dest_address %>
+                  <%= ride.dest_address.street %>, <%= ride.dest_address.city %>,
+                  <%= ride.dest_address.state %> <%= ride.dest_address.zip %>
+                <% else %>
+                  No destination
+                <% end %>
+              </td>
+              <td><%= ride.notes_date_reserved.presence || ride.notes.presence || "No notes" %></td>
               <td><%= ride.hours %></td>
               <td><%= number_to_currency(ride.amount_paid) %></td>
             </tr>
@@ -45,10 +62,26 @@
         <% @rides.each do |ride| %>
           <div class="ride-block">
             <p><strong>Van:</strong> <%= ride.van %></p>
-            <p><strong>Passenger:</strong> <%= ride.passenger_name_and_phone %></p>
-            <p><strong>Address:</strong> <%= ride.passenger_address %></p>
-            <p><strong>Destination:</strong> <%= ride.destination %></p>
-            <p><strong>Notes:</strong> <%= ride.notes_to_driver %></p>
+            <p><strong>Passenger:</strong>
+              <%= ride.passenger&.name %> (<%= ride.passenger&.phone %>)
+            </p>
+            <p><strong>Address:</strong>
+              <% if ride.passenger&.address %>
+                <%= ride.passenger.address.street %>, <%= ride.passenger.address.city %>,
+                <%= ride.passenger.address.state %> <%= ride.passenger.address.zip %>
+              <% else %>
+                No address
+              <% end %>
+            </p>
+            <p><strong>Destination:</strong>
+              <% if ride.dest_address %>
+                <%= ride.dest_address.street %>, <%= ride.dest_address.city %>,
+                <%= ride.dest_address.state %> <%= ride.dest_address.zip %>
+              <% else %>
+                No destination
+              <% end %>
+            </p>
+            <p><strong>Notes:</strong> <%= ride.notes_date_reserved.presence || ride.notes.presence || "No notes" %></p>
             <p><strong>Hours:</strong> <%= ride.hours %></p>
             <p><strong>Fee:</strong> <%= number_to_currency(ride.amount_paid) %></p>
           </div>
@@ -58,4 +91,10 @@
   <% else %>
     <p class="no-rides">No rides available</p>
   <% end %>
+
+  
+  <div class="shift-button">
+    <%= link_to "View Shifts", read_only_shifts_path, class: "btn btn-primary" %>
+  </div>
+
 </div>

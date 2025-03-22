@@ -2,8 +2,6 @@
 
 Rails.application.routes.draw do
   resources :passengers
-  resources :drivers
-  resources :shifts
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -23,6 +21,21 @@ Rails.application.routes.draw do
       get "today"
       get "filter"
       get "filter_results"
+    end
+  end
+
+  resources :shifts do
+    collection do
+      get "read_only"
+    end
+    member do
+      get "feedback"
+    end
+  end
+
+  resources :drivers do
+    member do
+      get "all_shifts"
     end
   end
 end

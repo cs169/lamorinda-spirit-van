@@ -20,6 +20,34 @@ RSpec.describe DriversController, type: :controller do
     end
   end
 
+  describe "GET #all_shifts" do
+    before(:each) do
+      @shift1 = FactoryBot.create(:shift, driver: @driver1)
+      @shift2 = FactoryBot.create(:shift, driver: @driver1)
+    end
+
+    it "assigns the requested driver's shifts to @shifts" do
+      get :all_shifts, params: { id: @driver1.id }
+      expect(assigns(:shifts)).to match_array([@shift1, @shift2])
+    end
+
+    it "assigns the correct driver to @driver" do
+      get :all_shifts, params: { id: @driver1.id }
+      expect(assigns(:driver)).to eq(@driver1)
+    end
+
+    it "renders the all_shifts template if exists" do
+      get :all_shifts, params: { id: @driver1.id }
+      expect(response).to be_successful
+    end
+
+    it "raises an error when driver is not found" do
+      expect {
+        get :all_shifts, params: { id: -1 }
+      }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
+
   describe "GET #show" do
     it "assigns the requested driver to @driver" do
       get :show, params: { id: @driver1.id }
@@ -135,6 +163,6 @@ RSpec.describe DriversController, type: :controller do
   end
 
   after(:each) do
-    Driver.delete_all
+    Driver.destroy_all
   end
 end
