@@ -1,7 +1,7 @@
-# Given('I am on the passengers page') do
-#   visit 'passengers_path'
-#   save_and_open_page
-# end
+Given('I am on the passengers page') do
+  visit 'passengers_path'
+  save_and_open_page
+end
 
 Then('the {string} column should be visible') do |column_name|
   expect(page).to have_button("JS Ran!", wait: 10)

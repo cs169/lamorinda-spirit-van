@@ -3,6 +3,7 @@ Feature: Show and Hide Columns in Passengers Table
   Background:
     Given I am on the passengers page
 
+@javascript
   Scenario: All columns are visible by default
     Then the "Name" column should be visible
     And the "Address" column should be visible
@@ -16,6 +17,7 @@ Feature: Show and Hide Columns in Passengers Table
     And the "Date Registered" column should be visible
     And the "Audit" column should be visible
 
+@javascript
   Scenario: Hiding the "Email" column
     When I uncheck the "Email" column toggle
     Then the "Email" column should be hidden

@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
             orientation: 'landscape',
             pageSize: 'A4',
             exportOptions: {
-              columns: ':visible' // Export only visible columns
+              columns: ':visible'
             }
           },
         ],
