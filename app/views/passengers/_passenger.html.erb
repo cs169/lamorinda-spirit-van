@@ -6,6 +6,12 @@
 <% end %>
 
 <div class="card">
+  <button id="js-check">JS Loaded</button>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("js-check").innerText = "JS Ran!";
+    });
+  </script>
   <div class="card-body d-flex justify-content-center"> 
     <div class="table-responsive" style="white-space: nowrap; width: auto;">
       <div id="column-toggle-container" class="mb-3"></div>
@@ -72,3 +78,4 @@
     </div>
   </div>
 </div>
+

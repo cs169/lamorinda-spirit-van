@@ -26,7 +26,7 @@ const initiateCheckboxes = (table) => {
   });
 };
 
-document.addEventListener('turbo:load', () => {
+document.addEventListener('DOMContentLoaded', () => {
 
   const tables = [
     { selector: '#passengers-table', order: [[2, 'asc']], searchPlaceholder: "Search passengers..." },

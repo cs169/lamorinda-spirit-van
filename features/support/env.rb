@@ -15,6 +15,38 @@ SimpleCov.start
 require "cucumber/rails"
 require "capybara/cucumber"
 
+
+# Selenium for Capybara (currently cannot get it to work, so commented it out)
+# start of Selenium
+# require 'selenium-webdriver'
+# require 'webdrivers'
+
+# Webdrivers::Chromedriver.required_version = '114.0.5735.90'
+# Webdrivers::Chromedriver.required_version = '134.0.6998.165'
+
+# Capybara.register_driver :selenium_chromium do |app|
+#   options = Selenium::WebDriver::Chrome::Options.new
+
+#   # Specify the path to the Chromium binary. Adjust if needed.
+#   options.binary = '/snap/chromium/'
+
+#   # Common options for headless mode; remove --headless for non-headless debugging
+#   options.add_argument('--headless')
+#   options.add_argument('--disable-gpu')
+#   options.add_argument('--no-sandbox')
+#   options.add_argument('--window-size=1920,1080')
+
+#   Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
+# end
+
+# Capybara.default_max_wait_time = 10
+
+# Capybara.default_driver = :selenium_chrome
+# Capybara.javascript_driver = :selenium_chrome
+
+# end of Selenium
+
+
 # By default, any exception happening in your Rails application will bubble up
 # to Cucumber so that your scenario will fail. This is a different from how
 # your application behaves in the production environment, where an error page will
