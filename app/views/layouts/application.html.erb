@@ -21,6 +21,14 @@
     <!-- jQuery (Required for DataTables) -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
+    <!-- jQueryUI (Required for autocomplete) -->
+    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.min.js"
+      integrity="sha256-AlTido85uXPlSyyaZNsjJXeCs07eSv3r43kyCVc8ChI="
+      crossorigin="anonymous"></script>
+
+    <!-- jQueryUI stylesheet -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+
     <!-- DataTables JS Integration-->
     <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
     
@@ -44,6 +52,8 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.2.2/css/buttons.dataTables.css">
     
+    <!-- gon gem integration -->
+    <%= include_gon %>
   </head>
 
   <body>

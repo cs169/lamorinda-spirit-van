@@ -13,8 +13,11 @@ class RidesController < ApplicationController
   # new (GET Request, displays form)
   def new
     @ride = Ride.new
+    @ride.build_start_address
+    @ride.build_dest_address
     # For driver dropdown list in creating / updating
     @drivers = Driver.order(:name)
+    gon.passengers = Passenger.all.map { |p| { label: p.name, id: p.id, phone: p.phone, notes: p.notes } }
   end
 
   def create

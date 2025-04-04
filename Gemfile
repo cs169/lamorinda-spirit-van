@@ -43,6 +43,9 @@ gem "csv"
 # for shift calendar
 gem "simple_calendar"
 
+# for transfering controller variables to JS varialbles
+gem "gon"
+
 # for ease of testing names
 gem "humanize"
 

@@ -76,6 +76,16 @@
                            {},
                            class: "form-select", required: true %>
             </div>
+
+                                  
+            <div class="mb-3">
+              <%= f.label :start_address_id, "Start address id (temporary so functionality works)" %>
+              <%= f.number_field :start_address_id, class: "form-control"  %> 
+            </div>
+            <div class="mb-3">
+              <%= f.label :dest_address_id, "Dest address id (temporary so functionality works)" %>
+              <%= f.number_field :dest_address_id, class: "form-control"  %> 
+            </div>
           </div>
 
           <!-- Right Column (Passenger + Addresses) -->
@@ -85,20 +95,25 @@
             <!-- If you want to allow picking or associating a passenger, you can add a dropdown or fields here. 
                  For now, we keep them read-only or placeholder to mimic the structure. -->
             <div class="mb-3">
-              <%= f.label :passenger_name, "Passenger Name" %>
-              <input type="text" class="form-control bg-secondary text-white opacity-50"
-                     value="(No passenger yet)" readonly>
+              <%= f.label :passenger_name, "Passenger" %>
+              <%= f.text_field :passenger_name, class: "form-control"  %> 
+              <%= link_to 'New Passenger', new_passenger_path, class: "btn btn-success mt-3" %>
             </div>
 
+            <%= f.hidden_field :passenger_id, class: "form-control"  %> 
+
             <div class="mb-3">
-              <%= f.label :passenger_home_address, "Home Address" %>
-              <input type="text" class="form-control bg-secondary text-white opacity-50"
-                     value="(N/A)" readonly>
+              <%= f.label :passenger_phone, "Phone Number:" %>
+              <%= f.text_field :passenger_phone, class: "form-control", readonly: true  %> 
             </div>
+            <div class="mb-3">
+              <%= f.label :passenger_notes, "Notes about Passenger:" %>
+              <%= f.text_field :passenger_notes, class: "form-control", readonly: true  %> 
+            </div>
+
 
             <!-- New Address Container with Justify Content Row -->
             <div class="d-flex justify-content-between">
-              
               <!-- Origin Address -->
               <div class="col-md-5">
                 <h5 class="fw-bold text-success text-center">Origin Address</h5>
