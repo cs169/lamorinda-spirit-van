@@ -101,6 +101,14 @@ RSpec.describe ShiftsController, type: :controller do
       end
     end
 
+    context "with feedback" do
+      it "updates the shift" do
+        patch :update, params: { id: @shift.id, shift: { van: 1 }, commit_type: "feedback" }
+        @shift.reload
+        expect(@shift.van).to eq(1)
+      end
+    end
+
     context "with invalid parameters" do
       it "does not update the shift and re-renders the edit template" do
         patch :update, params: { id: @shift.id, shift: { shift_date: nil } }

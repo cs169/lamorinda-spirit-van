@@ -18,7 +18,6 @@ Rails.application.routes.draw do
 
   resources :rides do
     collection do
-      get "today"
       get "filter"
       get "filter_results"
     end
@@ -36,6 +35,7 @@ Rails.application.routes.draw do
   resources :drivers do
     member do
       get "all_shifts"
+      get "today"
     end
   end
 end

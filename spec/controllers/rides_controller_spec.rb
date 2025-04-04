@@ -16,14 +16,6 @@ RSpec.describe RidesController, type: :controller do
      @ride4 = FactoryBot.create(:ride, date: Date.today - 5.days)
    end
 
-  describe "GET #today" do
-    # Tests when no today parameters are provided, all rides should be returned
-    it "returns all rides when no today is applied" do
-      get :today
-      expect(assigns(:rides)).to match_array([ @ride1, @ride2, @ride3 ])
-    end
-  end
-
   describe "POST #create" do
     context "with valid attributes" do
       let(:valid_attributes) do
@@ -108,6 +100,14 @@ RSpec.describe RidesController, type: :controller do
       expect {
         get :show, params: { id: -1 } # Non-existent ID
       }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
+
+  describe "GET #filter" do
+    # Test if filter returns no rides without params
+    it "assigns the requested ride to @ride" do
+      get :filter
+      expect(assigns(:ride)).to eq(nil)
     end
   end
 

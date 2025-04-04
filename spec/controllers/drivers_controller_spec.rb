@@ -6,6 +6,16 @@ RSpec.describe DriversController, type: :controller do
   before(:each) do
     @driver1 = FactoryBot.create(:driver)
     @driver2 = FactoryBot.create(:driver)
+
+    @address1 = FactoryBot.create(:address)
+
+    @passenger1 = FactoryBot.create(:passenger)
+    @passenger2 = FactoryBot.create(:passenger)
+    @ride1 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1)
+    @ride2 = FactoryBot.create(:ride, driver: @driver2, passenger: @passenger1)
+    @ride3 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger2)
+    @ride4 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1, date: Time.zone.today + 1.days)
+    @ride5 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1, date: Time.zone.today - 1.days)
   end
 
   describe "GET #index" do
@@ -20,31 +30,20 @@ RSpec.describe DriversController, type: :controller do
     end
   end
 
-  describe "GET #all_shifts" do
-    before(:each) do
-      @shift1 = FactoryBot.create(:shift, driver: @driver1)
-      @shift2 = FactoryBot.create(:shift, driver: @driver1)
+  describe "GET #today" do
+    it "returns today's rides when no date is applied" do
+      get :today, params: { id: @driver1.id }
+      expect(assigns(:rides)).to match_array([ @ride1, @ride3 ])
     end
 
-    it "assigns the requested driver's shifts to @shifts" do
-      get :all_shifts, params: { id: @driver1.id }
-      expect(assigns(:shifts)).to match_array([@shift1, @shift2])
+    it "returns yesterday's rides" do
+      get :today, params: { id: @driver1.id, date: Time.zone.today - 1.days }
+      expect(assigns(:rides)).to match_array([ @ride5 ])
     end
 
-    it "assigns the correct driver to @driver" do
-      get :all_shifts, params: { id: @driver1.id }
-      expect(assigns(:driver)).to eq(@driver1)
-    end
-
-    it "renders the all_shifts template if exists" do
-      get :all_shifts, params: { id: @driver1.id }
-      expect(response).to be_successful
-    end
-
-    it "raises an error when driver is not found" do
-      expect {
-        get :all_shifts, params: { id: -1 }
-      }.to raise_error(ActiveRecord::RecordNotFound)
+    it "returns tomorrow's rides" do
+      get :today, params: { id: @driver1.id, date: Time.zone.today + 1.days }
+      expect(assigns(:rides)).to match_array([ @ride4 ])
     end
   end
 

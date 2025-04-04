@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DriversController < ApplicationController
-  before_action :set_driver, only: %i[ show edit update destroy ]
+  before_action :set_driver, only: %i[ show edit update destroy today ]
 
   # GET /drivers or /drivers.json
   def index
@@ -15,6 +15,17 @@ class DriversController < ApplicationController
   def all_shifts
     @driver = Driver.find(params[:id])
     @shifts = @driver.shifts
+  end
+
+  def today
+    @current_date = begin
+                      Date.parse(params[:date])
+                    rescue ArgumentError, TypeError
+                      Time.zone.today
+                    end
+
+    @rides = @driver.rides.where(date: @current_date)
+    @shift = @driver.shifts.where(shift_date: @current_date).first
   end
 
   # GET /drivers/1 or /drivers/1.json
