@@ -2,7 +2,7 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 
-// Generate checkboxes for showing/hiding DataTable columns
+// Generates checkboxes for showing/hiding DataTable columns
 const initiateCheckboxes = (table) => {
   const columnToggleContainer = document.getElementById('column-toggle-container');
   columnToggleContainer.innerHTML = '';
@@ -26,11 +26,28 @@ const initiateCheckboxes = (table) => {
   });
 };
 
-document.addEventListener('turbo:load', () => {
+// Generates search bars for searching of each column of datatables
+const initiateSearchbars = (table) => {
+  table.columns('.text-filter').every(function () {
+    const column = this;
+  
+    // Create search input element and append it to the table
+    $('<input type="text"/>')
+      .attr('placeholder', `Filter ${column.header().textContent.trim()}...`)
+      .appendTo(column.footer())
+      .on('keyup change clear', function () {
+        if (column.search() !== this.value) {
+          column.search(this.value).draw();
+        }
+      });
+  });
+}
 
+// Creates the Datatables
+const initiateDatatables = () => {
   const tables = [
-    { selector: '#passengers-table', order: [[2, 'asc']], searchPlaceholder: "Search passengers..." },
-    { selector: '#rides-table', order: [[2, 'desc']], searchPlaceholder: "Search rides..." }
+    { selector: '#passengers-table', order: [[2, 'asc']]},
+    { selector: '#rides-table', order: [[2, 'desc']]}
   ];
 
   tables.forEach(table => {
@@ -39,16 +56,12 @@ document.addEventListener('turbo:load', () => {
       if ($.fn.DataTable.isDataTable(table.selector)) {
         $(table.selector).DataTable().destroy();
       }
-
       const newTable = $(table.selector).DataTable({
         paging: true,
         searching: true,
         ordering: true,
         pageLength: 10,
         order: table.order,
-        language: {
-          searchPlaceholder: table.searchPlaceholder
-        },
         scrollX: true,
 
         buttons: [
@@ -63,13 +76,18 @@ document.addEventListener('turbo:load', () => {
             }
           },
         ],
-        dom: "<'row'<'col-md-6'l><'col-md-6'Bf>>" +
+        dom: "<'row'<'col-md-6'l><'col-md-6'B>>" +
           "<'row'<'col-md-12'tr>>" +
           "<'row'<'col-md-6'i><'col-md-6'p>>",
       });
       initiateCheckboxes(newTable);
+      initiateSearchbars(newTable);
     }
   });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initiateDatatables();
 
   // Flash message auto-hide after 5 seconds
   const flashMessage = document.querySelector(".alert");
