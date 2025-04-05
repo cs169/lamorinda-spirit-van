@@ -4,6 +4,9 @@ Feature: Driver Ride and Shift Navigation
   I want to view my rides and shifts
   So that I can review my schedule efficiently
 
+  Background:
+    Given a driver is logged in
+
   Scenario: Navigating from Home to Today's Rides
     Given I am on the "Home" page
     When I click on "Today's Rides" button

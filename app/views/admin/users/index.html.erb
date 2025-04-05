@@ -1,0 +1,18 @@
+<h1>All Users</h1>
+<table>
+  <tr>
+    <th>Email</th>
+    <th>Role</th>
+    <th>Actions</th>
+  </tr>
+  <% @users.each do |user| %>
+    <tr>
+      <td><%= user.email %></td>
+      <td><%= user.role.present? ? user.role : "Unassigned" %></td>
+      <td>
+        <%= button_to "Edit", edit_admin_user_path(user), method: :get %>
+        <%= button_to "Delete", admin_user_path(user), method: :delete, form: { data: { turbo: 'false'} } %>
+      </td>
+    </tr>
+  <% end %>
+</table>

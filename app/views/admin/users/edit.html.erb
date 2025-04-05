@@ -1,0 +1,10 @@
+<h1>Assign Role to <%= @user.email %></h1>
+<%= form_with(model: [:admin, @user], local: true) do |f| %>
+  <div>
+    <%= f.label :role %>
+    <%= f.select :role, User::ROLES, include_blank: "Unassigned" %>
+  </div>
+  <div>
+    <%= f.submit "Update User" %>
+  </div>
+<% end %>

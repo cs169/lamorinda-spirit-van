@@ -58,6 +58,11 @@ class ShiftsController < ApplicationController
 
   # PATCH/PUT /shifts/1 or /shifts/1.json
   def update
+    if params[:commit_type] == "feedback"
+      @shift.update(shift_params)
+      redirect_to today_driver_path(id: @shift.driver_id)
+      return
+    end
     respond_to do |format|
       if @shift.update(shift_params)
         format.html { redirect_to @shift, notice: "Shift was successfully updated." }

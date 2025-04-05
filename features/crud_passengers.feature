@@ -5,6 +5,8 @@ Feature: Manage Passengers
     I want to be able to create, delete, update passenger records
 
     Background:
+        Given a dispatcher is logged in
+
         Given the following passenger records exist:
             | Name        | Street           | City        | State | Zip   | Birthday   | Race | Hispanic? | Date Registered |
             | Jane Doe    | 123 Main St      | Lafayette   | CA    | 94549 | 1940-01-01 | 5    | true      | 2022-06-01      |
@@ -14,7 +16,7 @@ Feature: Manage Passengers
     @create 
     Scenario: Create a new passenger
         Given I am on the new passenger page
-        When I fill in all neccesary information
+        When I fill in all necessary information
         And I press "Create Passenger"
         Then I should see "Passenger created."
     

@@ -26,7 +26,7 @@ Given("I am on the master passenger list") do
   visit passengers_path
 end
 
-When("I fill in all neccesary information") do
+When("I fill in all necessary information") do
   fill_in "Name", with: "New Passenger"
   fill_in "Street", with: "123 New St"
   fill_in "City", with: "Lafayette"
@@ -38,13 +38,6 @@ When("I fill in all neccesary information") do
   fill_in "Date Registered", with: "2024-01-01"
 end
 
-When("I fill in {string} with {string}") do |field, value|
-  fill_in field, with: value
-end
-
-When("I press {string}") do |button|
-  click_button button
-end
 
 When("I follow {string} for {string}") do |link_text, name|
   # Find the row containing the passenger’s name, then click the link
@@ -53,9 +46,6 @@ When("I follow {string} for {string}") do |link_text, name|
   end
 end
 
-Then("I should see {string}") do |text|
-  expect(page).to have_content text
-end
 
 Then("I should not see {string}") do |text|
   expect(page).not_to have_content text

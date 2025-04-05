@@ -5,6 +5,8 @@ Feature: Dispatcher Shift Navigation
   So that I can easily review driver schedules and shift details
 
   Background:
+    Given a dispatcher is logged in
+    
     Given the following driver exists:
       | name       |
       | John Smith |

@@ -28,6 +28,12 @@ class Ride < ApplicationRecord
     rides
   end
 
+  def self.today_driver_view(driver_id, date = nil)
+    date = date.presence || Time.zone.today
+    rides = rides_by_date(rides_by_driver(Ride.all, driver_id), date)
+    rides
+  end
+
   # # Filtering logic for rides table
   # def self.filter_rides(filter_params)
   #   rides = Ride.all

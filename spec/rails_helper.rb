@@ -1,10 +1,22 @@
 # frozen_string_literal: true
 
 require_relative "support/factory_bot.rb"
+
 require "simplecov"
 require "simplecov_json_formatter"
-SimpleCov.formatter = SimpleCov::Formatter::JSONFormatter
-SimpleCov.start
+
+# Configure SimpleCov to generate both HTML and JSON reports.
+# HTML is useful for local inspection; JSON is used by Codecov or other CI tools.
+SimpleCov.formatters = SimpleCov::Formatter::MultiFormatter.new([
+  SimpleCov::Formatter::HTMLFormatter,      # Generates coverage/index.html
+  SimpleCov::Formatter::JSONFormatter       # Generates coverage/coverage.json for CI
+])
+
+SimpleCov.start "rails" do
+  # enable_coverage :branch         # Optional: also track branch coverage
+  add_filter "/spec/"            # Exclude spec files from coverage calculation
+end
+
 
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
@@ -76,4 +88,10 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+
+
+  # Devise test helpers
+  # This allows us to use `sign_in` in controller tests
+  # to simulate logged-in users during testing.
+  config.include Devise::Test::ControllerHelpers, type: :controller
 end

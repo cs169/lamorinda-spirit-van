@@ -4,17 +4,20 @@ require "rails_helper"
 
 RSpec.describe RidesController, type: :controller do
   before(:each) do
-     @driver1 = FactoryBot.create(:driver)
-     @driver2 = FactoryBot.create(:driver)
+    @user = FactoryBot.create(:user, :dispatcher)
+    sign_in @user
 
-     @address1 = FactoryBot.create(:address)
+    @driver1 = FactoryBot.create(:driver)
+    @driver2 = FactoryBot.create(:driver)
 
-     @passenger1 = FactoryBot.create(:passenger)
-     @ride1 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1)
-     @ride2 = FactoryBot.create(:ride, driver: @driver2, passenger: @passenger1)
-     @ride3 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1)
-     @ride4 = FactoryBot.create(:ride, date: Date.today - 5.days)
-   end
+    @address1 = FactoryBot.create(:address)
+
+    @passenger1 = FactoryBot.create(:passenger)
+    @ride1 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1)
+    @ride2 = FactoryBot.create(:ride, driver: @driver2, passenger: @passenger1)
+    @ride3 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1)
+    @ride4 = FactoryBot.create(:ride, date: Date.today - 5.days)
+  end
 
   describe "GET #today" do
     # Tests when no today parameters are provided, all rides should be returned
@@ -64,6 +67,64 @@ RSpec.describe RidesController, type: :controller do
       it "renders new when ride creation fails" do
         post :create, params: { ride: { driver_id: nil } }
         expect(response).to render_template(:new)
+      end
+
+      it "reuses an existing address when creating a ride" do
+        existing_address = FactoryBot.create(:address, street: "100 Main St", city: "Lafayette", state: "CA", zip: "94549")
+
+        expect {
+          post :create, params: {
+            ride: {
+              date: Date.today,
+              driver_id: @driver1.id,
+              passenger_id: @passenger1.id,
+              start_address_attributes: {
+                street: " 100 main st ",
+                city: "lafayette",
+                state: "ca",
+                zip: "94549"
+              },
+              dest_address_attributes: {
+                street: "200 Broadway",
+                city: "Lafayette",
+                state: "CA",
+                zip: "94549"
+              }
+            }
+          }
+        }.to change(Ride, :count).by(1)
+
+        created_ride = Ride.last
+        expect(created_ride.start_address).to eq(existing_address)
+        expect(created_ride.dest_address.street).to eq("200 Broadway")
+      end
+
+      it "creates a new address if none exists when creating a ride" do
+        expect {
+          post :create, params: {
+            ride: {
+              date: Date.today,
+              driver_id: @driver1.id,
+              passenger_id: @passenger1.id,
+              start_address_attributes: {
+                street: "789 unlisted st",
+                city: "Moraga",
+                state: "ca",
+                zip: "94556"
+              },
+              dest_address_attributes: {
+                street: "456 another st",
+                city: "Orinda",
+                state: "ca",
+                zip: "94563"
+              }
+            }
+          }
+        }.to change(Address, :count).by(2)
+
+        ride = Ride.last
+        expect(ride.start_address.city).to eq("Moraga")
+        expect(ride.dest_address.state).to eq("CA")
       end
     end
   end

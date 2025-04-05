@@ -4,6 +4,9 @@ Feature: Dispatcher Shift Creation
   I want to manually create shifts for drivers
   So that I can manage shift assignments efficiently
 
+  Background:
+    Given a dispatcher is logged in
+
   Scenario: Dispatcher creates a new shift from calendar
     Given I am on the "Shifts Calendar" page
     Then I should see each day has a button for create a new shift

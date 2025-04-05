@@ -4,6 +4,9 @@ require "rails_helper"
 
 RSpec.describe ShiftsController, type: :controller do
   before(:each) do
+    @user = FactoryBot.create(:user, :dispatcher)
+    sign_in @user
+
     @driver = FactoryBot.create(:driver)
     @shift = FactoryBot.create(:shift, driver: @driver)
 
@@ -108,6 +111,15 @@ RSpec.describe ShiftsController, type: :controller do
         expect(@shift.shift_date).not_to be_nil
         expect(response).to render_template(:edit)
       end
+    end
+  end
+
+  describe "PATCH #update with commit_type feedback" do
+    it "updates shift and redirects to driver's today page" do
+      patch :update, params: { id: @shift.id, shift: { shift_type: "feedback_type" }, commit_type: "feedback" }
+      @shift.reload
+      expect(@shift.shift_type).to eq("feedback_type")
+      expect(response).to redirect_to(today_driver_path(id: @shift.driver_id))
     end
   end
 
