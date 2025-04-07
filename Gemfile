@@ -70,6 +70,9 @@ group :development, :test do
 
   # factory bot
   gem "factory_bot_rails"
+
+  # gem 'webdrivers', 
+  # gem 'selenium-webdriver'
 end
 
 group :development do
@@ -90,7 +93,7 @@ group :test do
   gem "simplecov_json_formatter", require: false
   gem "cucumber-rails", require: false
   gem "cucumber-rails-training-wheels" # basic imperative step defs like "Then I should see..."
-  gem 'webdrivers'
+  gem 'webdrivers', '>= 5.3.0'
   gem 'selenium-webdriver'
   gem "database_cleaner" # required by Cucumber
   gem "rails-controller-testing"

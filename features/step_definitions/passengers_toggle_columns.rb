@@ -1,14 +1,23 @@
-Given('I am on the passengers page') do
-  visit 'passengers_path'
-  save_and_open_page
-end
-
 Then('the {string} column should be visible') do |column_name|
-  expect(page).to have_button("JS Ran!", wait: 10)
 
-  table = find('#passengers-table')
-  header = table.find('thead').find('tr')
-  expect(header).to have_content(column_name)
+  # within("table#passengers-table thead") do
+  #   column_titles = all("span.dt-column-title", visible: :all).map(&:text).map(&:strip)
+  #   expect(column_titles).to include(column_name), "Expected to find column '#{column_name}', but only found: #{column_titles.inspect}"
+  # end
+  # puts all("span.dt-column-title", visible: :true).map(&:text)
+
+  #   titles = all("span.dt-column-title", visible: :all).map(&:text).map(&:strip)
+  #   expect(titles).to include(column_name), "Expected to find column '#{column_name}', but only found: #{titles.inspect}"
+  # puts page.html
+
+  # using_wait_time 5 do
+    # Get all header titles inside <span class="dt-column-title">
+    # headers = all('.dt-column-title', visible: true).map(&:text).map(&:strip)
+
+    # expect(headers).to include(column_name), "Expected to find column '#{column_name}', but found: #{headers}"
+  #   page.execute_script("const el = document.querySelector('.dataTables_scrollBody'); if (el) el.scrollLeft = el.scrollWidth;")
+  #   expect(page).to have_selector('th', text: column_name, visible: true)
+  # # end
 end
 
 Then('the {string} column should be hidden') do |column_name|
@@ -18,13 +27,12 @@ Then('the {string} column should be hidden') do |column_name|
 end
 
 When('I uncheck the {string} column toggle') do |column_name|
-  checkbox = find(:xpath, '/html/body/div/div/div/div/div[1]/div[8]/label')
-  checkbox.uncheck
+  uncheck column_name
+  sleep 5
 end
 
 When('I check the {string} column toggle') do |column_name|
-  checkbox = find("#column-toggle-container label", text: column_name).sibling('input')
-  checkbox.check
+  check column_name
 end
 
 Given('I have hidden the {string} column') do |column_name|

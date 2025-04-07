@@ -21,10 +21,10 @@ require "capybara/cucumber"
 require 'selenium-webdriver'
 require 'webdrivers'
 
-Webdrivers::Chromedriver.required_version = '114.0.5735.90'
+# Webdrivers::Chromedriver.required_version = '114.0.5735.90'
 # Webdrivers::Chromedriver.required_version = '134.0.6998.165'
 
-Capybara.register_driver :selenium_chromium do |app|
+Capybara.register_driver :selenium_chromium_headful do |app|
   options = Selenium::WebDriver::Chrome::Options.new
 
   # Specify the path to the Chromium binary. Adjust if needed.
