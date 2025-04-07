@@ -4,16 +4,23 @@ require "rails_helper"
 
 RSpec.describe ShiftsController, type: :controller do
   before(:each) do
+    @user = FactoryBot.create(:user, :dispatcher)
+    sign_in @user
+
     @driver = FactoryBot.create(:driver)
     @shift = FactoryBot.create(:shift, driver: @driver)
-
-    Time.zone.today
   end
-
 
   describe "GET #index" do
     it "returns a successful response" do
       get :index
+      expect(response).to be_successful
+    end
+  end
+
+  describe "GET #read_only" do
+    it "returns a successful response" do
+      get :read_only
       expect(response).to be_successful
     end
   end
@@ -84,6 +91,13 @@ RSpec.describe ShiftsController, type: :controller do
     end
   end
 
+  describe "GET #feedback" do
+    it "returns a successful response" do
+      get :feedback, params: { id: @shift.id }
+      expect(response).to be_successful
+    end
+  end
+
   describe "PATCH #update" do
     context "with valid parameters" do
       it "updates the shift and redirects to the shift page" do
@@ -101,6 +115,15 @@ RSpec.describe ShiftsController, type: :controller do
         expect(@shift.shift_date).not_to be_nil
         expect(response).to render_template(:edit)
       end
+    end
+  end
+
+  describe "PATCH #update with commit_type feedback" do
+    it "updates shift and redirects to driver's today page" do
+      patch :update, params: { id: @shift.id, shift: { shift_type: "feedback_type" }, commit_type: "feedback" }
+      @shift.reload
+      expect(@shift.shift_type).to eq("feedback_type")
+      expect(response).to redirect_to(today_driver_path(id: @shift.driver_id))
     end
   end
 

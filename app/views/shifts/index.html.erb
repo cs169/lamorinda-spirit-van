@@ -16,10 +16,10 @@
     <% shifts.each do |shift| %>
       <div>
         <strong>
-          <%= link_to shift.driver.name, shift, style: "color: blue; text-decoration: underline;" %>
+          <%= link_to shift.driver.name, all_shifts_driver_path(shift.driver), class: "driver-link" %>
         </strong>
          - 
-        <%= shift.shift_type %>
+        <%= link_to shift.shift_type, shift, style: "color: blue; text-decoration: underline;", class: "shift-type-link" %>
       </div>
     <% end %>
   <% end %>

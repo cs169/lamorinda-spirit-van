@@ -1,0 +1,41 @@
+<% content_for :title, "Shift Feedback" %>
+
+<h1>Feedback for <%= @shift.shift_type %> shift on <%= @shift.shift_date %></h1>
+
+<%= form_with(model: @shift) do |form| %>
+  <% if @shift.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(@shift.errors.count, "error") %> prohibited this shift from being saved:</h2>
+
+      <ul>
+        <% @shift.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :van, "Van: ", style: "display: block" %>
+    <%= form.number_field :van, required: false, value: @shift.van %>
+    <%= form.label :pick_up_time, "Van pick up time from base: ", style: "display: block" %>
+    <%= form.text_field :pick_up_time, required: false, value: @shift.pick_up_time %>
+    <%= form.label :drop_off_time, "Van drop off time from base: ", style: "display: block" %>
+    <%= form.text_field :drop_off_time, required: false, value: @shift.drop_off_time %>
+    <%= form.label :odometer_pre, "Odometer reading pre-trip: ", style: "display: block" %>
+    <%= form.text_field :odometer_pre, required: false, value: @shift.odometer_pre %>
+    <%= form.label :odometer_post, "Odometer reading post-trip: ", style: "display: block" %>
+    <%= form.text_field :odometer_post, required: false, value: @shift.odometer_post %>
+  </div>
+
+  <div>
+    <%= form.button "Save Feedback", type: :submit, name: "commit_type", value: "feedback" %>
+  </div>
+<% end %>
+
+<br>
+
+<div>
+  <%= link_to "Show this shift", @shift %> |
+  <%= link_to "Back to today", today_driver_path(id: @shift.driver_id) %>
+</div>

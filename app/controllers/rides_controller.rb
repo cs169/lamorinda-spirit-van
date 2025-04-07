@@ -47,19 +47,9 @@ class RidesController < ApplicationController
   def destroy
     @ride.destroy!
     redirect_to rides_url, notice: "Ride was successfully removed."
-    rescue ActiveRecord::RecordNotDestroyed
-      flash[:alert] = "Failed to remove the ride."
-      redirect_to rides_url, status: :unprocessable_entity
-  end
-
-  def today
-    @current_date = begin
-                      Date.parse(params[:date])
-                    rescue ArgumentError, TypeError
-                      Time.zone.today
-                    end
-
-    @rides = Ride.driver_today_view(@current_date)
+  rescue ActiveRecord::RecordNotDestroyed
+    flash[:alert] = "Failed to remove the ride."
+    redirect_to rides_url, status: :unprocessable_entity
   end
 
   def filter

@@ -28,6 +28,9 @@ gem "jbuilder"
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
 
+gem "devise"
+gem "letter_opener", group: :development
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
@@ -67,6 +70,9 @@ group :development, :test do
 
   # make sure references to sqlite3 gem ONLY appear in dev/test groups
   gem "sqlite3"
+
+  # selenium webdriver - for headful cucumber tests
+  gem "selenium-webdriver"
 
   # factory bot
   gem "factory_bot_rails"

@@ -14,19 +14,18 @@
             <tr class="border-0">
               <th class="border-0"></th> <!-- Info Button -->
               <th class="border-0"></th> <!-- Delete Button -->
-
-              <th class="border-0">Date</th>
-              <th class="border-0">Driver</th>
-              <th class="border-0">Van</th>
-              <th class="border-0">Passenger Name</th>
-              <th class="border-0">Origin</th>
-              <th class="border-0">Destination</th>
-              <th class="border-0">Notes</th>
-              <th class="border-0">Hours</th>
-              <th class="border-0">Amount Paid</th>
-              <th class="border-0">Date Reserved Notes</th>
-              <th class="border-0">Confirmed with Passenger</th>
-              <th class="border-0">Emailed Driver?</th>
+              <th class="border-0 text-filter">Date</th>
+              <th class="border-0 text-filter">Driver</th>
+              <th class="border-0 text-filter">Van</th>
+              <th class="border-0 text-filter">Passenger Name</th>
+              <th class="border-0 text-filter">Origin</th>
+              <th class="border-0 text-filter">Destination</th>
+              <th class="border-0 text-filter">Notes</th>
+              <th class="border-0 text-filter">Hours</th>
+              <th class="border-0 text-filter">Amount Paid</th>
+              <th class="border-0 text-filter">Date Reserved Notes</th>
+              <th class="border-0 text-filter">Confirmed with Passenger</th>
+              <th class="border-0 text-filter">Emailed Driver?</th>
             </tr>
           </thead>
 
@@ -66,6 +65,40 @@
               </tr>
             <% end %>
           </tbody>
+          <tfoot>
+            <tr class="border-0">
+              <th class="border-0"></th>
+              <th class="border-0"></th>
+              <th class="border-0"></th>
+              <th class="border-0"></th>
+              <th class="border-0"></th>
+              <th class="border-0"></th>
+              <th class="border-0"></th>
+              <th class="border-0"></th>
+              <th class="border-0"></th>
+              <th class="border-0"></th>
+              <th class="border-0"></th>
+              <th class="border-0"></th>
+              <th class="border-0"></th>
+              <th class="border-0"></th>
+            </tr>
+            <tr class="column-summary">
+              <th class='ignore'></th>
+              <th class='ignore'></th>
+              <th class="stat-count"></th>
+              <th class="stat-count"></th>
+              <th class="stat-count"></th>
+              <th class="stat-count"></th>
+              <th class="stat-percentage"></th>
+              <th class="stat-percentage"></th>
+              <th class="stat-count"></th>
+              <th class="stat-total"></th>
+              <th class="stat-total-money"></th>
+              <th class="stat-count"></th>
+              <th class="stat-count"></th>
+              <th class="stat-count"></th>
+            </tr>
+          </tfoot>
         </table>
       </div>
   </div>

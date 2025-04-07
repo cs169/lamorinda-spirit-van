@@ -31,4 +31,32 @@ RSpec.describe Shift, type: :model do
       expect(shift.errors[:driver]).to include("must exist")
     end
   end
+
+  describe ".shifts_by_date" do
+    it "filters shifts by date" do
+      shift1 = FactoryBot.create(:shift, shift_date: Date.today)
+      FactoryBot.create(:shift, shift_date: Date.yesterday)
+
+      expect(Shift.shifts_by_date(Shift.all, Date.today)).to contain_exactly(shift1)
+    end
+  end
+
+  describe ".shifts_by_driver" do
+    it "filters shifts by driver id" do
+      driver1 = FactoryBot.create(:driver)
+      driver2 = FactoryBot.create(:driver)
+      shift1 = FactoryBot.create(:shift, driver: driver1)
+      FactoryBot.create(:shift, driver: driver2)
+
+      expect(Shift.shifts_by_driver(Shift.all, driver1.id)).to contain_exactly(shift1)
+    end
+  end
+
+  describe ".today_driver_shifts" do
+    it "returns today's shift for a driver" do
+      driver = FactoryBot.create(:driver)
+      shift = FactoryBot.create(:shift, driver: driver, shift_date: Time.zone.today)
+      expect(Shift.today_driver_shifts(driver.id)).to eq(shift)
+    end
+  end
 end

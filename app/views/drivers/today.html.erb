@@ -1,10 +1,11 @@
 <div class="today-page">
   <h1>Rides for <%= @current_date.strftime("%m/%d/%Y %A") %></h1>
+  <h2>Driver: <%= @driver.name %></h2>
   <form class="today-form">
     <div class="button-group">
-      <%= link_to 'Last Day', today_rides_path(date: @current_date - 1.day), class: 'btn btn-secondary' %>
-      <%= link_to 'Back to Today', today_rides_path(date: Time.zone.today), class: 'btn btn-primary' %>
-      <%= link_to 'Next day', today_rides_path(date: @current_date + 1.day), class: 'btn btn-secondary' %>
+      <%= link_to "Last Day", today_driver_path(date: @current_date - 1.day), class: "btn btn-secondary" %>
+      <%= link_to "Back to Today", today_driver_path(date: Time.zone.today), class: "btn btn-primary" %>
+      <%= link_to "Next day", today_driver_path(date: @current_date + 1.day), class: "btn btn-secondary" %>
       <button onclick="window.print()" class="btn btn-primary" id="btn-print">Print</button>
     </div>
   </form>
@@ -17,24 +18,20 @@
         <thead>
           <tr>
             <th>Van</th>
-            <th>Passenger</th>
-            <th>Address</th>
-            <th>Destination</th>
             <th>Notes</th>
             <th>Hours</th>
             <th>Fee</th>
+            <th>Info</th>
           </tr>
         </thead>
         <tbody>
           <% @rides.each do |ride| %>
             <tr>
               <td><%= ride.van %></td>
-              <td><%= ride.passenger_name_and_phone %></td>
-              <td><%= ride.passenger_address %></td>
-              <td><%= ride.destination %></td>
-              <td><%= ride.notes_to_driver %></td>
+              <td><%= ride.notes %></td>
               <td><%= ride.hours %></td>
               <td><%= number_to_currency(ride.amount_paid) %></td>
+              <td><%= link_to "Info", ride_path(ride.id), class: "btn btn-primary" %></td>
             </tr>
           <% end %>
         </tbody>
@@ -45,12 +42,10 @@
         <% @rides.each do |ride| %>
           <div class="ride-block">
             <p><strong>Van:</strong> <%= ride.van %></p>
-            <p><strong>Passenger:</strong> <%= ride.passenger_name_and_phone %></p>
-            <p><strong>Address:</strong> <%= ride.passenger_address %></p>
-            <p><strong>Destination:</strong> <%= ride.destination %></p>
-            <p><strong>Notes:</strong> <%= ride.notes_to_driver %></p>
+            <p><strong>Notes:</strong> <%= ride.notes %></p>
             <p><strong>Hours:</strong> <%= ride.hours %></p>
             <p><strong>Fee:</strong> <%= number_to_currency(ride.amount_paid) %></p>
+            <%= link_to "Info", ride_path(ride.id), class: "btn btn-primary" %>
           </div>
         <% end %>
       </div>
@@ -58,4 +53,13 @@
   <% else %>
     <p class="no-rides">No rides available</p>
   <% end %>
+
+  
+  <div id="btn-shift">
+    <% if @shift %>
+      <%= link_to "Shift Feedback", feedback_shift_path(@shift.id), class: "btn btn-primary" %>
+    <% end %> 
+    <%= link_to "View All Shifts", read_only_shifts_path, class: "btn btn-primary" %>
+  </div>
+
 </div>

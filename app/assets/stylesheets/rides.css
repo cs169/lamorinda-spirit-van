@@ -58,7 +58,12 @@ h1 {
     margin-left: auto;
 }
 
-/* Table for PC */
+.shift-button {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* PC */
 .today-page .rides-table {
     width: 100%;
     border-collapse: collapse;
@@ -67,7 +72,6 @@ h1 {
     overflow-x: auto;
 }
 
-/* Sticky header */
 .today-page .rides-table thead {
     position: sticky;
     top: 0;
@@ -87,18 +91,17 @@ h1 {
     font-weight: bold;
 }
 
-/* Block-style rides for mobile */
+/* mobile */
 .today-page .rides-list {
     display: none;
 }
 
-/* No rides styling */
 .today-page .no-rides {
     color: red;
     font-weight: bold;
 }
 
-/* Mobile-friendly layout */
+/* mobile */
 @media (pointer:none), (pointer:coarse) {
     .today-page .rides-table {
         display: none;
@@ -121,7 +124,7 @@ h1 {
     }
 }
 
-/* Print styling */
+/* print */
 @media print {
     .today-page .btn,
     .today-page .button-group {
@@ -150,7 +153,6 @@ h1 {
         font-weight: bold;
     }
 
-    /* Ensure table fits A4 */
     @page {
         size: A4 landscape;
         margin: 10mm;

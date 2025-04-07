@@ -13,21 +13,6 @@ class Ride < ApplicationRecord
     self.emailed_driver == "true"
   end
 
-  def self.rides_by_date(rides, date)
-    rides.where(date: date)
-  end
-
-  def self.rides_by_driver(rides, driver_id)
-    rides = rides.where(driver_id: driver_id) if driver_id.present?
-    rides
-  end
-
-  def self.driver_today_view(date = nil)
-    date = date.presence || Time.zone.today
-    rides = rides_by_date(Ride.all, date)
-    rides
-  end
-
   # # Filtering logic for rides table
   # def self.filter_rides(filter_params)
   #   rides = Ride.all
@@ -70,6 +55,7 @@ class Ride < ApplicationRecord
 
   #   rides
   # end
+
   def start_address_attributes=(attrs)
     normalized = normalize_address(attrs)
     existing_address = Address.find_by(normalized)

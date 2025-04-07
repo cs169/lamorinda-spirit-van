@@ -13,6 +13,8 @@
 
   <div>
     <%= form.label :shift_date, style: "display: block" %>
+    <%# Rails will automatically generate shift_date filed id as "shift_shift_date" %>
+    <%# Unless we rename the model field later %>
     <%= form.date_field :shift_date, required: true, :value => params[:date] || shift.shift_date %>
   </div>
 
@@ -24,6 +26,6 @@
   </div>
 
   <div>
-    <%= form.submit %>
+    <%= form.button "Save Shift", type: :submit, name: "commit_type", value: "save" %>
   </div>
 <% end %>
