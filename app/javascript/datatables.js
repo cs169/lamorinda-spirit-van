@@ -1,27 +1,32 @@
 // Generates checkboxes for showing/hiding DataTable columns
 const initiateCheckboxes = (table) => {
-    const columnToggleContainer = document.getElementById('column-toggle-container');
-    columnToggleContainer.innerHTML = '';
+  const columnToggleContainer = document.getElementById('column-toggle-container');
+  columnToggleContainer.innerHTML = '';
 
-    table.columns().every((index) => {
-        // If not index of info and delete buttons, add HTML checkboxes to DOM
-        if (index >= 2) {
-            columnToggleContainer.innerHTML += `
-            <div class="form-check form-check-inline">
-                <input type="checkbox" class="form-check-input" id="col-${index}" ${table.column(index).visible() ? 'checked' : ''}>
-                <label class="form-check-label" for="col-${index}">${table.column(index).header().textContent}</label>
-            </div>`;
-        }
-    });
-  
-    // on change event for checkboxes
-    document.addEventListener('change', (event) => {
-      if (event.target.matches('.form-check-input')) {
-        const index = event.target.id.replace('col-', '');
-        table.column(index).visible(event.target.checked);
-      }
-    });
-  };
+  table.columns().every((index) => {
+    if (index >= 2) {
+      columnToggleContainer.innerHTML += `
+        <div class="form-check form-switch form-check-inline">
+          <input 
+            type="checkbox" 
+            class="form-check-input" 
+            id="col-${index}" 
+            ${table.column(index).visible() ? 'checked' : ''}>
+          <label class="form-check-label ms-1" for="col-${index}">
+            ${table.column(index).header().textContent}
+          </label>
+        </div>`;
+    }
+  });
+
+  // Listen for checkbox toggle changes
+  document.addEventListener('change', (event) => {
+    if (event.target.matches('.form-check-input')) {
+      const index = event.target.id.replace('col-', '');
+      table.column(index).visible(event.target.checked);
+    }
+  });
+};
   
   // Generates search bars for searching of each column of datatables
   const initiateSearchbars = (table) => {
