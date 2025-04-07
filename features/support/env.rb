@@ -15,8 +15,6 @@ SimpleCov.start
 require "cucumber/rails"
 require "capybara/cucumber"
 
-<<<<<<< HEAD
-
 # Selenium for Capybara (currently cannot get it to work, so commented it out)
 # start of Selenium
 require 'selenium-webdriver'
@@ -47,13 +45,6 @@ Capybara.javascript_driver = :selenium_chrome
 
 # end of Selenium 
 
-
-=======
-Capybara.register_driver :selenium_chrome_headful do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome)
-end
-
->>>>>>> 81-tables-display-relevant-info
 # By default, any exception happening in your Rails application will bubble up
 # to Cucumber so that your scenario will fail. This is a different from how
 # your application behaves in the production environment, where an error page will
