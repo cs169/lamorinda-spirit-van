@@ -38,3 +38,5 @@ Feature: Show and Hide Columns in Passengers Table
     And I uncheck the "Address" column toggle
     Then the "Phone" column should be hidden
     And the "Address" column should be hidden
+
+  

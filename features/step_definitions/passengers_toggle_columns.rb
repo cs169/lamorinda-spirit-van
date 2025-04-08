@@ -1,13 +1,13 @@
 Then('the {string} column should be visible') do |column_name|
 
-  # within("table#passengers-table thead") do
-  #   column_titles = all("span.dt-column-title", visible: :all).map(&:text).map(&:strip)
-  #   expect(column_titles).to include(column_name), "Expected to find column '#{column_name}', but only found: #{column_titles.inspect}"
-  # end
+
+
+
+  
   # puts all("span.dt-column-title", visible: :true).map(&:text)
 
-  #   titles = all("span.dt-column-title", visible: :all).map(&:text).map(&:strip)
-  #   expect(titles).to include(column_name), "Expected to find column '#{column_name}', but only found: #{titles.inspect}"
+    titles = all("span.dt-column-title", visible: :all).map(&:text).map(&:strip)
+    expect(titles).to include(column_name), "Expected to find column '#{column_name}', but only found: #{titles.inspect}"
   # puts page.html
 
   # using_wait_time 5 do
@@ -39,3 +39,4 @@ Given('I have hidden the {string} column') do |column_name|
   step "I uncheck the \"#{column_name}\" column toggle"
   step "the \"#{column_name}\" column should be hidden"
 end
+

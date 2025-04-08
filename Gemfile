@@ -72,7 +72,7 @@ group :development, :test do
   gem "sqlite3"
 
   # selenium webdriver - for headful cucumber tests
-  gem "selenium-webdriver"
+  # gem "selenium-webdriver"
 
   # factory bot
   gem "factory_bot_rails"
