@@ -5,8 +5,8 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
-  # :omniauthable, omniauth_providers: [:google_oauth2]
+         :recoverable, :rememberable, :validatable,
+         :omniauthable, omniauth_providers: [:entra_id]
 
   # if you want to add new role, update the ROLES array below
   # and add definition methods for the new role
