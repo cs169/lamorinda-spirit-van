@@ -9,12 +9,42 @@ Feature: User authentication and role enforcement
       | driver1@example.com | password | driver |
 
   Scenario: A user can sign up with valid credentials
-    Given I am on the "Sign up" page
+    Given there are no user exists with email "newuser@example.com"
+    And I am on the "Sign up" page
     And I fill in "Email" with "newuser@example.com"
     And I fill in "Password" with "password"
     And I fill in "Password confirmation" with "password"
     And I press "Sign up"
     Then I should be on the "Log in" page
+
+  Scenario: A user cannot sign up with unvalid email
+    Given there are no user exists with email "newuser@example.com"
+    And I am on the "Sign up" page
+    And I fill in "Email" with "newuser"
+    And I fill in "Password" with "password"
+    And I fill in "Password confirmation" with "password"
+    And I press "Sign up"
+    Then I should be on the "Sign up" page
+    And I should see "Please include an '@' in the email address."
+
+  Scenario: A user cannot sign up with unvalid password
+    Given there are no user exists with email "newuser@example.com"
+    And I am on the "Sign up" page
+    And I fill in "Email" with "newuser"
+    And I fill in "Password" with "pass"
+    And I fill in "Password confirmation" with "pass"
+    And I press "Sign up"
+    Then I should be on the "Sign up" page
+    And I should see "Password is too short (minimum is 6 characters)"
+
+  Scenario: An existing user cannot sign up
+    Given I am on the "Sign up" page
+    And I fill in "Email" with "admin1@example.com"
+    And I fill in "Password" with "password"
+    And I fill in "Password confirmation" with "password"
+    And I press "Sign up"
+    Then I should be on the "Sign up" page
+    And I should see "Email has already been taken"
 
   Scenario Outline: A user with role <role> can sign in successfully
     Given I am on the "Log in" page

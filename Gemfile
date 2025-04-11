@@ -71,14 +71,8 @@ group :development, :test do
   # make sure references to sqlite3 gem ONLY appear in dev/test groups
   gem "sqlite3"
 
-  # selenium webdriver - for headful cucumber tests
-  # gem "selenium-webdriver"
-
   # factory bot
   gem "factory_bot_rails"
-
-  # gem 'webdrivers', 
-  # gem 'selenium-webdriver'
 end
 
 group :development do
@@ -100,7 +94,7 @@ group :test do
   gem "cucumber-rails", require: false
   gem "cucumber-rails-training-wheels" # basic imperative step defs like "Then I should see..."
   gem 'webdrivers', '>= 5.3.0'
-  gem 'selenium-webdriver'
+  gem 'selenium-webdriver' # selenium webdriver - for headful cucumber tests
   gem "database_cleaner" # required by Cucumber
   gem "rails-controller-testing"
 end

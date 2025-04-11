@@ -1,24 +1,21 @@
-Given("the following passenger records exist:") do |table|
-    table.hashes.each do |row|
-      FactoryBot.create(:passenger,
-        name: row["Name"],
-        birthday: row["Birthday"],
-        race: row["Race"],
-        hispanic: row["Hispanic?"] == "true",
-        date_registered: row["Date Registered"],
-        address: FactoryBot.build(:address,
-          street: row["Street"],
-          city: row["City"],
-          state: row["State"],
-          zip: row["Zip"]
-        )
-      )
-    end
-end
+# Given("the following passenger records exist:") do |table|
+#     table.hashes.each do |row|
+#       FactoryBot.create(:passenger,
+#         name: row["Name"],
+#         birthday: row["Birthday"],
+#         race: row["Race"],
+#         hispanic: row["Hispanic?"] == "true",
+#         date_registered: row["Date Registered"],
+#         address: FactoryBot.build(:address,
+#           street: row["Street"],
+#           city: row["City"],
+#           state: row["State"],
+#           zip: row["Zip"]
+#         )
+#       )
+#     end
+# end
 
-Given("I am on the passengers page") do
-  visit passengers_path
-end
 
 Given("I am on the passengers page sorted by {string} in {string} order") do |column, direction|
   visit passengers_path(sort: column.downcase, direction: direction.downcase)
@@ -30,9 +27,9 @@ When("I fill in the search field with {string}") do |query|
   sleep 1
 end
 
-When("I press {string}") do |button|
-  click_button button
-end
+# When("I press {string}") do |button|
+#   click_button button
+# end
 
 Then("I should see {string} in the table") do |text|
   expect(page).to have_css("table", text: text)
