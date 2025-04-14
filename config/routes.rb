@@ -37,6 +37,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :shift_templates, only: [:new, :create, :edit, :update, :destroy]
+
   resources :drivers do
     member do
       get "all_shifts"

@@ -1,0 +1,37 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Shift templates" %>
+
+<h1>Shift templates</h1>
+<div class="simple-calendar">
+  <table class="table table-striped">
+  <thead>
+    <tr>
+      <% (0..6).each do |day| %>
+        <th><%= t('date.abbr_day_names')[day] %></th>
+      <% end %>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% (0..6).each do |day| %>
+      <td>
+        <%= link_to "New shift", new_shift_template_path(day_of_week: day) %>
+        <% @shift_templates.each do |shift| %>
+          <div>
+            <% if shift.day_of_week == day%>
+              
+              <strong>
+                <%= link_to shift.driver.name, all_shifts_driver_path(shift.driver), class: "driver-link" %>
+              </strong>
+              
+              <%= link_to shift.shift_type, edit_shift_template_path(shift), style: "color: blue; text-decoration: underline;", class: "shift-type-link" %>
+            <% end %> 
+        </div>
+        <% end %>
+      </td>
+      
+    <% end %>
+  </tbody>
+  </table>
+</div>

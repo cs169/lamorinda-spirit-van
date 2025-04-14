@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @shift_template %>
+
+<div>
+  <%= link_to "Edit this shift template", edit_shift_template_path(@shift_template) %> |
+  <%= link_to "Back to shift templates", shift_templates_path %>
+
+  <%= button_to "Destroy this shift template", @shift_template, method: :delete %>
+</div>

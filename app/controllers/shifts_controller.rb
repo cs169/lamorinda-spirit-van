@@ -8,6 +8,10 @@ class ShiftsController < ApplicationController
     # @shifts = Shift.all
     @date = params[:start_date] ? Date.parse(params[:start_date]) : Date.today
     @shifts = Shift.where(shift_date: @date.beginning_of_month..@date.end_of_month)
+    @shift_templates = ShiftTemplate.all
+    # @shift_templates.each do |template|
+    #   template.date = @date.beginning_of_week + template.day_of_week
+    # end
   end
 
   # GET /read_only_shifts
