@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-Given(/^the following passengers exist:$/) do |names|
-  data = names.raw
-  data.each do |name|
-    FactoryBot.create(:passenger, name: name)
+Given(/^the following (driver|passenger|shift template)s exist:$/) do |model, table|
+  table.hashes.each do |args|
+    FactoryBot.create(model.parameterize(separator: "_").to_sym, args)
   end
 end
 
