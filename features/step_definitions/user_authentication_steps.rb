@@ -12,23 +12,28 @@ Given("the following user exists:") do |table|
 end
 
 # features/step_definitions/auth_steps.rb
-Given(/^a (.*) is logged in$/) do |user_type|
+Given(/^an? (.*) is logged in$/) do |user_type|
   case user_type
-    when "dispatcher"
-      @user = FactoryBot.create(:user,
-                              :dispatcher,
-                              email: "dispatcher1@example.com",
-                              password: "password")
+  when "dispatcher"
+    @user = FactoryBot.create(:user,
+                            :dispatcher,
+                            email: "dispatcher1@example.com",
+                            password: "password")
 
-    when "driver"
-      @driver = FactoryBot.create(:driver)
-      @driver_id = @driver.id
-      @user = FactoryBot.create(:user,
-                                :driver,
-                                email: "driver1@example.com",
-                                password: "password")
+  when "driver"
+    @driver = FactoryBot.create(:driver)
+    @driver_id = @driver.id
+    @user = FactoryBot.create(:user,
+                              :driver,
+                              email: "driver1@example.com",
+                              password: "password")
+  when "admin"
+    @user = FactoryBot.create(:user,
+                              :admin,
+                              email: "admin1@example.com",
+                              password: "password")
   end
-    
+
   visit new_user_session_path
   fill_in "Email", with: @user.email
   fill_in "Password", with: @user.password
