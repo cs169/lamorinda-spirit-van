@@ -12,7 +12,6 @@ FactoryBot.define do
     destination_type { "Default Type" }
     notes_about_location { "Default Note About Location" }
     wheelchair { false }
-    new_passenger { false }
     low_income { false }
     disabled { false }
     need_caregiver { false }
