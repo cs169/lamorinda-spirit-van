@@ -34,7 +34,6 @@ namespace :import do
         notes_about_location: row["notes_about_location"],
         destination_type: row["destination_type"],
         wheelchair: row["wheelchair"].to_i == 1,
-        new_passenger: row["new_passenger"].to_i == 1,
         low_income: row["low_income"].to_i == 1,
         disabled: row["disabled"].to_i == 1,
         need_caregiver: row["need_caregiver"].to_i == 1,

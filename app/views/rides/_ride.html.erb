@@ -17,7 +17,6 @@
               <th class="border-0 text-filter">Destination Type</th>
               <th class="border-0 text-filter">Notes About Location</th>
               <th class="border-0 text-filter">Wheelchair</th>
-              <th class="border-0 text-filter">New Passenger</th>
               <th class="border-0 text-filter">Low Income</th>
               <th class="border-0 text-filter">Disabled</th>
               <th class="border-0 text-filter">Needs Caregiver</th>
@@ -53,7 +52,7 @@
                 <td><%= ride.address_name %></td>
                 <td><%= ride.destination_type %></td>
                 <td><%= ride.notes_about_location %></td>
-                <% [:wheelchair, :new_passenger, :low_income, :disabled, :need_caregiver].each do |field| %>
+                <% [:wheelchair, :low_income, :disabled, :need_caregiver].each do |field| %>
                 <td>
                   <span class="badge <%= ride.send(field) ? 'bg-success' : 'bg-danger' %>">
                     <%= ride.send(field) ? 'Yes' : 'No' %>
@@ -85,7 +84,7 @@
           </tbody>
           <tfoot>
             <tr class="border-0">
-              <% 22.times do %>
+              <% 21.times do %>
                 <th class="border-0"></th>
               <% end %>
             </tr>
@@ -98,7 +97,6 @@
               <th class="stat-count"></th>
               <th class="stat-percentage"></th>
               <th class="stat-percentage"></th>
-              <th class="stat-count"></th>
               <th class="stat-count"></th>
               <th class="stat-count"></th>
               <th class="stat-count"></th>

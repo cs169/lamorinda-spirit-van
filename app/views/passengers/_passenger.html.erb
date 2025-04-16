@@ -15,7 +15,6 @@
             <th class="border-0 text-filter">Race</th>
             <th class="border-0 text-filter">Hispanic</th>
             <th class="border-0 text-filter">Wheelchair</th>
-            <th class="border-0 text-filter">New Passenger</th>
             <th class="border-0 text-filter">Low Income</th>
             <th class="border-0 text-filter">Disabled</th>
             <th class="border-0 text-filter">Needs Caregiver</th>
@@ -43,7 +42,7 @@
                   <%= passenger.hispanic? ? 'Yes' : 'No' %>
                 </span>
               </td>
-              <% [:wheelchair, :new_passenger, :low_income, :disabled, :need_caregiver].each do |field| %>
+              <% [:wheelchair, :low_income, :disabled, :need_caregiver].each do |field| %>
                 <td>
                   <span class="badge <%= passenger.send(field) ? 'bg-success' : 'bg-danger' %>">
                     <%= passenger.send(field) ? 'Yes' : 'No' %>
@@ -60,14 +59,14 @@
 
         <tfoot>
           <tr class="border-0">
-            <% 18.times do %>
+            <% 17.times do %>
               <th class="border-0"></th>
             <% end %>
           </tr>
           <tr class="column-summary">
             <th class="ignore"></th>
             <th class="ignore"></th>
-            <% 16.times do %>
+            <% 15.times do %>
               <th class="stat-count"></th>
             <% end %>
           </tr>
