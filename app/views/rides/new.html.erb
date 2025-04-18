@@ -78,6 +78,24 @@
               <%= f.label :passenger_phone, "Phone Number:" %>
               <%= f.text_field :passenger_phone, class: "form-control", readonly: true  %> 
             </div>
+
+            <div class="mb-3">
+              <%= f.label :wheelchair, "Wheelchair" %>
+              <%= f.text_field :wheelchair, class: "form-control", readonly: true  %> 
+            </div>
+            <div class="mb-3">
+              <%= f.label :low_income, "Low Income" %>
+              <%= f.text_field :low_income, class: "form-control", readonly: true  %> 
+            </div>
+            <div class="mb-3">
+              <%= f.label :disabled, "Disabled" %>
+              <%= f.text_field :disabled, class: "form-control", readonly: true  %> 
+            </div>         
+            <div class="mb-3">
+            <%= f.label :need_caregiver, "Needs Caregiver" %>
+            <%= f.text_field :need_caregiver, class: "form-control", readonly: true  %> 
+            </div>  
+
             <div class="mb-3">
               <%= f.label :passenger_notes, "Notes about Passenger:" %>
               <%= f.text_field :passenger_notes, class: "form-control", readonly: true  %> 

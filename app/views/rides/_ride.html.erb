@@ -11,6 +11,7 @@
               <th class="border-0 text-filter">Driver</th>
               <th class="border-0 text-filter">Van</th>
               <th class="border-0 text-filter">Passenger Name</th>
+              <th class="border-0 text-filter">Multiple Destination</th>
               <th class="border-0 text-filter">Origin</th>
               <th class="border-0 text-filter">Destination</th>
               <th class="border-0 text-filter">Address Name</th>
@@ -47,6 +48,13 @@
                 <td><%= ride.driver&.name || 'N/A' %></td>
                 <td><%= ride.van || 'N/A' %></td>
                 <td><%= ride.passenger&.name || 'N/A' %></td>
+                 <td>
+                  <% if ride.next_ride_id? %>
+                    <span class="badge bg-success">Yes</span>
+                  <% else %>
+                    <span class="badge bg-danger">No</span>
+                  <% end %>
+                </td>
                 <td><%= ride.start_address&.full_address || 'N/A' %></td>
                 <td><%= ride.dest_address&.full_address || 'N/A' %></td>
                 <td><%= ride.address_name %></td>
@@ -84,13 +92,14 @@
           </tbody>
           <tfoot>
             <tr class="border-0">
-              <% 21.times do %>
+              <% 22.times do %>
                 <th class="border-0"></th>
               <% end %>
             </tr>
             <tr class="column-summary">
               <th class='ignore'></th>
               <th class='ignore'></th>
+              <th class="stat-count"></th>
               <th class="stat-count"></th>
               <th class="stat-count"></th>
               <th class="stat-count"></th>

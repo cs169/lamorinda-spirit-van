@@ -4,8 +4,11 @@ class RidesController < ApplicationController
   before_action :set_ride, only: [ :show, :edit, :update, :destroy ]
   before_action -> { require_role("admin", "dispatcher") }, only: [:index, :new, :edit, :create, :update, :destroy]
 
+  # Have only rides without previous rides (HEAD rides) be displayed
+  # "Give me all rides whose id is not someone else's next_ride_id 
+  # — i.e., they're not the continuation of another ride."
   def index
-    @rides = Ride.all
+    @rides = Ride.where.not(id: Ride.select(:next_ride_id).where.not(next_ride_id: nil))
   end
 
   def show
