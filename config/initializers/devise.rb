@@ -24,7 +24,7 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
-  config.mailer_sender = "dispatcher@lamorinda.com"
+  config.mailer_sender = ENV["DEFAULT_FROM_EMAIL"] # The email address messages appear to be sent from
 
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'
