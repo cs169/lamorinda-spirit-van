@@ -22,7 +22,7 @@ class RidesController < ApplicationController
     @ride.build_dest_address
     # For driver dropdown list in creating / updating
     @drivers = Driver.order(:name)
-    gon.passengers = Passenger.all.map { |p| { label: p.name, id: p.id, phone: p.phone, notes: p.notes } }
+    gon.passengers = Passenger.all.map { |p| { label: p.name, id: p.id, phone: p.phone, wheelchair: p.wheelchair, low_income: p.low_income, disabled: p.disabled, need_caregiver: p.need_caregiver, notes: p.notes } }
     gon.addresses = Address.all.map { |a| { label: a.street, zip: a.zip, city: a.city } }
   end
 
@@ -66,29 +66,6 @@ class RidesController < ApplicationController
 
   def filter
     @rides = Ride.all
-  end
-
-  def filter_results
-    filter_params = {
-      'day': params["day"],
-      'driver_name': params["driver_name"],
-      'passenger_name_and_phone': params["passenger_name_and_phone"],
-      'passenger_address': params["passenger_address"],
-      'destination': params["destination"],
-      'van': params["van"],
-      'start_date': params["start_date"],
-      'end_date': params["end_date"],
-      'driver_email': params["driver_email"],
-      'confirmed': params["confirmed"],
-      'ride_count': params["ride_count"],
-      'amount_paid': params["amount_paid"],
-      'hours': params["hours"],
-      'driver_initials': params["driver_initials"]
-
-    }
-
-    @rides = Ride.filter_rides(filter_params)
-    render :filter
   end
 
     private

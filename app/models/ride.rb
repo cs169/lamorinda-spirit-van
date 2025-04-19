@@ -15,49 +15,6 @@ class Ride < ApplicationRecord
     self.emailed_driver == "true"
   end
 
-  # # Filtering logic for rides table
-  # def self.filter_rides(filter_params)
-  #   rides = Ride.all
-
-  #   # Handle LIKE filters in a loop
-  #   {
-  #     day: "day",
-  #     driver_name: "driver",
-  #     passenger_name_and_phone: "passenger_name_and_phone",
-  #     passenger_address: "passenger_address",
-  #     destination: "destination",
-  #     driver_email: "driver_email",
-  #     driver_initials: "driver_initials",
-  #     confirmed: "confirmed_with_passenger"
-  #   }.each do |key, column|
-  #     if filter_params[key].present?
-  #       rides = rides.where(Ride.arel_table[column].lower.matches("%#{filter_params[key].downcase}%"))
-  #     end
-  #   end
-
-  #   # Handle exact match filters
-  #   {
-  #     ride_count: "ride_count",
-  #     amount_paid: "amount_paid",
-  #     hours: "hours"
-  #   }.each do |key, column|
-  #     rides = rides.where(column => filter_params[key]) if filter_params[key].present?
-  #   end
-
-  #   # Handle date range filters
-  #   if filter_params[:start_date].present?
-  #     rides = rides.where("date >= ?", Date.parse(filter_params[:start_date]))
-  #   end
-
-  #   date_end = filter_params[:end_date].present? ? Date.parse(filter_params[:end_date]) : Date.today
-  #   rides = rides.where("date <= ?", date_end) if date_end
-
-  #   # Handle simple presence filter
-  #   rides = rides.where(van: filter_params[:van]) if filter_params[:van].present?
-
-  #   rides
-  # end
-
   def start_address_attributes=(attrs)
     normalized = normalize_address(attrs)
     existing_address = Address.find_by(normalized)
