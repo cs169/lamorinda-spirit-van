@@ -56,10 +56,11 @@
 
   
   <div id="btn-shift">
+    <%= link_to "View Other Drivers", drivers_path(dont_jump: true), class: "btn btn-primary" %>
+    <%= link_to "View All Shifts", shifts_path, class: "btn btn-primary" %>
     <% if @shift %>
       <%= link_to "Shift Feedback", feedback_shift_path(@shift.id), class: "btn btn-primary" %>
     <% end %> 
-    <%= link_to "View All Shifts", shifts_path, class: "btn btn-primary" %>
   </div>
 
 </div>

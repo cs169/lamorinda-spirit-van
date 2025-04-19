@@ -6,25 +6,25 @@ module SeedData
       {
         name:         "Sarah",
         phone:        "0000000000",
-        email:        "jd@lamorinda.com",
+        email:        "sarah@lamorinda.com",
         active:       true
       },
       {
         name:         "Mike",
         phone:        "000-000-0000",
-        email:        "jd@lamorinda.com",
+        email:        "mike@lamorinda.com",
         active:       true
       },
       {
         name:         "John",
         phone:        "510-687-8824",
-        email:        "mike@lamorinda.com",
+        email:        "john@lamorinda.com",
         active:       true
       },
       {
         name:         "Emily",
         phone:        "510-123-4567",
-        email:        "peter@lamorinda.com",
+        email:        "Emily@lamorinda.com",
         active:       true
       },
       {

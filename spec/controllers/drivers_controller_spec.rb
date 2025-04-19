@@ -9,6 +9,7 @@ RSpec.describe DriversController, type: :controller do
 
     @driver1 = FactoryBot.create(:driver)
     @driver2 = FactoryBot.create(:driver)
+    @driver1_user = FactoryBot.create(:user, email: @driver1.email, role: "driver")
 
     @address1 = FactoryBot.create(:address)
 
@@ -62,6 +63,22 @@ RSpec.describe DriversController, type: :controller do
     it "renders the index template" do
       get :index
       expect(response).to render_template(:index)
+    end
+
+    context "as driver with matching Driver record" do
+      before do
+        sign_in @driver1_user
+      end
+
+      it "redirects to today_driver_path" do
+        get :index
+        expect(response).to redirect_to(today_driver_path(@driver1.id))
+      end
+
+      it "renders the index template without redirecting" do
+        get :index, params: { dont_jump: true }
+        expect(response).to render_template(:index)
+      end
     end
   end
 
