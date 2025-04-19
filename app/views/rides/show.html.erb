@@ -1,7 +1,64 @@
-<p style="color: green"><%= notice %></p>
+<div class="container mt-5">
+  <h1 class="mb-4">Ride Details</h1>
 
-<%= @ride.id %>
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Basic Info</h5>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"><strong>Date:</strong> <%= @ride.date.strftime("%B %d, %Y") %></li>
+        <li class="list-group-item"><strong>Van Number:</strong> <%= @ride.van %></li>
+        <li class="list-group-item"><strong>Hours:</strong> <%= @ride.hours %></li>
+        <li class="list-group-item"><strong>Amount Paid:</strong> <%= number_to_currency(@ride.amount_paid) %></li>
+      </ul>
+    </div>
+  </div>
 
-<div>
-    <%= link_to "Back to rides", rides_path %>
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">People</h5>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"><strong>Passenger:</strong> <%= @ride.passenger&.name || "Not Assigned" %></li>
+        <li class="list-group-item"><strong>Driver:</strong> <%= @ride.driver&.name || "Not Assigned" %></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Locations</h5>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"><strong>Start Address:</strong> <%= @ride.start_address&.full_address || "N/A" %></li>
+        <li class="list-group-item"><strong>Destination Address:</strong> <%= @ride.dest_address&.full_address || "N/A" %></li>
+        <li class="list-group-item"><strong>Address Name:</strong> <%= @ride.address_name %></li>
+        <li class="list-group-item"><strong>Destination Type:</strong> <%= @ride.destination_type %></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Passenger Info</h5>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"><strong>Wheelchair Accessible:</strong> <%= @ride.wheelchair ? "Yes" : "No" %></li>
+        <li class="list-group-item"><strong>Low Income:</strong> <%= @ride.low_income ? "Yes" : "No" %></li>
+        <li class="list-group-item"><strong>Disabled:</strong> <%= @ride.disabled ? "Yes" : "No" %></li>
+        <li class="list-group-item"><strong>Needs Caregiver:</strong> <%= @ride.need_caregiver ? "Yes" : "No" %></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Notes</h5>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"><strong>General Notes:</strong> <%= simple_format(@ride.notes) %></li>
+        <li class="list-group-item"><strong>Notes (Date Reserved):</strong> <%= simple_format(@ride.notes_date_reserved) %></li>
+        <li class="list-group-item"><strong>Confirmed with Passenger:</strong> <%= simple_format(@ride.confirmed_with_passenger) %></li>
+        <li class="list-group-item"><strong>Emailed Driver:</strong> <%= @ride.emailed_driver.present? ? "Yes" : "No" %></li>
+      </ul>
+    </div>
+  </div>
+
+  <%= link_to "Edit Ride", edit_ride_path(@ride), class: "btn btn-primary me-2" %>
+  <%= link_to "Back to All Rides", rides_path, class: "btn btn-secondary" %>
 </div>
