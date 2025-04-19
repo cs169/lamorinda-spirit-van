@@ -24,6 +24,7 @@ Rails.application.routes.draw do
     mount Blazer::Engine, at: "blazer", as: "blazer"
   end
 
+  resources :feedbacks
   resources :passengers
 
   resources :rides do

@@ -26,6 +26,8 @@ class RidesController < ApplicationController
   def create
     @ride = Ride.new(ride_params)
     if @ride.save
+      feedback = Feedback.new(ride_id: @ride.id)
+      feedback.save
       session[:return_to] ||= rides_path
       redirect_to session[:return_to], notice: "Ride was successfully created."
     else

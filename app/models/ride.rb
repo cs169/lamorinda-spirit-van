@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Ride < ApplicationRecord
+  has_one :feedback
   belongs_to :passenger, optional: true
   belongs_to :driver
   belongs_to :start_address, class_name: "Address", foreign_key: :start_address_id

@@ -22,6 +22,7 @@
             <th>Hours</th>
             <th>Fee</th>
             <th>Info</th>
+            <th>Feedback</th>
           </tr>
         </thead>
         <tbody>
@@ -32,6 +33,7 @@
               <td><%= ride.hours %></td>
               <td><%= number_to_currency(ride.amount_paid) %></td>
               <td><%= link_to "Info", ride_path(ride.id), class: "btn btn-primary" %></td>
+              <td><%= link_to "Feedback", edit_feedback_path(ride.feedback), class: "btn btn-primary" %></td>
             </tr>
           <% end %>
         </tbody>

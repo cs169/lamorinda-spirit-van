@@ -1,0 +1,8 @@
+<% content_for :title, "Editing feedback" %>
+
+<h1>Feedback for <%= @passenger %>'s ride<br>
+  on <%= @current_date.strftime("%A %m/%d/%Y") %></h1>
+
+<%= render "form", feedback: @feedback %>
+
+<br>
