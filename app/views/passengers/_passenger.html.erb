@@ -28,7 +28,7 @@
         <tbody>
           <% @passengers.each do |passenger| %>
             <tr class="clickable-row" data-href="<%= edit_passenger_path(passenger) %>">
-              <td><%= link_to 'Info', edit_passenger_path(passenger), class: "btn btn-sm btn-primary" %></td>
+              <td><%= link_to 'Edit', edit_passenger_path(passenger), class: "btn btn-sm btn-primary" %></td>
               <td><%= link_to 'Delete', passenger, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: "btn btn-sm btn-danger" %></td>
 
               <td><%= passenger.name %></td>

@@ -107,7 +107,7 @@ const initiateCheckboxes = (table) => {
   // Creates the Datatables
   const initiateDatatables = () => {
     const tables = [
-      { selector: '#passengers-table', order: [[2, 'asc']], footerCallback: passengersRelevantData},
+      { selector: '#passengers-table', order: [[15, 'desc']], footerCallback: passengersRelevantData},
       { selector: '#rides-table', order: [[2, 'desc']], footerCallback: ridesRelevantStats}
     ];
   
@@ -126,7 +126,7 @@ const initiateCheckboxes = (table) => {
           dom: "<'row'<'col-md-6'l><'col-md-6'>>" +
             "<'row'<'col-md-12'tr>>" +
             "<'row'<'col-md-6'i><'col-md-6'p>>",
-          footerCallback: table.footerCallback,
+          // footerCallback: table.footerCallback,
         });
         initiateCheckboxes(newTable);
         initiateSearchbars(newTable);

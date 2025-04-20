@@ -95,6 +95,50 @@
 
     <!-- RIGHT COLUMN -->
     <div class="col-md-6">
+      <!-- Wheelchair -->
+      <div class="mb-3">
+        <%= form.label :wheelchair, "Wheelchair?", class: "form-label" %>
+        <span class="text-danger">*</span>
+      
+        <%= form.select :wheelchair, 
+                        [['Yes', true], ['No', false]], 
+                        {}, 
+                        class: "form-select", required: true %>
+      </div>
+
+      <!-- Low Income -->
+      <div class="mb-3">
+        <%= form.label :low_income, "Low Income?", class: "form-label" %>
+        <span class="text-danger">*</span>
+      
+        <%= form.select :low_income, 
+                        [['Yes', true], ['No', false]], 
+                        {}, 
+                        class: "form-select", required: true %>
+      </div>
+
+      <!-- Disabled -->
+      <div class="mb-3">
+        <%= form.label :disabled, "Disabled?", class: "form-label" %>
+        <span class="text-danger">*</span>
+      
+        <%= form.select :disabled, 
+                        [['Yes', true], ['No', false]], 
+                        {}, 
+                        class: "form-select", required: true %>
+      </div>
+
+      <!-- Needs Caregiver -->
+      <div class="mb-3">
+        <%= form.label :need_caregiver, "Need Caregiver?", class: "form-label" %>
+        <span class="text-danger">*</span>
+      
+        <%= form.select :need_caregiver, 
+                        [['Yes', true], ['No', false]], 
+                        {}, 
+                        class: "form-select", required: true %>
+      </div>
+
       <!-- Notes -->
       <div class="mb-3">
         <%= form.label :notes, "Notes", class: "form-label" %>
