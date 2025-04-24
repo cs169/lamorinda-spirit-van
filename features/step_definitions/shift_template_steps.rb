@@ -13,6 +13,14 @@ Then(/^there should be "([^"]*)" shifts for driver "([^"]*)" for each ([^ ]*) of
 end
 
 Then("there should be no shifts any other month") do
-  shifts_this_month = Shift.where("shift_date >= ? AND shift_date <= ", Date.today.beginning_of_month, Date.today.end_of_month)
+  shifts_this_month = Shift.where("shift_date >= ? AND shift_date <= ?", Date.today.beginning_of_month, Date.today.end_of_month)
   expect(Shift.all.count).to equal(shifts_this_month.count)
+end
+
+Then("I remember how many shifts there are") do
+  @shift_count = Shift.all.count
+end
+
+Then("there should be no new shifts") do
+  expect(@shift_count).to equal(Shift.all.count)
 end
