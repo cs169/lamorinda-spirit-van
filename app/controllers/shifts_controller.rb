@@ -40,6 +40,16 @@ class ShiftsController < ApplicationController
     @shift = Shift.find(params[:id])
   end
 
+  # POST /shifts/fill_template
+  def fill_from_template
+    begin
+      Shift.fill_month(ShiftTemplate.all, Date.parse(params[:date]))
+    rescue ActiveRecord::ActiveRecord::RecordInvalid
+      flash[:alert] = "Error with creating shifts from templates"
+    end
+    redirect_to shifts_path(start_date: params[:date])
+  end
+
   # POST /shifts or /shifts.json
   def create
     if params[:shift][:driver_id].blank?

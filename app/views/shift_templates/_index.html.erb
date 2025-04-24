@@ -3,7 +3,7 @@
 <% content_for :title, "Shift templates" %>
 
 <h1>Shift templates</h1>
-<div class="simple-calendar">
+<div class="simple-calendar" id="shift-template-calender">
   <table class="table table-striped">
   <thead>
     <tr>
@@ -18,20 +18,25 @@
       <td>
         <%= link_to "New shift", new_shift_template_path(day_of_week: day) %>
         <% @shift_templates.each do |shift| %>
-          <div>
-            <% if shift.day_of_week == day%>
-              
+          <% if shift.day_of_week == day%>
+            <div>
               <strong>
                 <%= link_to shift.driver.name, all_shifts_driver_path(shift.driver), class: "driver-link" %>
               </strong>
               
               <%= link_to shift.shift_type, edit_shift_template_path(shift), style: "color: blue; text-decoration: underline;", class: "shift-type-link" %>
-            <% end %> 
-        </div>
+            </div>
+          <% end %> 
         <% end %>
       </td>
       
     <% end %>
   </tbody>
   </table>
+</div>
+
+<div class="text-center mt-4">
+  <%= link_to 'Fill in Month from Template', fill_from_template_shifts_path(date: @date),
+                      data: { turbo_method: :post, turbo_confirm: 'Are you sure you want to fill in shifts for this month?' },
+                      class: "btn btn-sm btn-primary" %>
 </div>

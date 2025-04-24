@@ -31,6 +31,7 @@ Rails.application.routes.draw do
   resources :shifts do
     collection do
       get "read_only"
+      post "fill_from_template"
     end
     member do
       get "feedback"
