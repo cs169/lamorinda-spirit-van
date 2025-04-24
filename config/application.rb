@@ -20,6 +20,8 @@ require "action_cable/engine"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+
+
 module Lamorinda
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
@@ -42,5 +44,8 @@ module Lamorinda
     config.generators.system_tests = nil
 
     config.time_zone = "Pacific Time (US & Canada)"
+    
+    # For simplecalendar
+    config.beginning_of_week = :sunday
   end
 end
