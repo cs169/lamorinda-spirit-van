@@ -10,9 +10,25 @@ RSpec.describe Ride, type: :model do
     today = Time.zone.today
     today.strftime("%a")
 
-    @ride1 = FactoryBot.create(:ride, driver: @driver1, date: Time.zone.today - 1.day, emailed_driver: true)
-    @ride2 = FactoryBot.create(:ride, driver: @driver2)
-    @ride3 = FactoryBot.create(:ride, driver: @driver1, date: Time.zone.today + 1.day)
+    @ride1 = FactoryBot.create(
+      :ride,
+      driver: @driver1,
+      date: Time.zone.today - 1.day,
+      emailed_driver: "sent",
+      confirmed_with_passenger: "Yes"
+    )
+    @ride2 = FactoryBot.create(
+      :ride,
+      driver: @driver2,
+      confirmed_with_passenger: "No"
+    )
+    @ride3 = FactoryBot.create(
+      :ride,
+      driver: @driver1,
+      date: Time.zone.today + 1.day,
+      wheelchair: true,
+      low_income: true
+    )
   end
 
   describe "Validations" do
@@ -21,7 +37,17 @@ RSpec.describe Ride, type: :model do
     end
 
     it "is certain fields valid" do
-      expect(@ride1.emailed_driver?).to eq(true)
+      expect(@ride1.emailed_driver).to eq("sent")
+    end
+
+    it "checks confirmed_with_passenger field" do
+      expect(@ride1.confirmed_with_passenger).to eq("Yes")
+      expect(@ride2.confirmed_with_passenger).to eq("No")
+    end
+
+    it "checks wheelchair and low_income fields" do
+      expect(@ride3.wheelchair).to eq(true)
+      expect(@ride3.low_income).to eq(true)
     end
   end
 
@@ -55,6 +81,23 @@ RSpec.describe Ride, type: :model do
       expect(ride.start_address.city).to eq("Oakland")
       expect(ride.start_address.state).to eq("CA")
       expect(ride.start_address.zip).to eq("94607")
+    end
+  end
+
+  describe "Associations" do
+    it "belongs to a driver" do
+      expect(@ride1.driver).to eq(@driver1)
+    end
+
+    it "belongs to a passenger" do
+      expect(@ride2.passenger).to be_present
+    end
+  end
+
+  describe "Scopes" do
+    it "retrieves rides for a specific driver" do
+      expect(Ride.where(driver: @driver1)).to include(@ride1, @ride3)
+      expect(Ride.where(driver: @driver2)).to include(@ride2)
     end
   end
 

@@ -2,13 +2,17 @@
 
 FactoryBot.define do
   factory :passenger do
-    association :address
     sequence(:name) { |n| "#{n.humanize.titleize}y Mc#{n.humanize.titleize}son" }
+    association :address
     sequence(:phone)  { |n| "(#{n}#{n}#{n})-#{n}#{n}#{n}-#{n}#{n}#{n}#{n}" }
-    sequence(:email)  { |n| "#{n.humanize}y_mc#{n.humanize}son@gmail.com" }
+    birthday { DateTime.now }
     race { 1 }
     hispanic { false }
-    birthday { DateTime.now }
+    wheelchair { false }
+    low_income { false }
+    disabled { false }
+    need_caregiver { false }
+    sequence(:email)  { |n| "#{n.humanize}y_mc#{n.humanize}son@gmail.com" }
     date_registered { DateTime.now }
   end
 end
