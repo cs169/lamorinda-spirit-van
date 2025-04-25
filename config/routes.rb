@@ -40,7 +40,6 @@ Rails.application.routes.draw do
 
   resources :shifts do
     collection do
-      get "read_only"
       post "fill_from_template"
       post "clear_month"
     end
