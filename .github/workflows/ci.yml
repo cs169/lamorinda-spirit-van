@@ -66,16 +66,16 @@ jobs:
           sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
           sudo chmod +x /usr/local/bin/chromedriver
 
-    - name: Run cucumber Tests
-      env:
-        RAILS_ENV: test
-      run: bundle exec cucumber
-
     - name: Run rspec Tests
       env:
         RAILS_ENV: test
       run: bundle exec rspec
 
+    - name: Run cucumber Tests
+      env:
+        RAILS_ENV: test
+      run: bundle exec cucumber
+      
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v5
       with:
