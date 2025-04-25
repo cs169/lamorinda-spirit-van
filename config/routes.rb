@@ -42,6 +42,7 @@ Rails.application.routes.draw do
     collection do
       get "read_only"
       post "fill_from_template"
+      post "clear_month"
     end
     member do
       get "feedback"

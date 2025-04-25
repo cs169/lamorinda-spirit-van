@@ -38,6 +38,10 @@ class Shift < ApplicationRecord
     batch.map { |shift| shift.errors.full_messages }.flatten
   end
 
+  def self.clear_month(month_date)
+    Shift.destroy shifts_for_month(month_date).map(&:id)
+  end
+
   private
   def self.shifts_for_month(month_date)
     Shift.where("shift_date >= ? AND shift_date <= ?", month_date.beginning_of_month, month_date.end_of_month)
