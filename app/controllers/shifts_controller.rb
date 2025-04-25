@@ -2,6 +2,7 @@
 
 class ShiftsController < ApplicationController
   before_action :set_shift, only: %i[ show edit update destroy ]
+  before_action -> { require_role("admin") }, only: [:fill_from_template]
 
   # GET /shifts or /shifts.json
   def index
@@ -9,9 +10,6 @@ class ShiftsController < ApplicationController
     @date = params[:start_date] ? Date.parse(params[:start_date]) : Date.today
     @shifts = Shift.where(shift_date: @date.beginning_of_month..@date.end_of_month)
     @shift_templates = ShiftTemplate.all
-    # @shift_templates.each do |template|
-    #   template.date = @date.beginning_of_week + template.day_of_week
-    # end
   end
 
   # GET /read_only_shifts

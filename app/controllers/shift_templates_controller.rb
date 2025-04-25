@@ -2,6 +2,7 @@
 
 class ShiftTemplatesController < ApplicationController
   before_action :set_shift_template, only: %i[ show edit update destroy ]
+  before_action -> { require_role("admin") }, only: [:new, :edit, :create, :update, :destroy]
 
   # GET /shift_templates/1 or /shift_templates/1.json
   def show
