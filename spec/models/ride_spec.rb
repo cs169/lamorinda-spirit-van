@@ -149,7 +149,7 @@ RSpec.describe Ride, type: :model do
         confirmed_with_passenger: "Yes"
       }
       rides = Ride.build_linked_rides(ride_attrs, addrs)
-     
+
       Ride.save_rides(rides)
 
       expect(rides.length).to eq(3)

@@ -30,22 +30,17 @@ class RidesController < ApplicationController
     ride_attrs = ride_params.except(:addresses_attributes)
     addresses = ride_params[:addresses_attributes]
 
-    created_rides = Ride.build_linked_rides(ride_attrs, addresses)
-    success, failed_ride = Ride.save_rides(created_rides)
-    puts
-    puts "failed_ride: #{failed_ride}"
-    puts
-    @ride = created_rides[0]
+    result_rides, success = Ride.build_linked_rides(ride_attrs, addresses)
 
-    if !success
-      created_rides.each(&:destroy)
-      flash[:alert] = failed_ride.errors.full_messages.join
+    if success
+      @ride = result_rides[0]
+      session[:return_to] ||= rides_path
+      redirect_to session[:return_to], notice: "Ride was successfully created."
+    else
+      @ride = Ride.new(ride_attrs)
+      flash[:alert] = "Error creating ride: #{success.message}"
       render :new
-  
     end
-
-    session[:return_to] ||= rides_path
-    redirect_to session[:return_to], notice: "Ride was successfully created."
   end
 
   def edit

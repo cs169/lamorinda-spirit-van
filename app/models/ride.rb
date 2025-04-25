@@ -7,9 +7,10 @@ class Ride < ApplicationRecord
   belongs_to :dest_address, class_name: "Address", foreign_key: :dest_address_id
   belongs_to :next_ride, class_name: "Ride", optional: true
   has_one :previous_ride, class_name: "Ride", foreign_key: "next_ride_id"
-
-  accepts_nested_attributes_for :start_address
-  accepts_nested_attributes_for :dest_address
+  
+  # this causes problems -- duplicated addresses
+  # accepts_nested_attributes_for :start_address
+  # accepts_nested_attributes_for :dest_address
 
   def emailed_driver?
     self.emailed_driver == "true"
@@ -20,6 +21,7 @@ class Ride < ApplicationRecord
     normalized = normalize_address(attrs)
     puts "NORMALIZED: #{normalized}"
     existing_address = Address.find_by(normalized)
+    puts "address size : #{Address.count}"
 
     if existing_address
       puts "✅ Found existing start_address: #{existing_address.id}"
@@ -47,48 +49,42 @@ class Ride < ApplicationRecord
   def self.build_linked_rides(ride_attrs, addrs)
     prev_ride = nil
     created_rides = []
-    i = 0
-   
-    while i < (addrs.length - 1)
-      origin = addrs[i]
-      destination = addrs[i + 1]
 
-      # new_params = ride_attrs.merge(
-      #   start_address_attributes: origin,
-      #   dest_address_attributes: destination
-      # )
+    ActiveRecord::Base.transaction do
+      i = 0
+      while i < (addrs.length - 1)
+        origin = addrs[i]
+        destination = addrs[i + 1]
 
-      ride = Ride.new(ride_attrs)
-      ride.start_address_attributes = origin
-      ride.dest_address_attributes = destination
+        ride = Ride.new(ride_attrs)
+        ride.start_address_attributes = origin
+        ride.dest_address_attributes = destination
 
-      if prev_ride
-        prev_ride.next_ride = ride
+        if prev_ride
+          prev_ride.next_ride = ride
+          prev_ride.save!
+        end
+
+        ride.save!
+        created_rides << ride
+        prev_ride = ride
+        i += 1
       end
-
-      created_rides << ride
-      prev_ride = ride
-      i += 1
     end
 
-    created_rides
+    [created_rides, true]
+  rescue => e
+    [e, false]
   end
 
-  def self.save_rides(created_rides)
-    created_rides.each do |ride|
-      puts "Ride ##{ride.inspect} failed with errors: #{ride.errors.full_messages.join(', ')}"
-      return [false, ride] unless ride.save
-    end
-    [true, nil]
-  end
-
+    # change: stringified addresses, don't think this affects anything but remove 
   private
   def normalize_address(attrs)
     {
-      street: attrs[:street].to_s.strip.titleize,
-      city:   attrs[:city].to_s.strip.titleize,
-      state:  attrs[:state].to_s.strip.upcase,
-      zip:    attrs[:zip].to_s.strip
+      "street" => attrs[:street].to_s.strip.titleize,
+      "city"   => attrs[:city].to_s.strip.titleize,
+      "state"  => attrs[:state].to_s.strip.upcase,
+      "zip"    => attrs[:zip].to_s.strip
     }
   end
 end
