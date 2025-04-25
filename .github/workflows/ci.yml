@@ -38,41 +38,24 @@ jobs:
       - name: Scan for security vulnerabilities in JavaScript dependencies
         run: bin/importmap audit
   
-  cucumber:
+  rspec_cucumber:
     runs-on: ubuntu-latest
-
-    services:
-      postgres:
-        image: postgres:latest
-        env:
-          POSTGRES_USER: rails
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: test_database
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - uses: actions/checkout@v4
+    - name: Install Ruby (3.4)
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: .ruby-version
+    - name: Build
+      run: |
+        gem install bundler
+        bundle install --jobs 4 --retry 3
+        bundle exec rake db:create
+        bundle exec rake db:migrate
+        bundle exec rake db:test:prepare
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-      
-      - name: Set up Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 23.6.1
-
-      - name: Install Chrome & Chromedriver
-        run: |
+    - name: Install Chrome & Chromedriver
+      run: |
           sudo apt-get update
           sudo apt-get install -y wget unzip
           wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
@@ -82,44 +65,16 @@ jobs:
           unzip chromedriver.zip
           sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
           sudo chmod +x /usr/local/bin/chromedriver
-    
-      - name: Install Dependencies
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y libpq-dev postgresql-client
-          gem install bundler:2.6.2
-          bundle install
-          
-      - name: Setup Database
-        env:
-          RAILS_ENV: test
-          DATABASE_URL: postgres://rails:password@localhost:5432/test_database
-        run: |
-          bundle exec rake db:create
-          bundle exec rake db:migrate
-          bundle exec rake db:test:prepare
 
-      - name: Run Cucumber Tests
-        env:
-          RAILS_ENV: test
-        run: bundle exec cucumber
-        
-  rspec:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Install Ruby (3.4)
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: .ruby-version
-    - name: Build and test with RSpec
-      run: |
-        gem install bundler
-        bundle install --jobs 4 --retry 3
-        bundle exec rake db:create
-        bundle exec rake db:migrate
-        bundle exec rake db:test:prepare
-        bundle exec rspec
+    - name: Run cucumber Tests
+      env:
+        RAILS_ENV: test
+      run: bundle exec cucumber
+
+    - name: Run rspec Tests
+      env:
+        RAILS_ENV: test
+      run: bundle exec rspec
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v5
