@@ -52,53 +52,18 @@
   </head>
 
   <body>
-    <div class="flash-container">
-      <% flash.each do |type, message| %>
-        <div class="alert alert-<%= type == "notice" ? "success" : "danger" %> alert-dismissible fade show" role="alert">
-          <%= message %>
-        </div>
-      <% end %>
-    </div>
+    
     <div class="page-wrapper">
-      <!-- Header with sign-in -->
-      <header class="custom-header py-2 mb-3">
-        <div class="container d-flex justify-content-between align-items-center">
-
-          <div>
-            <%= link_to root_path, class: "d-inline-block" do %>
-              <img src="<%= asset_path('lamorindalogo.png') %>" alt="Lafayette Spirit Van" class="app-logo white">
-            <% end %>
-          </div>
-
-          <div class="directories">
-            <%= link_to "Admin", admin_users_path, class: "admin-link #{'active' if current_page?(admin_users_path)}" %>
-            <%= link_to "Passengers", passengers_path, class: "passengers-link #{'active' if current_page?(passengers_path)}" %>
-            <%= link_to "Rides", rides_path, class: "rides-link #{'active' if current_page?(rides_path)}" %>
-            <%= link_to "Calendar", shifts_path, class: "shifts-link #{'active' if current_page?(shifts_path)}" %>
-            <%= link_to "Drivers", drivers_path, class: "drivers-link #{'active' if current_page?(drivers_path)}" %>
-          </div>
-
-          <% if user_signed_in? %>
-            <div style="display: flex; flex-direction: row; align-items: center;">
-              <span>Hello! <%= current_user.role %></span>
-              <%= button_to 'Sign Out', destroy_user_session_path, method: :delete, form: { data: { turbo: 'false' } }, class: "btn btn-outline-light btn-sm ms-2" %>
-            </div>
-          <% end %>
-
-        </div>
-      </header>
+      <%= render "layouts/flash" %>
+      <%= render "layouts/navbar" %>
 
       <!-- Global Container  -->
       <div class="content-wrapper container my-4" style="max-width: 80%;">
         <%= yield %>
       </div>
 
-      <!-- Footer  -->
-      <footer class="custom-footer py-2 mt-3">
-        <div class="container text-center">
-          <p class="mb-0">City of Lafayette, CA. All Rights Reserved. © <%= Time.current.year %></p>
-        </div>
-      </footer>
+      <%= render "layouts/footer" %>
     </div>
+
   </body>
 </html>

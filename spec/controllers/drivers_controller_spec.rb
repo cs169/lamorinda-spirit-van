@@ -4,11 +4,12 @@ require "rails_helper"
 
 RSpec.describe DriversController, type: :controller do
   before(:each) do
-    @user = FactoryBot.create(:user, :driver)
-    sign_in @user
+    @dispatcher = FactoryBot.create(:user, :dispatcher)
+    sign_in @dispatcher
 
     @driver1 = FactoryBot.create(:driver)
     @driver2 = FactoryBot.create(:driver)
+    @driver1_user = FactoryBot.create(:user, email: @driver1.email, role: "driver")
 
     @address1 = FactoryBot.create(:address)
 
@@ -21,6 +22,38 @@ RSpec.describe DriversController, type: :controller do
     @ride5 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1, date: Time.zone.today - 1.days)
   end
 
+  describe "Access control: driver user restrictions" do
+    before do
+      sign_in FactoryBot.create(:user, :driver)
+    end
+
+    it "denies access to GET #new" do
+      get :new
+      expect(response).to redirect_to(root_path)
+      expect(flash[:alert]).to eq("Access denied.")
+    end
+
+    it "denies access to GET #edit" do
+      get :edit, params: { id: @driver1.id }
+      expect(response).to redirect_to(root_path)
+    end
+
+    it "denies access to POST #create" do
+      post :create, params: { driver: { name: "Test", email: "t@example.com", phone: "111", active: true } }
+      expect(response).to redirect_to(root_path)
+    end
+
+    it "denies access to PATCH #update" do
+      patch :update, params: { id: @driver1.id, driver: { name: "Blocked" } }
+      expect(response).to redirect_to(root_path)
+    end
+
+    it "denies access to DELETE #destroy" do
+      delete :destroy, params: { id: @driver1.id }
+      expect(response).to redirect_to(root_path)
+    end
+  end
+
   describe "GET #index" do
     it "Verify @drivers contains all Driver records" do
       get :index
@@ -30,6 +63,22 @@ RSpec.describe DriversController, type: :controller do
     it "renders the index template" do
       get :index
       expect(response).to render_template(:index)
+    end
+
+    context "as driver with matching Driver record" do
+      before do
+        sign_in @driver1_user
+      end
+
+      it "redirects to today_driver_path" do
+        get :index
+        expect(response).to redirect_to(today_driver_path(@driver1.id))
+      end
+
+      it "renders the index template without redirecting" do
+        get :index, params: { dont_jump: true }
+        expect(response).to render_template(:index)
+      end
     end
   end
 

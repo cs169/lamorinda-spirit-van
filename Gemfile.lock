@@ -82,6 +82,12 @@ GEM
     benchmark (0.4.0)
     bigdecimal (3.1.9)
     bindex (0.8.1)
+    blazer (3.2.1)
+      activerecord (>= 7)
+      chartkick (>= 5)
+      csv
+      railties (>= 7)
+      safely_block (>= 0.4)
     bootsnap (1.18.4)
       msgpack (~> 1.2)
     brakeman (7.0.2)
@@ -96,6 +102,7 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
+    chartkick (5.1.4)
     childprocess (5.1.0)
       logger (~> 1.5)
     coderay (1.1.3)
@@ -159,6 +166,12 @@ GEM
     factory_bot_rails (6.4.4)
       factory_bot (~> 6.5)
       railties (>= 5.0.0)
+    faraday (2.13.0)
+      faraday-net_http (>= 2.0, < 3.5)
+      json
+      logger
+    faraday-net_http (3.4.0)
+      net-http (>= 0.5.0)
     ffi (1.17.1-aarch64-linux-gnu)
     ffi (1.17.1-aarch64-linux-musl)
     ffi (1.17.1-arm-linux-gnu)
@@ -191,6 +204,7 @@ GEM
       guard (~> 2.1)
       guard-compat (~> 1.1)
       rspec (>= 2.99.0, < 4.0)
+    hashie (5.0.0)
     humanize (3.1.0)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
@@ -207,6 +221,8 @@ GEM
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
     json (2.10.2)
+    jwt (2.10.1)
+      base64
     language_server-protocol (3.17.0.4)
     launchy (3.1.1)
       addressable (~> 2.8)
@@ -236,7 +252,11 @@ GEM
     msgpack (1.8.0)
     multi_json (1.15.0)
     multi_test (1.1.0)
+    multi_xml (0.7.1)
+      bigdecimal (~> 3.1)
     nenv (0.3.0)
+    net-http (0.6.0)
+      uri
     net-imap (0.5.6)
       date
       net-protocol
@@ -266,6 +286,25 @@ GEM
     notiffany (0.1.3)
       nenv (~> 0.1)
       shellany (~> 0.0)
+    oauth2 (2.0.9)
+      faraday (>= 0.17.3, < 3.0)
+      jwt (>= 1.0, < 3.0)
+      multi_xml (~> 0.5)
+      rack (>= 1.2, < 4)
+      snaky_hash (~> 2.0)
+      version_gem (~> 1.1)
+    omniauth (2.1.3)
+      hashie (>= 3.4.6)
+      rack (>= 2.2.3)
+      rack-protection
+    omniauth-entra-id (3.0.1)
+      omniauth-oauth2 (~> 1.8)
+    omniauth-oauth2 (1.8.0)
+      oauth2 (>= 1.4, < 3)
+      omniauth (~> 2.0)
+    omniauth-rails_csrf_protection (1.0.2)
+      actionpack (>= 4.2)
+      omniauth (~> 2.0)
     orm_adapter (0.5.0)
     ostruct (0.6.1)
     parallel (1.26.3)
@@ -288,6 +327,10 @@ GEM
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.1.12)
+    rack-protection (4.1.1)
+      base64 (>= 0.1.0)
+      logger (>= 1.6.0)
+      rack (>= 3.0.0, < 4)
     rack-session (2.1.0)
       base64 (>= 0.1.0)
       rack (>= 3.0.0)
@@ -401,6 +444,7 @@ GEM
       rubocop (~> 1.72, >= 1.72.1)
     ruby-progressbar (1.13.0)
     rubyzip (2.4.1)
+    safely_block (0.4.1)
     securerandom (0.4.1)
     selenium-webdriver (4.30.1)
       base64 (~> 0.2)
@@ -417,6 +461,9 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.13.1)
     simplecov_json_formatter (0.1.4)
+    snaky_hash (2.0.1)
+      hashie
+      version_gem (~> 1.1, >= 1.1.1)
     sprockets (4.2.1)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
@@ -447,7 +494,9 @@ GEM
     unicode-display_width (3.1.4)
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
+    uri (1.0.3)
     useragent (0.16.11)
+    version_gem (1.1.6)
     warden (1.2.9)
       rack (>= 2.0.9)
     web-console (4.2.1)
@@ -476,6 +525,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord-import
+  blazer
   bootsnap
   brakeman
   csv
@@ -491,6 +541,8 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   letter_opener
+  omniauth-entra-id
+  omniauth-rails_csrf_protection
   pg
   puma (>= 5.0)
   rails (~> 7.2.2, >= 7.2.2.1)

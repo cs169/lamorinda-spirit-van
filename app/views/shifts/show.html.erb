@@ -4,9 +4,26 @@
 
 <%= render @shift %>
 
-<div>
-  <%= link_to "Edit this shift", edit_shift_path(@shift) %> |
-  <%= link_to "Back to shifts", shifts_path %>
+<%= render "shift_rides" %>
 
-  <%= button_to "Destroy this shift", @shift, method: :delete %>
+<div class="text-right mt-4">
+  <%= link_to "Add new ride", new_ride_path(date: @shift.shift_date, driver_id: @shift.driver), class: "btn btn-primary" %>
+</div>
+
+
+<div class="mb-3">
+  <%= form_with model: @shift do |form| %>
+    <%= form.label :notes, "Notes about Shift/Timeline:" %>
+    <%= form.text_area :notes, class: "form-control", value: @shift.notes  %> 
+    <%= form.submit "Save", class: "form-control"  %> 
+  <% end %>
+</div>
+
+<div class="text-center mt-4">
+  <%= link_to "Edit this shift", edit_shift_path(@shift), class: "btn btn-primary" %>
+  <%= link_to "Back to shifts", shifts_path, class: "btn btn-secondary"%>
+
+  <%= button_to "Destroy this shift", @shift, 
+        class: "btn btn-danger",
+        data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' } %> 
 </div>

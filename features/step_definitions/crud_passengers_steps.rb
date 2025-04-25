@@ -38,8 +38,3 @@ When("I follow {string} for {string}") do |link_text, name|
     click_link link_text
   end
 end
-
-
-# Then("I should not see {string}") do |text|
-#   expect(page).not_to have_content text
-# end

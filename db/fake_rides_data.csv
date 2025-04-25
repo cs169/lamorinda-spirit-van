@@ -1,51 +1,51 @@
-Date,driver_id,Van,passenger_id,start_address_id,dest_address_id,Notes to Driver,Hours,Amount Paid,Notes,emailed_driver
-04/07/2025,1,6,14,8,38,60 min,2.5,10.86,10/31:tel rqst (SP),
-04/07/2025,2,5,2,83,62,"r/t, Wheelchair, 60 min",4,32.16,10/31:tel rqst (MS),
-04/07/2025,5,3,12,50,93,60 min,3.4,27.30,10/31:tel rqst (MS),
-04/07/2025,3,7,42,46,88,60 min,1,13.98,10/31:tel rqst (SP),
-04/07/2025,1,7,50,50,75,"r/t, $20",3.2,30.49,10/31:tel rqst (JB),sent
-04/07/2025,5,8,26,78,97,"r/t, Wheelchair",2.2,46.42,10/31:tel rqst (JB),sent
-04/07/2025,6,5,01,99,93,"Wheelchair, r/t, 60 min",2.8,24.26,10/31:tel rqst (JD),
-04/07/2025,1,8,24,69,7,"$20, r/t, Wheelchair",3.3,42.99,10/31:tel rqst (JD),sent
-04/07/2025,3,3,48,55,68,60 min,1.5,30.97,10/31:tel rqst (SP),sent
-04/07/2025,6,6,1,90,24,"60 min, r/t, $20",3.2,42.96,10/31:tel rqst (MS),sent
-04/07/2025,5,5,8,89,49,"$20, r/t",2.9,25.87,10/31:tel rqst (ER),
-04/07/2025,6,8,6,66,38,Wheelchair,4.2,43.41,10/31:tel rqst (MS),
-04/08/2025,1,6,6,80,94,60 min,2.7,36.48,10/31:tel rqst (SP),sent
-04/08/2025,6,7,26,86,45,"$20, Wheelchair",1.9,15.7,10/31:tel rqst (ER),sent
-04/08/2025,4,3,28,41,23,60 min,2.9,12.09,10/31:tel rqst (MS),
-04/08/2025,2,5,30,91,91,"$20, r/t, Wheelchair",3.8,33.35,10/31:tel rqst (SP),
-04/08/2025,3,5,9,44,78,"$20, 60 min",1.2,21.43,10/31:tel rqst (JD),sent
-04/08/2025,4,7,40,76,79,"r/t, Wheelchair",2.5,24.27,10/31:tel rqst (MS),sent
-04/08/2025,6,7,36,43,31,"r/t, $20",1.8,26.37,10/31:tel rqst (ER),
-04/08/2025,3,8,15,91,80,"r/t, $20",1.2,35.35,10/31:tel rqst (MS),
-04/08/2025,6,8,16,94,22,"Wheelchair, $20, 60 min",2.7,27.04,10/31:tel rqst (SP),
-04/08/2025,3,5,1,100,2,"r/t, 60 min",1.1,39.7,10/31:tel rqst (JB),sent
-04/08/2025,6,3,46,80,32,60 min,1.2,48.30,10/31:tel rqst (ER),
-04/08/2025,3,5,15,48,29,r/t,2.5,45.75,10/31:tel rqst (ER),sent
-04/08/2025,4,3,45,64,79,"60 min, Wheelchair, r/t",2.9,25.26,10/31:tel rqst (ER),
-04/08/2025,6,7,38,11,50,Wheelchair,4.1,31.01,10/31:tel rqst (ER),
-04/08/2025,4,7,01,6,50,r/t,3.6,15.16,10/31:tel rqst (MS),sent
-04/08/2025,2,5,23,31,14,"r/t, $20",2.8,23.1,10/31:tel rqst (ER),sent
-04/08/2025,3,3,6,53,60,$20,4,01.61,10/31:tel rqst (SP),
-04/08/2025,6,8,15,70,93,"60 min, Wheelchair",3.8,39.69,10/31:tel rqst (JD),
-04/08/2025,1,7,32,22,74,60 min,2.8,41.47,10/31:tel rqst (JD),
-04/08/2025,3,7,15,45,51,"60 min, Wheelchair, r/t",3.5,31.91,10/31:tel rqst (SP),sent
-04/08/2025,5,3,31,31,49,"60 min, Wheelchair",3,29.66,10/31:tel rqst (JD),
-04/08/2025,6,8,31,60,52,r/t,3.7,15.76,10/31:tel rqst (JD),sent
-04/09/2025,3,5,2,40,29,"Wheelchair, 60 min",4.7,11.98,10/31:tel rqst (JB),
-04/09/2025,4,5,34,77,16,"Wheelchair, $20, r/t",2.5,27.93,10/31:tel rqst (SP),
-04/09/2025,6,5,16,96,29,Wheelchair,4.6,15.21,10/31:tel rqst (JD),sent
-04/09/2025,2,8,3,40,88,"$20, 60 min",1.1,30.24,10/31:tel rqst (MS),sent
-04/09/2025,1,5,44,47,74,"$20, Wheelchair, 60 min",3.7,49.31,10/31:tel rqst (JD),sent
-04/09/2025,4,6,1,91,66,"$20, 60 min, r/t",4.6,23.14,10/31:tel rqst (JB),
-04/09/2025,4,5,1,12,49,"$20, Wheelchair",2,10.02,10/31:tel rqst (JB),
-04/09/2025,1,7,6,11,75,"r/t, $20, 60 min",4.1,01.42,10/31:tel rqst (JB),
-04/09/2025,4,6,10,11,33,"Wheelchair, $20, r/t",4.5,44.47,10/31:tel rqst (SP),sent
-04/09/2025,4,3,27,7,59,"Wheelchair, r/t, 60 min",4.6,10.85,10/31:tel rqst (MS),sent
-04/09/2025,2,3,13,45,30,r/t,2.1,49.9,10/31:tel rqst (SP),sent
-04/09/2025,4,7,6,72,61,"$20, 60 min, Wheelchair",3.3,24.78,10/31:tel rqst (SP),sent
-04/09/2025,2,7,01,64,28,"60 min, $20",5,43.42,10/31:tel rqst (SP),sent
-04/09/2025,2,7,45,41,74,"$20, 60 min",4.8,47.51,10/31:tel rqst (MS),
-04/09/2025,1,7,31,97,73,"$20, Wheelchair, 60 min",1.8,21.88,10/31:tel rqst (MS),sent
-04/09/2025,3,7,38,94,20,60 min,4.2,23.44,10/31:tel rqst (JB),sent
+Date,driver_id,Van,passenger_id,start_address_id,dest_address_id,address_name,destination_type,notes_about_location,wheelchair,low_income,disabled,need_caregiver,Notes,Hours,Amount Paid,notes_date_reserved,Confirmed with passenger,emailed_driver
+04/07/2025,1,6,14,8,38,Main Entrance,Cafe Costa,"Side entrance, 1st floor",0,0,0,0,60 min,2.5,10.86,10/31:tel rqst (SP),Yes,
+04/07/2025,2,5,2,83,62,Front Desk,special events,Ask for receptionist,1,1,0,1,"r/t, Wheelchair, 60 min",4.0,32.16,10/31:tel rqst (MS),Yes,
+04/07/2025,5,3,12,50,93,Reception,errands & groceries,"3rd floor, left wing",0,1,0,1,60 min,3.4,27.3,10/31:tel rqst (MS),Yes,
+04/07/2025,3,7,42,46,88,Back Door,social visits,"Room 205, 2nd floor",0,0,1,0,60 min,1.0,13.98,10/31:tel rqst (SP),No,
+04/07/2025,1,7,50,50,75,Lobby,Cafe Costa,"Room 205, 2nd floor",1,0,0,0,"r/t, $20",3.2,30.49,10/31:tel rqst (JB),No,sent
+04/07/2025,5,8,26,78,97,Front Desk,medical,"3rd floor, left wing",1,0,1,1,"r/t, Wheelchair",2.2,46.42,10/31:tel rqst (JB),No,sent
+04/07/2025,6,5,1,99,93,Garage,errands & groceries,"3rd floor, left wing",0,0,0,0,"Wheelchair, r/t, 60 min",2.8,24.26,10/31:tel rqst (JD),Yes,
+04/07/2025,1,8,24,69,7,Back Door,errands & groceries,"3rd floor, left wing",1,0,0,0,"$20, r/t, Wheelchair",3.3,42.99,10/31:tel rqst (JD),No,sent
+04/07/2025,3,3,48,55,68,Lobby,special events,"3rd floor, left wing",0,0,0,1,60 min,1.5,30.97,10/31:tel rqst (SP),No,sent
+04/07/2025,6,6,1,90,24,Main Entrance,Cafe Costa,"Room 205, 2nd floor",1,0,1,0,"60 min, r/t, $20",3.2,42.96,10/31:tel rqst (MS),No,sent
+04/07/2025,5,5,8,89,49,Main Entrance,personal care,Go to 1st floor,1,1,1,0,"$20, r/t",2.9,25.87,10/31:tel rqst (ER),No,
+04/07/2025,6,8,6,66,38,Main Entrance,personal care,Go to 1st floor,0,0,0,0,Wheelchair,4.2,43.41,10/31:tel rqst (MS),Yes,
+04/08/2025,1,6,6,80,94,Main Entrance,social visits,"Side entrance, 1st floor",1,1,1,1,60 min,2.7,36.48,10/31:tel rqst (SP),No,sent
+04/08/2025,6,7,26,86,45,Garage,personal care,Ask for receptionist,0,0,1,0,"$20, Wheelchair",1.9,15.7,10/31:tel rqst (ER),No,sent
+04/08/2025,4,3,28,41,23,Garage,Cafe Costa,Ask for receptionist,1,0,1,1,60 min,2.9,12.09,10/31:tel rqst (MS),Yes,
+04/08/2025,2,5,30,91,91,Reception,medical,Go to 1st floor,1,0,0,1,"$20, r/t, Wheelchair",3.8,33.35,10/31:tel rqst (SP),No,
+04/08/2025,3,5,9,44,78,Main Entrance,Cafe Costa,Ask for receptionist,0,1,0,0,"$20, 60 min",1.2,21.43,10/31:tel rqst (JD),No,sent
+04/08/2025,4,7,40,76,79,Main Entrance,social visits,Ask for receptionist,0,0,1,1,"r/t, Wheelchair",2.5,24.27,10/31:tel rqst (MS),Yes,sent
+04/08/2025,6,7,36,43,31,Main Entrance,personal care,"Room 205, 2nd floor",1,0,0,1,"r/t, $20",1.8,26.37,10/31:tel rqst (ER),No,
+04/08/2025,3,8,15,91,80,Main Entrance,personal care,"Side entrance, 1st floor",0,1,0,1,"r/t, $20",1.2,35.35,10/31:tel rqst (MS),No,
+04/08/2025,6,8,16,94,22,Front Desk,special events,"3rd floor, left wing",0,0,0,1,"Wheelchair, $20, 60 min",2.7,27.04,10/31:tel rqst (SP),No,
+04/08/2025,3,5,1,100,2,Back Door,personal care,Ask for receptionist,0,0,1,0,"r/t, 60 min",1.1,39.7,10/31:tel rqst (JB),No,sent
+04/08/2025,6,3,46,80,32,Back Door,errands & groceries,"Room 205, 2nd floor",0,0,1,0,60 min,1.2,48.3,10/31:tel rqst (ER),No,
+04/08/2025,3,5,15,48,29,Lobby,errands & groceries,Ask for receptionist,0,1,1,1,r/t,2.5,45.75,10/31:tel rqst (ER),Yes,sent
+04/08/2025,4,3,45,64,79,Front Desk,medical,"Side entrance, 1st floor",0,1,1,1,"60 min, Wheelchair, r/t",2.9,25.26,10/31:tel rqst (ER),Yes,
+04/08/2025,6,7,38,11,50,Back Door,medical,Ask for receptionist,0,1,1,1,Wheelchair,4.1,31.01,10/31:tel rqst (ER),No,
+04/08/2025,4,7,1,6,50,Front Desk,errands & groceries,Go to 1st floor,0,1,0,1,r/t,3.6,15.16,10/31:tel rqst (MS),No,sent
+04/08/2025,2,5,23,31,14,Front Desk,personal care,"Side entrance, 1st floor",0,0,0,0,"r/t, $20",2.8,23.1,10/31:tel rqst (ER),No,sent
+04/08/2025,3,3,6,53,60,Main Entrance,special events,"Side entrance, 1st floor",0,1,0,0,$20 ,4.0,1.61,10/31:tel rqst (SP),No,
+04/08/2025,6,8,15,70,93,Back Door,personal care,Go to 1st floor,0,1,0,1,"60 min, Wheelchair",3.8,39.69,10/31:tel rqst (JD),No,
+04/08/2025,1,7,32,22,74,Reception,social visits,"3rd floor, left wing",0,0,1,1,60 min,2.8,41.47,10/31:tel rqst (JD),No,
+04/08/2025,3,7,15,45,51,Garage,personal care,Go to 1st floor,1,0,0,0,"60 min, Wheelchair, r/t",3.5,31.91,10/31:tel rqst (SP),No,sent
+04/08/2025,5,3,31,31,49,Reception,personal care,Go to 1st floor,0,0,0,1,"60 min, Wheelchair",3.0,29.66,10/31:tel rqst (JD),No,
+04/08/2025,6,8,31,60,52,Reception,special events,Ask for receptionist,1,0,0,1,r/t,3.7,15.76,10/31:tel rqst (JD),Yes,sent
+04/09/2025,3,5,2,40,29,Garage,personal care,Go to 1st floor,1,0,1,1,"Wheelchair, 60 min",4.7,11.98,10/31:tel rqst (JB),No,
+04/09/2025,4,5,34,77,16,Main Entrance,special events,"Room 205, 2nd floor",1,0,0,1,"Wheelchair, $20, r/t",2.5,27.93,10/31:tel rqst (SP),Yes,
+04/09/2025,6,5,16,96,29,Lobby,Cafe Costa,"Room 205, 2nd floor",0,1,1,0,Wheelchair,4.6,15.21,10/31:tel rqst (JD),No,sent
+04/09/2025,2,8,3,40,88,Lobby,special events,Go to 1st floor,1,0,0,1,"$20, 60 min",1.1,30.24,10/31:tel rqst (MS),Yes,sent
+04/09/2025,1,5,44,47,74,Main Entrance,errands & groceries,"Side entrance, 1st floor",1,1,0,0,"$20, Wheelchair, 60 min",3.7,49.31,10/31:tel rqst (JD),Yes,sent
+04/09/2025,4,6,1,91,66,Front Desk,medical,"Room 205, 2nd floor",0,0,1,0,"$20, 60 min, r/t",4.6,23.14,10/31:tel rqst (JB),Yes,
+04/09/2025,4,5,1,12,49,Front Desk,errands & groceries,Ask for receptionist,1,0,1,1,"$20, Wheelchair",2.0,10.02,10/31:tel rqst (JB),Yes,
+04/09/2025,1,7,6,11,75,Garage,social visits,"Side entrance, 1st floor",1,0,1,0,"r/t, $20, 60 min",4.1,1.42,10/31:tel rqst (JB),Yes,
+04/09/2025,4,6,10,11,33,Lobby,Cafe Costa,Ask for receptionist,1,1,1,0,"Wheelchair, $20, r/t",4.5,44.47,10/31:tel rqst (SP),Yes,sent
+04/09/2025,4,3,27,7,59,Reception,Cafe Costa,"Side entrance, 1st floor",1,0,0,1,"Wheelchair, r/t, 60 min",4.6,10.85,10/31:tel rqst (MS),No,sent
+04/09/2025,2,3,13,45,30,Reception,Cafe Costa,"3rd floor, left wing",1,1,1,1,r/t,2.1,49.9,10/31:tel rqst (SP),Yes,sent
+04/09/2025,4,7,6,72,61,Main Entrance,personal care,"3rd floor, left wing",0,0,0,0,"$20, 60 min, Wheelchair",3.3,24.78,10/31:tel rqst (SP),Yes,sent
+04/09/2025,2,7,1,64,28,Back Door,social visits,"3rd floor, left wing",1,1,0,1,"60 min, $20",5.0,43.42,10/31:tel rqst (SP),No,sent
+04/09/2025,2,7,45,41,74,Front Desk,personal care,"Room 205, 2nd floor",1,1,0,0,"$20, 60 min",4.8,47.51,10/31:tel rqst (MS),Yes,
+04/09/2025,1,7,31,97,73,Reception,errands & groceries,Ask for receptionist,0,1,1,0,"$20, Wheelchair, 60 min",1.8,21.88,10/31:tel rqst (MS),No,sent
+04/09/2025,3,7,38,94,20,Front Desk,special events,"Side entrance, 1st floor",1,1,0,0,60 min,4.2,23.44,10/31:tel rqst (JB),No,sent

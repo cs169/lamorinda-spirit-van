@@ -18,8 +18,17 @@
   <%= link_to "Didn't receive unlock instructions?", new_unlock_path(resource_name) %><br />
 <% end %>
 
-<%- if devise_mapping.omniauthable? %>
-  <%- resource_class.omniauth_providers.each do |provider| %>
-    <%= button_to "Sign in with #{OmniAuth::Utils.camelize(provider)}", omniauth_authorize_path(resource_name, provider), data: { turbo: false } %><br />
-  <% end %>
+<% if devise_mapping.omniauthable? && resource_class.omniauth_providers.include?(:entra_id) %>
+  <div>
+    <%= button_to omniauth_authorize_path(resource_name, :entra_id),
+      data: { turbo: false },
+      form_class: "m-0 p-0 border-0",
+      class: "p-0 border-0",
+      title: "Sign in with Microsoft",   
+      style: "background: none;" do %>
+    <%= image_tag "ms-symbollockup_signin_light.png",
+      alt: "Microsoft logo",
+      style: "display: block; width: 100%; height: auto;" %>
+    <% end %>
+  </div>
 <% end %>

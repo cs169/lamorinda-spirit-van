@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Lamorinda" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= yield :head %>
+
+    <!-- Favicons and Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+
+    <% if defined?(Propshaft::Railtie) && Rails.application.assets.is_a?(Propshaft::Assembly) %>
+      <%= stylesheet_link_tag "blazer/bootstrap-propshaft", "blazer/bootstrap", "blazer/selectize", "blazer/github", "blazer/daterangepicker", "blazer/application" %>
+      <%= javascript_include_tag "blazer/jquery", "blazer/rails-ujs", "blazer/stupidtable", "blazer/stupidtable-custom-settings", "blazer/jquery.stickytableheaders", "blazer/selectize", "blazer/highlight.min", "blazer/moment", "blazer/moment-timezone-with-data", "blazer/daterangepicker", "blazer/chart.umd", "blazer/chartjs-adapter-date-fns.bundle", "blazer/chartkick", "blazer/mapkick.bundle", "blazer/ace/ace", "blazer/ace/ext-language_tools", "blazer/ace/theme-twilight", "blazer/ace/mode-sql", "blazer/ace/snippets/text", "blazer/ace/snippets/sql", "blazer/Sortable", "blazer/bootstrap", "blazer/vue.global.prod", "blazer/routes", "blazer/queries", "blazer/fuzzysearch", "blazer/application", nonce: true %>
+    <% else %>
+      <%= stylesheet_link_tag "blazer/application" %>
+      <%= javascript_include_tag "blazer/application", nonce: true %>
+    <% end %>
+    <%= javascript_tag nonce: true do %>
+      <%= blazer_js_var "rootPath", root_path %>
+    <% end %>
+
+    <!-- gon gem integration -->
+    <%= include_gon %>
+  </head>
+  <body>
+
+      <!-- Main Content Area for Blazer -->
+      <div class="content-wrapper container my-4" style="max-width: 80%;">
+        <%= link_to 'Back to Website', '/admin/users', class: "btn btn-success mt-3" %>
+        <%= yield %>
+      </div>
+
+    </div>
+  </body>
+</html>

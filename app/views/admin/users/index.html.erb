@@ -1,4 +1,15 @@
 <h1>All Users</h1>
+
+<div class="unassigned-user-actions mb-3">
+  <%= button_to "Remove All Unassigned Users",
+                destroy_unassigned_admin_users_path,
+                method: :delete,
+                data: {
+                  turbo_confirm: "Are you sure you want to delete all users with no assigned role?\nThis action cannot be undone!\nUsers with assigned roles will not be affected."
+                },
+                class: "btn btn-danger" %>
+</div>
+
 <table>
   <tr>
     <th>Email</th>

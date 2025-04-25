@@ -8,7 +8,7 @@ Feature: Dispatcher Shift Creation
     Given a dispatcher is logged in
 
   Scenario: Dispatcher creates a new shift from calendar
-    Given I am on the Shifts Calendar page
+    Given I am on the shifts calendar page
     Then I should see each day has a button for create a new shift
     When I click one day's "New shift" button
     Then I should be on the new shift page

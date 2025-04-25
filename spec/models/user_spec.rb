@@ -3,6 +3,14 @@
 require "rails_helper"
 
 RSpec.describe User, type: :model do
+  describe "admin role constraint" do
+    it "does not allow deleting the last admin" do
+      admin = User.create!(email: "admin@example.com", password: "password", role: "admin")
+      expect(User.where(role: "admin").count).to eq(1)
+      expect { admin.destroy }.to_not change(User, :count)
+      expect(admin.errors[:base]).to include("Cannot delete the last admin user.")
+    end
+  end
   describe "#admin?" do
     it "returns true when role is admin" do
       user = User.new(role: "admin")

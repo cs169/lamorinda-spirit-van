@@ -13,7 +13,7 @@ Feature: Dispatcher Shift Navigation
     And the following shift exists:
       | driver     | shift_date | shift_type |
       | John Smith | Time.zone.today | am |
-    And I am on the Shifts Calendar page
+    And I am on the shifts calendar page
 
   Scenario: Dispatcher clicks on driver name to view all their shifts
     When I click on a driver's name
