@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class ShiftTemplatesController < ApplicationController
-  before_action :set_shift_template, only: %i[ show edit update destroy ]
-  before_action -> { require_role("admin") }, only: [:new, :edit, :create, :update, :destroy]
+  before_action :set_shift_template, only: %i[ edit update destroy ]
+  before_action -> { require_role("admin") }
 
   # GET /shift_templates/new
   def new
