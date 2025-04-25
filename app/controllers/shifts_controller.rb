@@ -33,13 +33,10 @@ class ShiftsController < ApplicationController
     @shift = Shift.find(params[:id])
   end
 
-  # POST /shifts/fill_template
+  # POST /shifts/fill_from_template
   def fill_from_template
-    begin
-      Shift.fill_month(ShiftTemplate.all, Date.parse(params[:date]))
-    rescue ActiveRecord::ActiveRecord::RecordInvalid
-      flash[:alert] = "Error with creating shifts from templates"
-    end
+    error_messages = Shift.fill_month(ShiftTemplate.all, Date.parse(params[:date]))
+    flash[:alert] = "Error with creating shifts from templates" unless error_messages.empty?
     redirect_to shifts_path(start_date: params[:date])
   end
 
