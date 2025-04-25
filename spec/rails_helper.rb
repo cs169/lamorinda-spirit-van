@@ -15,6 +15,7 @@ SimpleCov.formatters = SimpleCov::Formatter::MultiFormatter.new([
 SimpleCov.start "rails" do
   # enable_coverage :branch         # Optional: also track branch coverage
   add_filter "/spec/"            # Exclude spec files from coverage calculation
+  add_filter "/features/"        # Exclude cucumber files from coverage calculation
 end
 
 
