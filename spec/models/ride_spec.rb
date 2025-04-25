@@ -134,6 +134,48 @@ RSpec.describe Ride, type: :model do
     end
   end
 
+  describe "create multi-stop rides" do
+    it "creates rides and links them correctly" do
+      address0 = FactoryBot.create(:address, street: "789 Broadway", city: "San Francisco", state: "CA", zip: "94133")
+      address1 = FactoryBot.create(:address, street: "1000 Dwight", city: "Berkeley", state: "CA", zip: "94133")
+      address2 = FactoryBot.create(:address, street: "100 Bancroft", city: "Berkeley", state: "CA", zip: "94133")
+      address3 = FactoryBot.create(:address, street: "80 University", city: "Berkeley", state: "CA", zip: "94133")
+
+      addrs = [address0, address1, address2, address3]
+      ride_attrs = {
+        driver_id: 1,
+        date: Time.zone.today - 1.day,
+        emailed_driver: "sent",
+        confirmed_with_passenger: "Yes"
+      }
+      rides = Ride.build_linked_rides(ride_attrs, addrs)
+     
+      Ride.save_rides(rides)
+
+      expect(rides.length).to eq(3)
+
+      expect(rides[0].start_address.full_address).to eq("789 Broadway, San Francisco, CA, 94133")
+      expect(rides[0].dest_address.full_address).to eq("1000 Dwight, Berkeley, CA, 94133")
+
+      expect(rides[1].start_address.full_address).to eq("1000 Dwight, Berkeley, CA, 94133")
+      expect(rides[1].dest_address.full_address).to eq("100 Bancroft, Berkeley, CA, 94133")
+
+      expect(rides[2].start_address.full_address).to eq("100 Bancroft, Berkeley, CA, 94133")
+      expect(rides[2].dest_address.full_address).to eq("80 University, Berkeley, CA, 94133")
+
+      expect(rides[0].next_ride).to eq(rides[1])
+      expect(rides[1].previous_ride).to eq(rides[0])
+
+      expect(rides[1].next_ride).to eq(rides[2])
+      expect(rides[2].previous_ride).to eq(rides[1])
+
+      expect(rides[0].previous_ride).to eq(nil)
+      expect(rides[2].next_ride).to eq(nil)
+
+      byebug
+    end
+  end
+
   after(:each) do
     Ride.delete_all
     Driver.delete_all

@@ -5,7 +5,7 @@ class RidesController < ApplicationController
   before_action -> { require_role("admin", "dispatcher") }, only: [:index, :new, :edit, :create, :update, :destroy]
 
   # Have only rides without previous rides (HEAD rides) be displayed
-  # "Give me all rides whose id is not someone else's next_ride_id 
+  # "Give me all rides whose id is not someone else's next_ride_id
   # — i.e., they're not the continuation of another ride."
   def index
     @rides = Ride.where.not(id: Ride.select(:next_ride_id).where.not(next_ride_id: nil))
@@ -27,15 +27,25 @@ class RidesController < ApplicationController
   end
 
   def create
-    @ride = Ride.new(ride_params)
-    if @ride.save
-      session[:return_to] ||= rides_path
-      redirect_to session[:return_to], notice: "Ride was successfully created."
-    else
-      flash[:alert] = @ride.errors.full_messages.join
+    ride_attrs = ride_params.except(:addresses_attributes)
+    addresses = ride_params[:addresses_attributes]
+
+    created_rides = Ride.build_linked_rides(ride_attrs, addresses)
+    success, failed_ride = Ride.save_rides(created_rides)
+    puts
+    puts "failed_ride: #{failed_ride}"
+    puts
+    @ride = created_rides[0]
+
+    if !success
+      created_rides.each(&:destroy)
+      flash[:alert] = failed_ride.errors.full_messages.join
       render :new
-      # redirect_to new_ride_path
+  
     end
+
+    session[:return_to] ||= rides_path
+    redirect_to session[:return_to], notice: "Ride was successfully created."
   end
 
   def edit
@@ -87,8 +97,7 @@ class RidesController < ApplicationController
       :emailed_driver,
       :start_address_id,
       :dest_address_id,
-      start_address_attributes: [:street, :city, :state, :zip],
-      dest_address_attributes: [:street, :city, :state, :zip]
+      addresses_attributes: [:street, :city, :state, :zip]
     )
   end
 end

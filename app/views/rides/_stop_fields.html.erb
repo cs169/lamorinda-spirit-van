@@ -1,0 +1,43 @@
+<div class="col-md-5">
+    <h5 class="fw-bold text-success text-center">Stop <%= index %></h5>
+        <div class="mb-3">
+            <label class="form-label">Street</label>
+            <span class="text-danger">*</span>
+            <input type="text"
+                name="ride[addresses_attributes][][street]"
+                class="form-control"
+                required
+                autocomplete="ride-address">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">City</label>
+            <span class="text-danger">*</span>
+            <input type="text"
+                name="ride[addresses_attributes][][city]"
+                class="form-control"
+                required
+                autocomplete="ride-city">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">State</label>
+            <span class="text-danger">*</span>
+            <input type="text"
+                name="ride[addresses_attributes][][state]"
+                class="form-control"
+                required
+                autocomplete="ride-state">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Zip</label>
+            <span class="text-danger">*</span>
+            <input type="text"
+                name="ride[addresses_attributes][][zip]"
+                class="form-control"
+                required
+                autocomplete="ride-zip">
+        </div>
+
+    </div>
