@@ -26,12 +26,7 @@ Rails.application.routes.draw do
 
   resources :passengers
 
-  resources :rides do
-    collection do
-      get "filter"
-      get "filter_results"
-    end
-  end
+  resources :rides
 
   resources :shifts do
     member do
