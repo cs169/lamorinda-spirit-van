@@ -154,7 +154,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_17_221441) do
     t.datetime "updated_at", null: false
     t.index ["driver_id"], name: "index_shift_templates_on_driver_id"
   end
-
+  
   create_table "shifts", force: :cascade do |t|
     t.date "shift_date"
     t.string "shift_type"

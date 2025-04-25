@@ -1,17 +1,45 @@
 <div id="<%= dom_id shift %>">
-  <p>
-    <strong>Shift date:</strong>
-    <%= shift.shift_date %>
-  </p>
 
-  <p>
-    <strong>Driver name:</strong>
-    <%= shift.driver.name %>
-  </p>
+  <div class="van-col">
+    <p>
+      <strong>Shift date:</strong>
+      <%= shift.shift_date %>
+    </p>
+    <p>
+      <strong>Driver name:</strong>
+      <%= shift.driver.name %>
+    </p>
+    <p>
+      <strong>Shift type:</strong>
+      <%= shift.shift_type %>
+    </p>
+  </div>
 
-  <p>
-    <strong>Shift type:</strong>
-    <%= shift.shift_type %>
-  </p>  
+  <div class="van-col">
+    <p>
+      <strong>Van number:</strong>
+      <%= shift.van %>
+    </p>
+
+    <p>
+      <strong>Van pick-up time:</strong>
+      <%= shift.pick_up_time %>
+    </p>
+    <p>
+      <strong>Van drop-off time:</strong>
+      <%= shift.drop_off_time %>
+    </p>
+  </div>
+
+  <div class="van-col">
+    <p>
+      <strong>Odometer pre-ride:</strong>
+      <%= shift.odometer_pre %>
+    </p>
+    <p>
+      <strong>Odometer post-ride:</strong>
+      <%= shift.odometer_post %>
+    </p>
+  </div>
 
 </div>

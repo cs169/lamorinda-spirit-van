@@ -56,6 +56,15 @@
     <p class="no-rides">No rides available</p>
   <% end %>
 
+  <% shift_today = Shift.find_by(driver_id: @driver.id, shift_date: @current_date) %>
+  <% if shift_today %>
+    <div class="shift-notes">
+      <h3>Timeline & Notes</h3>
+      <p><%= shift_today.notes.presence || "No info available for this shift." %></p>
+    </div>
+  <% else %>
+    <p>No shift found for this driver on <%= @current_date.strftime("%m/%d/%Y") %>.</p>
+  <% end %>
   
   <div id="btn-shift">
     <%= link_to "View Other Drivers", drivers_path(dont_jump: true), class: "btn btn-primary" %>
