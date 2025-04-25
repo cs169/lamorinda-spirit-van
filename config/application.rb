@@ -44,7 +44,7 @@ module Lamorinda
     config.generators.system_tests = nil
 
     config.time_zone = "Pacific Time (US & Canada)"
-    
+
     # For simplecalendar
     config.beginning_of_week = :sunday
   end
