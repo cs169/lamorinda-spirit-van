@@ -13,6 +13,9 @@ When("I click one day's {string} button") do |button_text|
   raise "No '#{button_text}' button found in any day cell" if candidate_cells.empty?
 
   target_cell = candidate_cells.sample
+
+  puts "Target cell HTML: #{target_cell.native.inner_html}"
+
   clicked_date_str = target_cell.text.match(/\d{4}-\d{2}-\d{2}/)&.to_s
   unless clicked_date_str
     clicked_date_str = target_cell.find("a", text: button_text)[:href].match(/date=(\d{4}-\d{2}-\d{2})/)&.captures&.first
