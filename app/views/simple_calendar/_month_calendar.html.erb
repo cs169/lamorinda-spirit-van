@@ -1,9 +1,5 @@
 <div class="simple-calendar">
 
-  <% date_range = calendar.date_range %>
-  <% date_range = date_range.first.beginning_of_week(:sunday)..date_range.last.end_of_week(:sunday) %>
-  <% date_range = date_range.to_a %>
-
   <div class="calendar-heading">
     <time datetime="<%= start_date.strftime('%Y-%m') %>" class="calendar-title"><%= t('date.month_names')[start_date.month] %> <%= start_date.year %></time>
 
@@ -17,15 +13,14 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <% (0..6).each do |i| %>
-          <th><%= t('date.abbr_day_names')[i] %></th>
+        <% date_range.slice(0, 7).each do |day| %>
+          <th><%= t('date.abbr_day_names')[day.wday] %></th>
         <% end %>
       </tr>
     </thead>
 
     <tbody>
       <% date_range.each_slice(7) do |week| %>
-      <% next if week.all? { |day| day.month != start_date.month } %>
         <tr>
           <% week.each do |day| %>
             <%= content_tag :td, class: calendar.td_classes_for(day) do %>
