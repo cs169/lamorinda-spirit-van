@@ -2,6 +2,7 @@
 
 class RidesController < ApplicationController
   before_action :set_ride, only: [ :show, :edit, :update, :destroy ]
+  before_action -> { require_role("admin", "dispatcher") }, only: [:index, :new, :edit, :create, :update, :destroy]
 
   def index
     @rides = Ride.all
@@ -12,7 +13,8 @@ class RidesController < ApplicationController
 
   # new (GET Request, displays form)
   def new
-    @ride = Ride.new
+    session[:return_to] = request.referer
+    @ride = Ride.new(params.permit(:date, :driver_id))
     @ride.build_start_address
     @ride.build_dest_address
     # For driver dropdown list in creating / updating
@@ -24,7 +26,10 @@ class RidesController < ApplicationController
   def create
     @ride = Ride.new(ride_params)
     if @ride.save
-      redirect_to rides_path, notice: "Ride was successfully created."
+      feedback = Feedback.new(ride_id: @ride.id)
+      feedback.save
+      session[:return_to] ||= rides_path
+      redirect_to session[:return_to], notice: "Ride was successfully created."
     else
       flash[:alert] = @ride.errors.full_messages.join
       render :new

@@ -7,7 +7,7 @@ namespace :import do
   task fake_passengers: :environment do
     require Rails.root.join("app", "models", "passenger")
 
-    file_path = Rails.root.join("db", "fake_passengers.csv")
+    file_path = Rails.root.join("db", "fake_passengers_data.csv")
 
     unless File.exist?(file_path)
       puts "CSV file not found at #{file_path}"
@@ -26,9 +26,13 @@ namespace :import do
           birthday: Date.parse(row["Birthday"]),
           race: row["Race"].to_i,
           hispanic: row["Hispanic"] == "Yes",
-          email: row["Email"].presence,
+          wheelchair: row["wheelchair"].to_i == 1,
+          low_income: row["low_income"].to_i == 1,
+          disabled: row["disabled"].to_i == 1,
+          need_caregiver: row["need_caregiver"].to_i == 1,
           notes: row["Notes"].presence,
-          date_registered: Date.strptime(row["Date Registered"], "%m/%d/%Y"),
+          email: row["Email"].presence,
+          date_registered: Date.strptime(row["Date Registered"], "%Y-%m-%d"),
           audit: row["Audit"]
         )
     end

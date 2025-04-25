@@ -1,0 +1,34 @@
+---
+- :name: Rides By City
+  :description: Graphs the number of rides categorized by city, graphs both the starting
+    and ending addresses
+  :statement: "SELECT 'Starting Address' AS type, addresses.city, COUNT(*) AS ride_count\r\nFROM
+    rides\r\nJOIN addresses ON rides.start_address_id = addresses.id\r\nWHERE rides.date
+    >= {start_time} AND rides.date <= {end_time}\r\nGROUP BY addresses.city\r\n\r\nUNION
+    ALL\r\n\r\nSELECT 'Destination Address' AS type, addresses.city, COUNT(*) AS ride_count\r\nFROM
+    rides\r\nJOIN addresses ON rides.dest_address_id = addresses.id\r\nWHERE rides.date
+    >= {start_time} AND rides.date <= {end_time}\r\nGROUP BY addresses.city;\r\n"
+  :data_source: main
+- :name: Passenger Trips By City
+  :description: ''
+  :statement: "SELECT 'Lafayette' AS city, passengers.name, COUNT(*) AS ride_count\r\nFROM
+    rides\r\nJOIN passengers ON rides.passenger_id = passengers.id\r\nJOIN addresses
+    ON passengers.address_id = addresses.id\r\nWHERE rides.date >= {start_time} \r\n
+    \ AND rides.date <= {end_time}\r\n  AND addresses.city = 'Lafayette'\r\nGROUP
+    BY passengers.name\r\n\r\nUNION ALL\r\n\r\nSELECT 'Moraga' AS city, passengers.name,
+    COUNT(*) AS ride_count\r\nFROM rides\r\nJOIN passengers ON rides.passenger_id
+    = passengers.id\r\nJOIN addresses ON passengers.address_id = addresses.id\r\nWHERE
+    rides.date >= {start_time} \r\n  AND rides.date <= {end_time}\r\n  AND addresses.city
+    = 'Moraga'\r\nGROUP BY passengers.name\r\n\r\nUNION ALL\r\n\r\nSELECT 'Orinda'
+    AS city, passengers.name, COUNT(*) AS ride_count\r\nFROM rides\r\nJOIN passengers
+    ON rides.passenger_id = passengers.id\r\nJOIN addresses ON passengers.address_id
+    = addresses.id\r\nWHERE rides.date >= {start_time} \r\n  AND rides.date <= {end_time}\r\n
+    \ AND addresses.city = 'Orinda'\r\nGROUP BY passengers.name\r\n\r\nORDER BY city,
+    ride_count DESC;\r\n"
+  :data_source: main
+- :name: Fare by Passengers
+  :description: ''
+  :statement: "SELECT \r\n  passengers.name, \r\n  CONCAT('$', ROUND(SUM(rides.amount_paid),
+    2)) AS total_fare\r\nFROM rides\r\nJOIN passengers ON rides.passenger_id = passengers.id\r\nWHERE
+    rides.date >= {start_time} AND rides.date <= {end_time}\r\nGROUP BY passengers.name\r\n"
+  :data_source: main

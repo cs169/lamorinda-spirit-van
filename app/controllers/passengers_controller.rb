@@ -2,6 +2,7 @@
 
 class PassengersController < ApplicationController
   before_action :set_passenger, only: %i[ show edit update destroy ]
+  before_action -> { require_role("admin", "dispatcher") }
 
   # GET /passengers or /passengers.json
   def index

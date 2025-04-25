@@ -1,6 +1,6 @@
 <p style="color: green"><%= notice %></p>
 
-<% content_for :title, "Shifts" %>
+<% content_for :title, "Shifts Calendar" %>
 
 <%= stylesheet_link_tag 'shifts', media: 'all' %>
 
@@ -9,17 +9,28 @@
 <div id="shifts-calendar">
   <%# The following line starts with the following parameter which can be replaced by
   'week_calendar' or 'month_calendar' or 'calendar' %>
-  <%= month_calendar(attribute: :shift_date, events: @shifts) do |date, shifts| %>
+  <%= month_calendar(attribute: :shift_date, events: @shifts, start_day: :sunday) do |date, shifts| %>
     <%= date %>
-    <%= link_to "New shift", new_shift_path(:date => date) %>
+
+    <% if date.month == @date.month && date.year == @date.year && (current_user.admin? || current_user.dispatcher?) %>
+      <%= link_to "New shift", new_shift_path(date: date) %>
+    <% end %>
 
     <% shifts.each do |shift| %>
       <div>
         <strong>
-          <%= link_to shift.driver.name, all_shifts_driver_path(shift.driver), class: "driver-link" %>
+          <% if current_user.admin? || current_user.dispatcher? %>
+            <%= link_to shift.driver.name, all_shifts_driver_path(shift.driver), class: "driver-link" %>
+          <% elsif current_user.driver? %>
+            <%= shift.driver.name %>
+          <% end %>
         </strong>
          - 
-        <%= link_to shift.shift_type, shift, style: "color: blue; text-decoration: underline;", class: "shift-type-link" %>
+        <% if current_user.admin? || current_user.dispatcher? %>
+          <%= link_to shift.shift_type, shift, style: "color: blue; text-decoration: underline;", class: "shift-type-link" %>
+        <% elsif current_user.driver? %>
+          <%= shift.shift_type %>
+        <% end %>
       </div>
     <% end %>
   <% end %>

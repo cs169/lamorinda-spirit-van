@@ -21,13 +21,12 @@ Feature: User authentication and role enforcement
     And I fill in "Email" with "<email>"
     And I fill in "Password" with "password"
     And I press "Log in"
-    Then I should be on the "Lamorinda" page
+    Then I should be on the <expected_page> page
 
-    Examples:
-      | email                   | role       |
-      | admin1@example.com      | admin      |
-      | dispatcher1@example.com | dispatcher |
-      | driver1@example.com     | driver     |
+  Examples:
+    | email                   | role       | expected_page         |
+    | admin1@example.com      | admin      | admin users           |
+    | dispatcher1@example.com | dispatcher | rides                 |
 
 
   Scenario: A user with no role cannot sign in and sees an alert

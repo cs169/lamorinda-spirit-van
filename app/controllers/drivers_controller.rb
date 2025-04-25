@@ -2,9 +2,23 @@
 
 class DriversController < ApplicationController
   before_action :set_driver, only: %i[ show edit update destroy today ]
+  before_action -> { require_role("admin", "dispatcher") }, only: [:new, :edit, :create, :update, :destroy]
 
   # GET /drivers or /drivers.json
   def index
+    dont_jump = params[:dont_jump]
+    unless dont_jump
+      if current_user.role == "driver"
+        matched_driver = Driver.find_by("LOWER(email) = ?", current_user.email.downcase)
+        if matched_driver
+          redirect_to today_driver_path(matched_driver.id)
+          return
+        else
+          flash.now[:alert] = "No matching driver profile found for your account."
+        end
+      end
+    end
+
     @drivers = Driver.all
     # @drivers = @drivers.filter_by_active(params[:active])
     # @drivers = @drivers.filter_by_name(params[:name])

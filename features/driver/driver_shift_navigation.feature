@@ -11,14 +11,14 @@ Feature: Driver Ride and Shift Navigation
     Given I visit the Today's Rides page for that driver
     Then I should see "View All Shifts" button
     When I click on "View All Shifts" button
-    Then I should be on the "Shifts" page
+    Then I should be on the shifts calendar page
 
   Scenario: Viewing the current month in the shift calendar
-    Given I am on the "Shifts" page
+    Given I am on the shifts calendar page
     Then I should see the current month and year in the calendar title
 
   Scenario: Driver can switch month
-    Given I am on the "Shifts" page
+    Given I am on the shifts calendar page
     Then I should see the "Last Month", "Jump to Today", and "Next Month" buttons
     And I should see the current month title
 

@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  devise_for :users
+  devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks" }
   namespace :admin do
-    resources :users, only: [:index, :edit, :update, :destroy]
+    resources :users, only: [:index, :edit, :update, :destroy] do
+      collection do
+        delete :destroy_unassigned
+      end
+    end
   end
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
@@ -17,8 +21,14 @@ Rails.application.routes.draw do
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
 
   # Defines the root path route ("/")
-  root "rides#index"
+  root "drivers#index"
 
+  # blazer - data reporting
+  authenticate :user, ->(user) { user.admin? } do
+    mount Blazer::Engine, at: "blazer", as: "blazer"
+  end
+
+  resources :feedbacks
   resources :passengers
 
   resources :rides do

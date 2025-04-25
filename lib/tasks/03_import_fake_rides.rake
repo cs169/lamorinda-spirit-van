@@ -21,21 +21,30 @@ namespace :import do
     puts "Importing fake rides from #{file_path}..."
 
     CSV.foreach(file_path, headers: true) do |row|
-          puts "Row Data: #{row.to_h}"
-          # Create a new Ride record
-          Ride.create!(
-              date: Date.strptime(row["Date"], "%m/%d/%Y"),
-              driver_id: row["driver_id"],
-              van: row["Van"],
-              passenger_id: row["passenger_id"],
-              dest_address_id: row["dest_address_id"],
-              start_address_id: row["start_address_id"],
-              notes: row["Notes"],
-              hours: row["Hours"].to_f,
-              amount_paid: row["Amount Paid"].to_f,
-              emailed_driver: row["emailed_driver"] == "sent",
-            )
-        end
+      puts "Row Data: #{row.to_h}"
+
+      Ride.create!(
+        date: Date.strptime(row["Date"], "%m/%d/%Y"),
+        driver_id: row["driver_id"],
+        van: row["Van"],
+        passenger_id: row["passenger_id"],
+        dest_address_id: row["dest_address_id"],
+        start_address_id: row["start_address_id"],
+        address_name: row["address_name"],
+        notes_about_location: row["notes_about_location"],
+        destination_type: row["destination_type"],
+        wheelchair: row["wheelchair"].to_i == 1,
+        low_income: row["low_income"].to_i == 1,
+        disabled: row["disabled"].to_i == 1,
+        need_caregiver: row["need_caregiver"].to_i == 1,
+        notes: row["Notes"],
+        hours: row["Hours"].to_f,
+        amount_paid: row["Amount Paid"].to_f,
+        notes_date_reserved: row["notes_date_reserved"],
+        confirmed_with_passenger: row["Confirmed with passenger"],
+        emailed_driver: row["emailed_driver"] == "sent",
+      )
+    end
 
     puts "Import complete!"
   end

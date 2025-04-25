@@ -18,13 +18,6 @@ RSpec.describe ShiftsController, type: :controller do
     end
   end
 
-  describe "GET #read_only" do
-    it "returns a successful response" do
-      get :read_only
-      expect(response).to be_successful
-    end
-  end
-
   describe "GET #show" do
     it "returns a successful response" do
       get :show, params: { id: @shift.id }
@@ -46,7 +39,7 @@ RSpec.describe ShiftsController, type: :controller do
           post :create, params: { shift: { shift_date: Date.today, shift_type: "evening", driver_id: @driver.id } }
         }.to change(Shift, :count).by(1)
 
-        expect(response).to redirect_to(Shift.last)
+        expect(response).to redirect_to(shifts_path)
       end
     end
 
