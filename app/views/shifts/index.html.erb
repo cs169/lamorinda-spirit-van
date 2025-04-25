@@ -13,7 +13,7 @@
     <%= date %>
 
     <% if date.month == @date.month && date.year == @date.year && (current_user.admin? || current_user.dispatcher?) %>
-      <%= link_to "New shift", new_shift_path(date: date) %>
+      <%= link_to "New shift", new_shift_path(date: date), data: { date: date.to_s }, class: "new-shift-btn" %>
     <% end %>
 
     <% shifts.each do |shift| %>

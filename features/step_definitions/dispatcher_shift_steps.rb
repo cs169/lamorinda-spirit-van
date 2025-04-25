@@ -9,21 +9,17 @@ Then("I should see each day has a button for create a new shift") do
 end
 
 When("I click one day's {string} button") do |button_text|
-  candidate_cells = all("td").select { |td| td.has_link?(button_text) }
-  raise "No '#{button_text}' button found in any day cell" if candidate_cells.empty?
+  # Match any tag that has the correct text and a data-date attribute
+  expect(page).to have_selector("*[data-date]", text: button_text)
 
-  target_cell = candidate_cells.sample
+  # Find all elements with that text and data-date, regardless of tag
+  buttons = all("*[data-date]", text: button_text)
 
-  puts "Target cell HTML: #{target_cell.native.inner_html}"
+  raise "No '#{button_text}' button with data-date found" if buttons.empty?
 
-  clicked_date_str = target_cell.text.match(/\d{4}-\d{2}-\d{2}/)&.to_s
-  unless clicked_date_str
-    clicked_date_str = target_cell.find("a", text: button_text)[:href].match(/date=(\d{4}-\d{2}-\d{2})/)&.captures&.first
-  end
-  raise "Could not extract date from cell" unless clicked_date_str
-
-  @clicked_date = Date.parse(clicked_date_str)
-  target_cell.click_link(button_text)
+  selected = buttons.sample
+  @clicked_date = Date.parse(selected[:'data-date'])
+  selected.click
 end
 
 Then("the shift date field should show the date of the day I selected") do
