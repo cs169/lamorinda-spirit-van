@@ -38,7 +38,3 @@ Given(/^([0-9]*) shifts exist for (January|February|March|April|May|June|July|Au
     FactoryBot.create(:shift, shift_date: date.beginning_of_month + i)
   end
 end
-
-Then("show all shifts") do
-  puts Shift.all.map { |shift| "#{shift.shift_date}, #{shift.shift_type}" }
-end
