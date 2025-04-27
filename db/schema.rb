@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_04_27_224740) do
+ActiveRecord::Schema[7.2].define(version: 2025_04_27_231410) do
   create_table "addresses", force: :cascade do |t|
     t.string "street"
     t.string "city"
@@ -121,8 +121,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_27_224740) do
   end
 
   create_table "rides", force: :cascade do |t|
-    t.date "date", null: false
-    t.integer "van"
     t.float "hours"
     t.decimal "amount_paid", precision: 10, scale: 2
     t.text "notes_date_reserved"
@@ -130,9 +128,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_27_224740) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "passenger_id"
-    t.integer "driver_id"
     t.text "notes"
-    t.binary "emailed_driver"
     t.integer "start_address_id"
     t.integer "dest_address_id"
     t.string "address_name"
@@ -142,8 +138,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_27_224740) do
     t.boolean "low_income", default: false, null: false
     t.boolean "disabled", default: false, null: false
     t.boolean "need_caregiver", default: false, null: false
-    t.index ["driver_id"], name: "index_rides_on_driver_id"
+    t.integer "shift_id"
     t.index ["passenger_id"], name: "index_rides_on_passenger_id"
+    t.index ["shift_id"], name: "index_rides_on_shift_id"
   end
 
   create_table "shifts", force: :cascade do |t|
@@ -176,7 +173,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_27_224740) do
 
   add_foreign_key "feedbacks", "rides"
   add_foreign_key "passengers", "addresses"
-  add_foreign_key "rides", "drivers"
   add_foreign_key "rides", "passengers"
+  add_foreign_key "rides", "shifts"
   add_foreign_key "shifts", "drivers"
 end

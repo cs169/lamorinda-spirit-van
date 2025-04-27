@@ -3,6 +3,7 @@
 class Shift < ApplicationRecord
   belongs_to :driver
   validates :date, :shift_type, presence: true
+  has_many :rides, dependent: :nullify
 
   def self.shifts_by_date(shifts, date)
     shifts.where(date: date)
