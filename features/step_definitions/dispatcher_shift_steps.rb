@@ -24,7 +24,7 @@ When("I click one day's {string} button") do |button_text|
 end
 
 Then("the shift date field should show the date of the day I selected") do
-  input_value = find("#shift_shift_date").value
+  input_value = find("#shift_date").value
   expect(input_value).to eq @clicked_date.to_s
 end
 

@@ -9,15 +9,15 @@ end
 Given("the following shift exists:") do |table|
   table.hashes.each do |row|
     driver = Driver.find_by(name: row["driver"])
-    shift_date =
-      if row["shift_date"] == "Time.zone.today"
+    date =
+      if row["date"] == "Time.zone.today"
         Time.zone.today
       else
-        Date.parse(row["shift_date"])
+        Date.parse(row["date"])
       end
     Shift.create!(
       driver: driver,
-      shift_date: shift_date,
+      date: date,
       shift_type: row["shift_type"]
     )
   end

@@ -52,9 +52,9 @@ end
   driver_id_am = day.mday % 6
   driver_id_pm = (day.mday + 1) % 5
   if day.wday in (1..5)
-    if Shift.where(shift_date: day).empty?
-      Shift.create!(shift_date: day, shift_type: "am", driver: drivers[driver_id_am])
-      Shift.create!(shift_date: day, shift_type: "pm", driver: drivers[driver_id_pm])
+    if Shift.where(date: day).empty?
+      Shift.create!(date: day, shift_type: "am", driver: drivers[driver_id_am])
+      Shift.create!(date: day, shift_type: "pm", driver: drivers[driver_id_pm])
     end
   end
 end

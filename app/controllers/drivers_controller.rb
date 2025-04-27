@@ -39,7 +39,7 @@ class DriversController < ApplicationController
                     end
 
     @rides = @driver.rides.where(date: @current_date)
-    @shift = @driver.shifts.where(shift_date: @current_date).first
+    @shift = @driver.shifts.where(date: @current_date).first
   end
 
   # GET /drivers/1 or /drivers/1.json

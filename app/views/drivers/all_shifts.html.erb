@@ -6,7 +6,7 @@
   <% @shifts.each do |shift| %>
   <div class="shift">
     <li>
-      <strong>Shift date:</strong> <%= shift.shift_date %>,
+      <strong>Shift date:</strong> <%= shift.date %>,
       <strong>Shift type:</strong> <%= shift.shift_type %>
       <%= link_to "View Shift", shift_path(shift) %>
     </li>

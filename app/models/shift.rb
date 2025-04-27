@@ -2,10 +2,10 @@
 
 class Shift < ApplicationRecord
   belongs_to :driver
-  validates :shift_date, :shift_type, presence: true
+  validates :date, :shift_type, presence: true
 
-  def self.shifts_by_date(shifts, shift_date)
-    shifts.where(shift_date: shift_date)
+  def self.shifts_by_date(shifts, date)
+    shifts.where(date: date)
   end
 
   def self.shifts_by_driver(shifts, driver_id)
