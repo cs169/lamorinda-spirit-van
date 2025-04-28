@@ -10,18 +10,16 @@ document.addEventListener("turbo:load", function() {
       } );
 
       // edits the other fields upon selecting an autocomplete value
-      $( "#ride_passenger_name" ).on( "autocompleteselect", function( event, ui ) {
-        const yesNo = (val) => val ? "Yes" : "No";
-
-        document.getElementById('ride_passenger_phone').value=  ui.item.phone;
-        document.getElementById('ride_passenger_wheelchair').value=  yesNo(ui.item.wheelchair);
-        document.getElementById('ride_passenger_low_income').value=  yesNo(ui.item.low_income);
-        document.getElementById('ride_passenger_disabled').value=  yesNo(ui.item.disabled);
-        document.getElementById('ride_passenger_need_caregiver').value=  yesNo(ui.item.need_caregiver);
-        document.getElementById('ride_passenger_notes').value=  ui.item.notes;
-        document.getElementById('ride_passenger_id').value=  ui.item.id;
-      } );
-
+      $("#ride_passenger_name").on("autocompleteselect", function (event, ui) {
+        const yesNo = (val) => (val ? "Yes" : "No");
+        document.getElementById("ride_passenger_phone").value = ui.item.phone;
+        document.getElementById("ride_wheelchair").value = yesNo(ui.item.wheelchair);
+        document.getElementById("ride_low_income").value = yesNo(ui.item.low_income);
+        document.getElementById("ride_disabled").value = yesNo(ui.item.disabled);
+        document.getElementById("ride_need_caregiver").value = yesNo(ui.item.need_caregiver);
+        document.getElementById("ride_passenger_notes").value = ui.item.notes;
+        document.getElementById("ride_passenger_id").value = ui.item.id;
+      });
 
       //Addresses:
       $( function() {

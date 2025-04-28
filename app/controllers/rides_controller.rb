@@ -30,6 +30,15 @@ class RidesController < ApplicationController
     ride_attrs = ride_params.except(:addresses_attributes)
     addresses = ride_params[:addresses_attributes]
 
+    # For parsing "Yes", "No" into bool vals
+    accessibility_fields = [:wheelchair, :low_income, :disabled, :need_caregiver]
+    ride_attrs = ride_attrs.to_h
+    accessibility_fields.each do |field|
+      if ride_attrs[field].present?
+        ride_attrs[field] = (ride_attrs[field] == "Yes")
+      end
+    end
+
     result_rides, success = Ride.build_linked_rides(ride_attrs, addresses)
 
     if success
@@ -90,10 +99,14 @@ class RidesController < ApplicationController
       :passenger_id,
       :driver_id,
       :notes,
+      :wheelchair,
+      :low_income,
+      :disabled,
+      :need_caregiver,
       :emailed_driver,
       :start_address_id,
       :dest_address_id,
-      addresses_attributes: [:street, :city, :state, :zip]
+      addresses_attributes: [:street, :city, :state, :zip],
     )
   end
 end

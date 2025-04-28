@@ -96,21 +96,21 @@
 
 
            <div class="mb-3">
-             <%= f.label :passenger_wheelchair, "Wheelchair" %>
-             <%= f.text_field :passenger_wheelchair, class: "form-control", readonly: true  %>
+             <%= f.label :wheelchair, "Wheelchair" %>
+             <%= f.text_field :wheelchair, class: "form-control", readonly: true  %>
            </div>
            <div class="mb-3">
-             <%= f.label :passenger_low_income, "Low Income" %>
-             <%= f.text_field :passenger_low_income, class: "form-control", readonly: true  %>
+             <%= f.label :low_income, "Low Income" %>
+             <%= f.text_field :low_income, class: "form-control", readonly: true  %>
            </div>
            <div class="mb-3">
-             <%= f.label :passenger_disabled, "Disabled" %>
-             <%= f.text_field :passenger_disabled, class: "form-control", readonly: true  %>
-           </div>        
+             <%= f.label :disabled, "Disabled" %>
+             <%= f.text_field :disabled, class: "form-control", readonly: true  %>
+           </div>
            <div class="mb-3">
-           <%= f.label :passenger_need_caregiver, "Needs Caregiver" %>
-           <%= f.text_field :passenger_need_caregiver, class: "form-control", readonly: true  %>
-           </div> 
+           <%= f.label :need_caregiver, "Needs Caregiver" %>
+           <%= f.text_field :need_caregiver, class: "form-control", readonly: true  %>
+           </div>
 
 
            <div class="mb-3">
@@ -121,16 +121,59 @@
            <!-- New Address Container with Justify Content Row -->
            <div class="row g-4" id="address-grid">
              <!-- Origin Address -->
-              <%= render partial: "stop_fields", locals: {index: 1} %>
+              <div class="col-md-5">
+                <h5 class="fw-bold text-success text-center">Origin</h5>
+                    <div class="mb-3">
+                        <label class="form-label">Street</label>
+                        <span class="text-danger">*</span>
+                        <input type="text"
+                            name="ride[addresses_attributes][][street]"
+                            class="form-control"
+                            required
+                            autocomplete="ride-address">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">City</label>
+                        <span class="text-danger">*</span>
+                        <input type="text"
+                            name="ride[addresses_attributes][][city]"
+                            class="form-control"
+                            required
+                            autocomplete="ride-city">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">State</label>
+                        <span class="text-danger">*</span>
+                        <input type="text"
+                            name="ride[addresses_attributes][][state]"
+                            class="form-control"
+                            required
+                            autocomplete="ride-state">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Zip</label>
+                        <span class="text-danger">*</span>
+                        <input type="text"
+                            name="ride[addresses_attributes][][zip]"
+                            class="form-control"
+                            required
+                            autocomplete="ride-zip">
+                    </div>
+
+                </div>
 
              <!-- Spacer -->
              <div class="col-md-1" id="col-space"></div>
 
              <!-- Destination Address -->
-              <%= render partial: "stop_fields", locals: {index: 2} %>
+              <%= render partial: "stop_fields", locals: {index: 1} %>
       
              </div>
            </div>
+
 
            <!-- Hidden Template for Additional Destination -->
           <template id="destination-template">
