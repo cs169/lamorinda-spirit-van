@@ -3,15 +3,18 @@ const initiateCheckboxes = (table) => {
     const columnToggleContainer = document.getElementById('column-toggle-container');
     columnToggleContainer.innerHTML = '';
 
-    table.columns().every((index) => {
-        // If not index of info and delete buttons, add HTML checkboxes to DOM
-        if (index >= 2) {
-            columnToggleContainer.innerHTML += `
-            <div class="form-check form-check-inline">
-                <input type="checkbox" class="form-check-input" id="col-${index}" ${table.column(index).visible() ? 'checked' : ''}>
-                <label class="form-check-label" for="col-${index}">${table.column(index).header().textContent}</label>
-            </div>`;
-        }
+    table.columns().every(function () {
+      const index = this.index();
+      const headerText = this.header().textContent.trim();
+  
+      // Only add checkbox if header text is not empty
+      if (headerText) {
+        columnToggleContainer.innerHTML += `
+          <div class="form-check form-check-inline">
+            <input type="checkbox" class="form-check-input" id="col-${index}" ${this.visible() ? 'checked' : ''}>
+            <label class="form-check-label" for="col-${index}">${headerText}</label>
+          </div>`;
+      }
     });
   
     // on change event for checkboxes

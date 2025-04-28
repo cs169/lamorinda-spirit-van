@@ -26,6 +26,24 @@ if User.all.empty?
     password: "password",
     role: "driver"
   )
+
+  User.create!(
+    email: "mike@lamorinda.com",
+    password: "password",
+    role: "driver"
+  )
+
+  User.create!(
+    email: "sarah@lamorinda.com",
+    password: "password",
+    role: "driver"
+  )
+
+  User.create!(
+    email: "Emily@lamorinda.com",
+    password: "password",
+    role: "driver"
+  )
 end
 
 

@@ -29,6 +29,14 @@ class Admin::UsersController < ApplicationController
     end
   end
 
+  def destroy_unassigned
+    # Search for users with nil or empty role, delete them, return the count number
+    deleted_count = User.where(role: [nil, ""]).delete_all
+
+    # Redirects back to the admin users index page with a flash message
+    redirect_to admin_users_path, notice: "#{deleted_count} unassigned users removed."
+  end
+
   private
   def user_params
     permitted = [:email, :password]

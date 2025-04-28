@@ -86,6 +86,19 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_18_014022) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "feedbacks", force: :cascade do |t|
+    t.string "companion"
+    t.string "mobility"
+    t.string "note"
+    t.string "pick_up_time"
+    t.string "drop_off_time"
+    t.decimal "fare", precision: 10, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "ride_id", null: false
+    t.index ["ride_id"], name: "index_feedbacks_on_ride_id"
+  end
+
   create_table "passengers", force: :cascade do |t|
     t.string "phone"
     t.string "alternative_phone"
@@ -163,6 +176,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_18_014022) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "feedbacks", "rides"
   add_foreign_key "passengers", "addresses"
   add_foreign_key "rides", "drivers"
   add_foreign_key "rides", "passengers"

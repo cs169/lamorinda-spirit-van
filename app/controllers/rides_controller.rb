@@ -34,6 +34,7 @@ class RidesController < ApplicationController
 
     if success
       @ride = result_rides[0]
+
       session[:return_to] ||= rides_path
       redirect_to session[:return_to], notice: "Ride was successfully created."
     else

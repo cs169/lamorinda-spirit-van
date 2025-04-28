@@ -30,3 +30,8 @@
     background-color: #f9f9f9;
     color: #ccc;
 }
+
+.van-col {
+    display: inline-block;
+    width: 30%;
+}
