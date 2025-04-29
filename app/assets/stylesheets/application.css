@@ -16,7 +16,10 @@
 
 /* app/assets/stylesheets/application.css */
 
-html, body {
+/* ========== Global Common Styles (PC + Mobile) ========== */
+
+html,
+body {
   height: 100%;
   margin: 0;
 }
@@ -41,10 +44,13 @@ html, body {
   flex-direction: column;
   min-height: 100vh;
 }
+
 .content-wrapper {
   flex: 1;
 }
-.custom-header, .custom-footer {
+
+.custom-header,
+.custom-footer {
   background-color: #003e29;
   color: white;
 }
@@ -54,21 +60,36 @@ html, body {
   border-radius: 8px;
   transition: transform 0.2s ease, filter 0.2s ease;
 }
-  
+
 .app-logo.white {
   filter: brightness(0) invert(1);
 }
-  
+
 .app-logo.white:hover {
   filter: none;
 }
 
-.directories {
+.navbar-main {
   display: flex;
-  gap: 1.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.directories a {
+.navbar-logo {
+  flex: 0 0 auto;
+}
+
+.navbar-links {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.navbar-links a {
   font-weight: 650;
   font-size: 1.5rem;
   color: white;
@@ -78,8 +99,44 @@ html, body {
   border-bottom: 2px solid transparent;
 }
 
-.directories a:hover,
-.directories a.active {
+.navbar-links a:hover,
+.navbar-links a.active {
   color: #cab2fb;
   border-bottom-color: #f8f8f8;
+}
+
+.navbar-user {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+/* ========== Mobile-specific Styles (All devices with width < 576px) ========== */
+@media (max-width: 576px) {
+
+  .navbar-main {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .navbar-logo {
+    margin-bottom: 0.5rem;
+  }
+
+  .navbar-links {
+    justify-content: flex-start;
+    gap: 0.5rem;
+  }
+
+  .navbar-links a {
+    font-size: 1.2rem;
+    flex: 1 1 auto;
+    min-width: 80px;
+    text-align: center;
+  }
+
+  .navbar-user {
+    margin-top: 0.5rem;
+    justify-content: flex-start;
+  }
 }
