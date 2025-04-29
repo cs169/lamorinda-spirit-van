@@ -73,7 +73,7 @@
     <p>No shift found for this driver on <%= @current_date.strftime("%m/%d/%Y") %>.</p>
   <% end %>
   
-  <div id="btn-shift">
+  <div class="btn-shift" id="btn-shift">
     <%= link_to "View Other Drivers", drivers_path(dont_jump: true), class: "btn btn-primary" %>
     <%= link_to "View All Shifts", shifts_path, class: "btn btn-primary" %>
     <% if @shift %>

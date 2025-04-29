@@ -123,6 +123,17 @@ h1 {
     .today-page .ride-block p {
         margin: 5px 0;
     }
+
+    .btn-shift {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        width: 70%;
+    }
+
+    .btn-shift .btn {
+        margin-bottom: 10px;
+    }
 }
 
 /* print */
