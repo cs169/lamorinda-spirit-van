@@ -4,7 +4,7 @@
 <!-- app/views/rides/new.html.erb -->
  <div class="row justify-content-center">
    <div class="col-md-10">
-     <h1 class="mb-4 text-center">New Ride (THIS PAGE WILL BE REWORKED) </h1>
+     <h1 class="mb-4 text-center">New Ride </h1>
 
 
      <!-- Display error messages -->
@@ -76,44 +76,67 @@
          <div class="col-md-6">
            <h5 class="fw-bold text-success">Passenger Details</h5>
 
-
-           <!-- If you want to allow picking or associating a passenger, you can add a dropdown or fields here.
-                For now, we keep them read-only or placeholder to mimic the structure. -->
            <div class="mb-3">
              <%= f.label :passenger_name, "Passenger" %>
              <%= f.text_field :passenger_name, class: "form-control"  %>
              <%= link_to 'New Passenger', new_passenger_path, class: "btn btn-success mt-3" %>
            </div>
 
-
            <%= f.hidden_field :passenger_id, class: "form-control"  %>
-
 
            <div class="mb-3">
              <%= f.label :passenger_phone, "Phone Number:" %>
-             <%= f.text_field :passenger_phone, class: "form-control", readonly: true  %>
+             <%= f.text_field :passenger_phone,
+                  class: "form-control bg-secondary text-white opacity-50",
+                  style: "cursor: not-allowed",
+                  readonly: true %>
+           </div>
+
+           <div class="mb-3">
+            <%= f.label :wheelchair, "Wheelchair" %>
+            <%= f.text_field :wheelchair,
+                  value: @ride.wheelchair ? "Yes" : "",
+                  class: "form-control bg-secondary text-white opacity-50",
+                  style: "cursor: not-allowed",
+                  readonly: true %>
            </div>
 
             <div class="mb-3">
-              <%= f.label :wheelchair, "Wheelchair" %>
-              <%= f.text_field :wheelchair, value: @ride.wheelchair ? "Yes" : "", class: "form-control", readonly: true %>
-            </div>
-            <div class="mb-3">
               <%= f.label :low_income, "Low Income" %>
-              <%= f.text_field :low_income, value: @ride.low_income ? "Yes" : "", class: "form-control", readonly: true %>
+               <%= f.text_field :low_income,
+                  value: @ride.low_income ? "Yes" : "",
+                  class: "form-control bg-secondary text-white opacity-50",
+                  style: "cursor: not-allowed",
+                  readonly: true %>
             </div>
             <div class="mb-3">
               <%= f.label :disabled, "Disabled" %>
-              <%= f.text_field :disabled, value: @ride.disabled ? "Yes" : "", class: "form-control", readonly: true %>
+              <%= f.text_field :disabled,
+                  value: @ride.disabled ? "Yes" : "",
+                  class: "form-control bg-secondary text-white opacity-50",
+                  style: "cursor: not-allowed",
+                  readonly: true %>
             </div>
             <div class="mb-3">
             <%= f.label :need_caregiver, "Needs Caregiver" %>
-            <%= f.text_field :need_caregiver, value: @ride.need_caregiver ? "Yes" : "", class: "form-control", readonly: true %>
+            <%= f.text_field :need_caregiver,
+                  value: @ride.need_caregiver ? "Yes" : "",
+                  class: "form-control bg-secondary text-white opacity-50",
+                  style: "cursor: not-allowed",
+                  readonly: true %>
             </div>
 
            <div class="mb-3">
              <%= f.label :passenger_notes, "Notes about Passenger:" %>
-             <%= f.text_field :passenger_notes, class: "form-control", readonly: true  %>
+              <%= f.text_field :passenger_notes,
+                  class: "form-control bg-secondary text-white opacity-50",
+                  style: "cursor: not-allowed",
+                  readonly: true %>
+           </div>
+
+           <div class="mb-3">
+            <%= f.label :destination_type, "Destination Type:" %>
+            <%= f.text_field :destination_type, class: "form-control", rows: 3 %>
            </div>
 
            <!-- New Address Container with Justify Content Row -->
@@ -171,9 +194,15 @@
              <div class="col-md-1" id="col-space"></div>
 
              <!-- Destination Address -->
-              <%= render partial: "stop_fields", locals: {index: 1} %>
-      
+              <%= render partial: "stop_fields", locals: {index: 1} %>                 
              </div>
+
+             <div class="text-center mt-4">
+              <div class="mt-3">
+                <button type="button" class="btn btn-success mt-3" id="add-stop-button">Add Stop</button>
+                <button type="button" class="btn btn-danger mt-3" id="delete-stop-button">Delete Stop</button>
+             </div>
+           </div>
            </div>
 
 
@@ -181,15 +210,6 @@
           <template id="destination-template">
             <%= render partial: "stop_fields", locals: {index: "__INDEX__"} %>
           </template>
-
-            
-           <div class="text-center mt-4">
-             <div class="mt-3">
-               <button type="button" class="btn btn-success mt-3" id="add-stop-button">Add Stop</button>
-               <button type="button" class="btn btn-danger mt-3" id="delete-stop-button">Delete Stop</button>
-             </div>
-           </div>
-
 
            <div class="mb-3">
              <%= f.label :notes_date_reserved, "Notes / Date Reserved" %>

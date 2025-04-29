@@ -108,6 +108,7 @@ class RidesController < ApplicationController
       :emailed_driver,
       :start_address_id,
       :dest_address_id,
+      :destination_type,
       addresses_attributes: [:street, :city, :state, :zip],
     )
   end
