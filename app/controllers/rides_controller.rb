@@ -20,8 +20,11 @@ class RidesController < ApplicationController
     @ride = Ride.new(params.permit(:date, :driver_id))
     @ride.build_start_address
     @ride.build_dest_address
+
     # For driver dropdown list in creating / updating
     @drivers = Driver.order(:name)
+
+    # Mapping data for autocomplete
     gon.passengers = Passenger.all.map { |p| { label: p.name, id: p.id, phone: p.phone, wheelchair: p.wheelchair, low_income: p.low_income, disabled: p.disabled, need_caregiver: p.need_caregiver, notes: p.notes } }
     gon.addresses = Address.all.map { |a| { label: a.street, zip: a.zip, city: a.city } }
   end
@@ -30,7 +33,7 @@ class RidesController < ApplicationController
     ride_attrs = ride_params.except(:addresses_attributes)
     addresses = ride_params[:addresses_attributes]
 
-    # For parsing "Yes", "No" into bool vals
+    # Parsing "Yes", "No" from fields into bool vals
     accessibility_fields = [:wheelchair, :low_income, :disabled, :need_caregiver]
     ride_attrs = ride_attrs.to_h
     accessibility_fields.each do |field|

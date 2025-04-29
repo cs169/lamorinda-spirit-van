@@ -21,7 +21,7 @@ document.addEventListener("turbo:load", function() {
         document.getElementById("ride_passenger_id").value = ui.item.id;
       });
 
-      //Addresses:
+      // Origin address:
       $( function() {
         $( "#ride_start_address_attributes_street" ).autocomplete({
           source: gon.addresses
@@ -36,27 +36,24 @@ document.addEventListener("turbo:load", function() {
         document.getElementById('ride_start_address_attributes_zip').value=  ui.item.zip;
       } );
       
-      //Addresses:
-      $( function() {
-        $( "#ride_dest_address_attributes_street" ).autocomplete({
-          source: gon.addresses
+      // // Stop Addresses (uses focus event because stops are added dynamically):
+      $(document).on("focus", ".dest-autocomplete", function () {
+        const $input = $(this);
+    
+        // Avoid re-initializing if already initialized
+        if ($input.data("ui-autocomplete")) return;
+    
+        $input.autocomplete({
+          source: gon.addresses,
+          select: function (event, ui) {
+            const inputId = this.id;               // ex. "ride_dest_address_attributes_1_street"
+            const baseId = inputId.replace(/_street$/, ""); // remove "_street" suffix
+  
+            $(`#${baseId}_city`).val(ui.item.city);
+            $(`#${baseId}_state`).val("CA");
+            $(`#${baseId}_zip`).val(ui.item.zip);
+          }
         });
-        $("#ride_dest_address_attributes_street").attr("autocomplete", "ride-address");
-      } );
-
-      $( "#ride_dest_address_attributes_street" ).on( "autocompleteselect", function( event, ui ) {
-        document.getElementById('ride_dest_address_attributes_city').value=  ui.item.city;
-        document.getElementById('ride_dest_address_attributes_state').value=  "CA";
-        document.getElementById('ride_dest_address_attributes_zip').value=  ui.item.zip;
-      } );
-
+      });
     }
   })
-
-  /*
-   // E
-   document.addEventListener('change', (event) => {
-    if (event.target.matches('#ride_passenger_name')) {
-      document.getElementById('ride_notes_date_reserved').value=  gon.passengers;
-    }
-  });*/

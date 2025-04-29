@@ -94,24 +94,22 @@
              <%= f.text_field :passenger_phone, class: "form-control", readonly: true  %>
            </div>
 
-
-           <div class="mb-3">
-             <%= f.label :wheelchair, "Wheelchair" %>
-             <%= f.text_field :wheelchair, class: "form-control", readonly: true  %>
-           </div>
-           <div class="mb-3">
-             <%= f.label :low_income, "Low Income" %>
-             <%= f.text_field :low_income, class: "form-control", readonly: true  %>
-           </div>
-           <div class="mb-3">
-             <%= f.label :disabled, "Disabled" %>
-             <%= f.text_field :disabled, class: "form-control", readonly: true  %>
-           </div>
-           <div class="mb-3">
-           <%= f.label :need_caregiver, "Needs Caregiver" %>
-           <%= f.text_field :need_caregiver, class: "form-control", readonly: true  %>
-           </div>
-
+            <div class="mb-3">
+              <%= f.label :wheelchair, "Wheelchair" %>
+              <%= f.text_field :wheelchair, value: @ride.wheelchair ? "Yes" : "", class: "form-control", readonly: true %>
+            </div>
+            <div class="mb-3">
+              <%= f.label :low_income, "Low Income" %>
+              <%= f.text_field :low_income, value: @ride.low_income ? "Yes" : "", class: "form-control", readonly: true %>
+            </div>
+            <div class="mb-3">
+              <%= f.label :disabled, "Disabled" %>
+              <%= f.text_field :disabled, value: @ride.disabled ? "Yes" : "", class: "form-control", readonly: true %>
+            </div>
+            <div class="mb-3">
+            <%= f.label :need_caregiver, "Needs Caregiver" %>
+            <%= f.text_field :need_caregiver, value: @ride.need_caregiver ? "Yes" : "", class: "form-control", readonly: true %>
+            </div>
 
            <div class="mb-3">
              <%= f.label :passenger_notes, "Notes about Passenger:" %>
@@ -124,41 +122,45 @@
               <div class="col-md-5">
                 <h5 class="fw-bold text-success text-center">Origin</h5>
                     <div class="mb-3">
-                        <label class="form-label">Street</label>
+                        <label class="form-label" for="ride_start_address_attributes_street">Street</label>
                         <span class="text-danger">*</span>
                         <input type="text"
                             name="ride[addresses_attributes][][street]"
                             class="form-control"
+                            id="ride_start_address_attributes_street"
                             required
                             autocomplete="ride-address">
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">City</label>
+                        <label class="form-label" for="ride_start_address_attributes_city">City</label>
                         <span class="text-danger">*</span>
                         <input type="text"
                             name="ride[addresses_attributes][][city]"
                             class="form-control"
+                            id="ride_start_address_attributes_city"
                             required
                             autocomplete="ride-city">
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">State</label>
+                        <label class="form-label" for="ride_start_address_attributes_state">State</label>
                         <span class="text-danger">*</span>
                         <input type="text"
                             name="ride[addresses_attributes][][state]"
                             class="form-control"
+                            id="ride_start_address_attributes_state"
                             required
                             autocomplete="ride-state">
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Zip</label>
+                        <label class="form-label" for="ride_start_address_attributes_zip">Zip</label>
                         <span class="text-danger">*</span>
                         <input type="text"
                             name="ride[addresses_attributes][][zip]"
                             class="form-control"
+                            id="ride_start_address_attributes_zip"
                             required
                             autocomplete="ride-zip">
                     </div>
