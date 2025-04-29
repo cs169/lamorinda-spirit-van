@@ -35,13 +35,14 @@ h1 {
     margin-top: 10px;
 }
 
-.today-page .btn {
-    padding: 10px 15px;
+.today-page .button-group .btn {
+    display: flex;
+    align-items: center; /* Center vertically */
+    min-height: 41px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     text-decoration: none;
-    font-size: 14px;
 }
 
 .today-page .btn-primary {
@@ -126,9 +127,21 @@ h1 {
 
 /* print */
 @media print {
-    .today-page .btn,
     .today-page .button-group {
-        display: none;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        min-height: 38px; /* Ensure all buttons have the same height */
+        align-items: stretch; /* Make all buttons the same height */
+        margin-top: 10px;
+    }
+
+    .today-page .button-group .btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 38px;
     }
 
     .today-page .rides-table {
