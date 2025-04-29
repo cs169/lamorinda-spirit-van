@@ -41,8 +41,20 @@ RSpec.describe RidesController, type: :controller do
           driver_id: @ride1.driver_id,
           notes: @ride1.notes,
           emailed_driver: @ride1.emailed_driver,
-          start_address_id: @ride1.start_address_id,
-          dest_address_id: @ride1.dest_address_id
+          addresses_attributes: [
+            {
+              street: "123 Main St",
+              city: "Oakland",
+              state: "CA",
+              zip: "94601"
+            },
+            {
+              street: "456 Second Ave",
+              city: "Berkeley",
+              state: "CA",
+              zip: "94704"
+            }
+          ]
         }
       end
 
@@ -122,13 +134,14 @@ RSpec.describe RidesController, type: :controller do
     end
   end
 
-  describe "GET #filter" do
-    # Test if filter returns no rides without params
-    it "assigns the requested ride to @ride" do
-      get :filter
-      expect(assigns(:ride)).to eq(nil)
-    end
-  end
+  # got rid of filter
+  # describe "GET #filter" do
+  #   # Test if filter returns no rides without params
+  #   it "assigns the requested ride to @ride" do
+  #     get :filter
+  #     expect(assigns(:ride)).to eq(nil)
+  #   end
+  # end
 
   after(:each) do
   end

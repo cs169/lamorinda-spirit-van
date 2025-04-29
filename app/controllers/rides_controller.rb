@@ -43,12 +43,11 @@ class RidesController < ApplicationController
 
     if success
       @ride = result_rides[0]
-
       session[:return_to] ||= rides_path
       redirect_to session[:return_to], notice: "Ride was successfully created."
     else
       @ride = Ride.new(ride_attrs)
-      flash[:alert] = "Error creating ride: #{success.message}"
+      flash[:alert] = @ride.errors.full_messages.join
       render :new
     end
   end
