@@ -1,47 +1,61 @@
-<%= form_with(model: feedback) do |form| %>
-  <% if feedback.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(feedback.errors.count, "error") %> prohibited this feedback from being saved:</h2>
+<!-- Container wraps the entire form layout, not inside the form itself -->
 
-      <ul>
-        <% feedback.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
+<!-- 'sm' means small (576px); .sm- classes take effect at ≥576px -->
+<!-- mx-auto centers the container on all screen sizes by default -->
+<!-- mx-sm-0 overrides the centering and left-aligns the container on screens ≥576px -->
+<div class="container mx-auto mx-sm-0">
+  <%= form_with(model: feedback, html: { class: "needs-validation" }) do |form| %>
+    
+    <% if feedback.errors.any? %>
+      <div class="alert alert-danger">
+        <h4 class="alert-heading"><%= pluralize(feedback.errors.count, "error") %> prohibited this feedback from being saved:</h4>
+        <ul class="mb-0">
+          <% feedback.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="row">
+      <div class="col-md-6">
+
+        <div class="mb-3">
+          <%= form.label :companion, class: "form-label" %>
+          <%= form.text_field :companion, class: "form-control" %>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :mobility, class: "form-label" %>
+          <%= form.text_field :mobility, class: "form-control" %>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :pick_up_time, class: "form-label" %>
+          <%= form.text_field :pick_up_time, class: "form-control" %>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :drop_off_time, class: "form-label" %>
+          <%= form.text_field :drop_off_time, class: "form-control" %>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :fare, class: "form-label" %>
+          <%= form.text_field :fare, class: "form-control" %>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :note, class: "form-label" %>
+          <%= form.text_field :note, class: "form-control" %>
+        </div>
+
+        <!-- text-center centers the button by default -->
+        <!-- text-sm-start overrides it to left-align the button on screens ≥576px -->
+        <div class="mt-4 text-sm-start text-center">
+          <%= form.button "Give Feedback", type: :submit, class: "btn btn-primary px-5 shift-feedback-btn" %>
+        </div>
+      </div>
     </div>
   <% end %>
-
-  <div>
-    <%= form.label :companion, style: "display: block" %>
-    <%= form.text_field :companion %>
-  </div>
-
-  <div>
-    <%= form.label :mobility, style: "display: block" %>
-    <%= form.text_field :mobility %>
-  </div>
-
-  <div>
-    <%= form.label :pick_up_time, style: "display: block" %>
-    <%= form.text_field :pick_up_time %>
-  </div>
-
-  <div>
-    <%= form.label :drop_off_time, style: "display: block" %>
-    <%= form.text_field :drop_off_time %>
-  </div>
-
-  <div>
-    <%= form.label :fare, style: "display: block" %>
-    <%= form.text_field :fare %>
-  </div>
-
-  <div>
-    <%= form.label :note, style: "display: block" %>
-    <%= form.text_field :note %>
-  </div>
-
-  <div>
-    <%= form.button "Give Feedback", type: :submit %>
-  </div>
-<% end %>
+</div>
