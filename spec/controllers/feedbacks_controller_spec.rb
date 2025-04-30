@@ -89,7 +89,7 @@ RSpec.describe FeedbacksController, type: :controller do
 
   describe "PATCH #update" do
     context "with valid parameters" do
-      it "updates the feedback and redirects to driver today path" do
+      it "updates the feedback and redirects to driver today path with date param" do
         patch :update, params: {
           id: @feedback.id,
           feedback: {
@@ -98,7 +98,8 @@ RSpec.describe FeedbacksController, type: :controller do
         }
         @feedback.reload
         expect(@feedback.note).to eq("Updated note")
-        expect(response).to redirect_to(today_driver_path(@driver.id))
+        expected_date = @feedback.ride.date.to_s
+        expect(response).to redirect_to(today_driver_path(@driver.id, date: expected_date))
       end
     end
 

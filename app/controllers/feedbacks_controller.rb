@@ -44,7 +44,7 @@ class FeedbacksController < ApplicationController
       if @feedback.update(feedback_params)
         matched_driver = Driver.find_by("LOWER(email) = ?", current_user.email.downcase)
         if matched_driver
-          redirect_to today_driver_path(matched_driver.id)
+          redirect_to today_driver_path(matched_driver.id, date: @feedback.ride.date)
           return
         else
           redirect_to drivers_path
