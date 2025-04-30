@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DriversController < ApplicationController
-  before_action :set_driver, only: %i[ show edit update destroy today ]
+  before_action :set_driver, only: %i[ edit update destroy today ]
   before_action -> { require_role("admin", "dispatcher") }, only: [:new, :edit, :create, :update, :destroy]
 
   # GET /drivers or /drivers.json
@@ -42,9 +42,10 @@ class DriversController < ApplicationController
     @shift = @driver.shifts.where(shift_date: @current_date).first
   end
 
-  # GET /drivers/1 or /drivers/1.json
-  def show
-  end
+  # NOTE: We deliberately disabled the `show` action.
+  # If you need to add it, please check this commit and modify some related code.
+  # Currently the /drivers shows all drivers.
+  # Invalid URL: /drivers/:id
 
   # GET /drivers/new
   def new
@@ -61,8 +62,8 @@ class DriversController < ApplicationController
 
     respond_to do |format|
       if @driver.save
-        format.html { redirect_to @driver, notice: "Driver was successfully created." }
-        format.json { render :show, status: :created, location: @driver }
+        format.html { redirect_to drivers_path, notice: "Driver was successfully created." }
+        format.json { render json: @driver, status: :created }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @driver.errors, status: :unprocessable_entity }
@@ -74,8 +75,8 @@ class DriversController < ApplicationController
   def update
     respond_to do |format|
       if @driver.update(driver_params)
-        format.html { redirect_to @driver, notice: "Driver was successfully updated." }
-        format.json { render :show, status: :ok, location: @driver }
+        format.html { redirect_to drivers_path, notice: "Driver was successfully updated." }
+        format.json { render json: @driver, status: :ok }
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @driver.errors, status: :unprocessable_entity }
