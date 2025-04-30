@@ -20,6 +20,10 @@
             <th>Van</th>
             <th>Notes</th>
             <th>Hours</th>
+            <th>Passenger</th>
+            <th>Wheelchair</th>
+            <th>Disabled</th>
+            <th>Needs Caregiver</th>
             <th>Fee</th>
             <th>Info</th>
             <th>Feedback</th>
@@ -31,6 +35,10 @@
               <td><%= ride.van %></td>
               <td><%= ride.notes %></td>
               <td><%= ride.hours %></td>
+              <td><%= ride.passenger.name %></td>
+              <td><%= ride.wheelchair ? "Yes" : "" %></td>
+              <td><%= ride.disabled ? "Yes" : "" %></td>
+              <td><%= ride.need_caregiver ? "Yes" : "" %></td>
               <td><%= number_to_currency(ride.amount_paid) %></td>
               <td><%= link_to "Info", ride_path(ride.id), class: "btn btn-primary" %></td>
               <% if ride.feedback %>
@@ -47,10 +55,22 @@
       <div class="rides-list">
         <% @rides.each do |ride| %>
           <div class="ride-block">
-            <p><strong>Van:</strong> <%= ride.van %></p>
             <p><strong>Notes:</strong> <%= ride.notes %></p>
             <p><strong>Hours:</strong> <%= ride.hours %></p>
-            <p><strong>Fee:</strong> <%= number_to_currency(ride.amount_paid) %></p>
+            <p><strong>Passenger:</strong> <%= ride.passenger.name %></p>
+
+            <% if ride.wheelchair %>
+              <p><strong>Wheelchair:</strong> Yes</p>
+            <% end %>
+            <% if ride.disabled %>
+              <p><strong>Disabled:</strong> Yes</p>
+            <% end %>
+            <% if ride.need_caregiver %>
+              <p><strong>Needs Caregiver:</strong> Yes</p>
+            <% end %>
+
+            <p><strong>Start Address:</strong> <%= ride.start_address.full_address || "N/A" %></p>
+            <p><strong>Destination Address:</strong> <%= ride.dest_address.full_address || "N/A" %></p>
             <%= link_to "Info", ride_path(ride.id), class: "btn btn-primary" %>
             <% if ride.feedback %>
               <%= link_to "Feedback", edit_feedback_path(ride.feedback), class: "btn btn-primary" %>
