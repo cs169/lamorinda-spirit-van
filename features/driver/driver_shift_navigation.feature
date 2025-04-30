@@ -7,6 +7,10 @@ Feature: Driver Ride and Shift Navigation
   Background:
     Given a driver is logged in
 
+  Scenario: Driver cannot see the New Driver button
+    Given I am on the drivers page
+    Then I should not see "New Driver"
+
   Scenario: Viewing monthly shifts from Today's Rides
     Given I visit the Today's Rides page for that driver
     Then I should see "View All Shifts" button
