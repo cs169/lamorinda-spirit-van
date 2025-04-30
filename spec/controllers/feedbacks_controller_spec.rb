@@ -100,6 +100,7 @@ RSpec.describe FeedbacksController, type: :controller do
         expect(@feedback.note).to eq("Updated note")
         expected_date = @feedback.ride.date.to_s
         expect(response).to redirect_to(today_driver_path(@driver.id, date: expected_date))
+        expect(response).to have_http_status(:see_other)
       end
     end
 
@@ -130,16 +131,17 @@ RSpec.describe FeedbacksController, type: :controller do
     end
 
     context "when feedback update succeeds but current_user is not a driver" do
-      it "redirects to drivers_path" do
-        other_user = FactoryBot.create(:user, :dispatcher, email: "not_a_driver@example.com")
+      it "still redirects to today_driver_path if current_user is dispatcher" do
+        other_user = FactoryBot.create(:user, :dispatcher, email: "dispatcher@example.com")
         sign_in other_user
 
         patch :update, params: {
           id: @feedback.id,
-          feedback: { note: "dispatcher/admin updated" }
+          feedback: { note: "dispatcher updated" }
         }
 
-        expect(response).to redirect_to(drivers_path)
+        expect(response).to redirect_to(today_driver_path(@driver.id, date: @ride.date.to_s))
+        expect(response).to have_http_status(:see_other)
       end
     end
   end
