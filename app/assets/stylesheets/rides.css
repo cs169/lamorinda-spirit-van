@@ -32,7 +32,7 @@ h1 {
 .today-page .button-group {
     display: flex;
     gap: 10px;
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 .today-page .button-group .btn {
@@ -69,6 +69,7 @@ h1 {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+    margin-bottom: 20px;
     table-layout: auto;
     overflow-x: auto;
 }
@@ -92,7 +93,6 @@ h1 {
     font-weight: bold;
 }
 
-/* mobile */
 .today-page .rides-list {
     display: none;
 }
