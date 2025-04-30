@@ -53,14 +53,14 @@
         <!-- text-center centers the button by default -->
         <!-- text-sm-start overrides it to left-align the button on screens ≥576px -->
         <div class="mt-4 text-sm-start text-center">
-          <%= form.button "Give Feedback", type: :submit, class: "btn btn-primary px-5 shift-feedback-btn" %>
+          <%= form.button "Give Feedback", type: :submit, class: "btn btn-primary px-5 ride-feedback-btn" %>
         </div>
 
         <%# This "Back" button returns to the driver's today page for the same date as the feedback's ride. %>
         <%# Suggested Cucumber test (not yet implemented): clicking this button should redirect to /drivers/:id/today?date=... %>
         <div class="mt-4 text-sm-start text-center">
           <%= link_to "Back", today_driver_path(feedback.ride.driver_id, date: feedback.ride.date),
-              class: "btn btn-outline-secondary px-5 shift-feedback-btn" %>
+              class: "btn btn-outline-secondary px-5 ride-feedback-btn" %>
         </div>
       </div>
     </div>

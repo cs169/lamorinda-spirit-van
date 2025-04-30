@@ -37,12 +37,12 @@
 }
 
 /* Responsive feedback form button specific to shifts#edit or shifts#feedback */
-.shift-feedback-btn {
+.ride-feedback-btn {
     width: 50%;
 }
 
 @media (max-width:576px) {
-    .shift-feedback-btn {
+    .ride-feedback-btn {
         width: 80%;
     }
 }
