@@ -1,8 +1,8 @@
+// Using gon if the controller action hasn't set it causes js errors, 
+// so as a hack only load this code on pages where its needed
 document.addEventListener("turbo:load", function() {
-    // using gon if the controller action hasn't set it causes js errors, so as a hack only load this code on pages where its needed
-    if (document.getElementById("ride_passenger_name")){
-
-      // basic autocomplete setup
+    // Autocomplete for passengers info
+    if (gon.passengers) {
       $( function() {
         $( "#ride_passenger_name" ).autocomplete({
           source: gon.passengers
@@ -20,8 +20,11 @@ document.addEventListener("turbo:load", function() {
         document.getElementById("ride_passenger_notes").value = ui.item.notes;
         document.getElementById("ride_passenger_id").value = ui.item.id;
       });
+    }
 
-      // Origin address:
+    // Autocomplete for addresses
+    if (gon.addresses) {
+         // Origin address:
       $( function() {
         $( "#ride_start_address_attributes_street" ).autocomplete({
           source: gon.addresses
@@ -41,7 +44,7 @@ document.addEventListener("turbo:load", function() {
         const $input = $(this);
     
         // Avoid re-initializing if already initialized
-        if ($input.data("ui-autocomplete")) return;
+        // if ($input.data("ui-autocomplete")) return;
     
         $input.autocomplete({
           source: gon.addresses,
@@ -55,5 +58,5 @@ document.addEventListener("turbo:load", function() {
           }
         });
       });
-    }
+      }
   })

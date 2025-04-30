@@ -60,6 +60,8 @@ class RidesController < ApplicationController
     @ride = Ride.find(params[:id])
     @all_rides = @ride.get_all_linked_rides
     @drivers = Driver.order(:name)
+
+    # Mapping data for autocomplete
     gon.addresses = Address.all.map { |a| { label: a.street, zip: a.zip, city: a.city } }
   end
 
