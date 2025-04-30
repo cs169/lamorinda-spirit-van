@@ -1,0 +1,51 @@
+<div class="col-md-5">
+    <h5 class="fw-bold text-success text-center">Stop <%= index %></h5>
+        <div class="mb-3">
+            <label class="form-label" for="ride_start_address_attributes_<%= index %>_street">Street</label>
+            <span class="text-danger">*</span>
+            <input type="text"
+                name="ride[addresses_attributes][][street]"
+                value="<%= address.dest_address.street %>"
+                class="form-control dest-autocomplete"
+                id="ride_dest_address_attributes_<%= index %>_street"
+                required
+                autocomplete="ride-address">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="ride_dest_address_attributes_<%= index %>_city">City</label>
+            <span class="text-danger">*</span>
+            <input type="text"
+                name="ride[addresses_attributes][][city]"
+                value="<%= address.dest_address.city %>"
+                class="form-control"
+                id="ride_dest_address_attributes_<%= index %>_city"
+                required
+                autocomplete="ride-city">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="ride_dest_address_attributes_<%= index %>_state">State</label>
+            <span class="text-danger">*</span>
+            <input type="text"
+                name="ride[addresses_attributes][][state]"
+                value="<%= address.dest_address.state %>"
+                class="form-control"
+                id="ride_dest_address_attributes_<%= index %>_state"
+                required
+                autocomplete="ride-state">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="ride_dest_address_attributes_<%= index %>_zip">Zip</label>
+            <span class="text-danger">*</span>
+            <input type="text"
+                name="ride[addresses_attributes][][zip]"
+                value="<%= address.dest_address.zip %>"
+                class="form-control"
+                id="ride_dest_address_attributes_<%= index %>_zip"
+                required
+                autocomplete="ride-zip">
+        </div>
+
+    </div>

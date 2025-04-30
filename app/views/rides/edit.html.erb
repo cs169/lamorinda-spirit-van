@@ -87,16 +87,17 @@
           </div>
 
           <!-- Addresses: Side-by-Side -->
-          <div class="d-flex justify-content-between">
+          <div class="row g-4">
             <!-- Origin Address -->
             <div class="col-md-5">
-              <h5 class="fw-bold text-success text-center">Origin Address</h5>
+              <h5 class="fw-bold text-success text-center">Origin</h5>
               <%= f.fields_for :start_address do |start_f| %>
                 <div class="mb-3">
                   <%= start_f.label :street, "Street", class: "form-label" %>
                   <span class="text-danger">*</span>
                   <%= start_f.text_field :street,
                                           value: @ride.start_address&.street,
+                                          id: "ride_start_address_attributes_street",
                                           class: "form-control",
                                           required: true %>
                 </div>
@@ -106,6 +107,7 @@
                   <span class="text-danger">*</span>
                   <%= start_f.text_field :city,
                                           value: @ride.start_address&.city,
+                                          id: "ride_start_address_attributes_city",
                                           class: "form-control",
                                           required: true %>
                 </div>
@@ -115,6 +117,7 @@
                   <span class="text-danger">*</span>
                   <%= start_f.text_field :state,
                                           value: @ride.start_address&.state,
+                                          id: "ride_start_address_attributes_state",
                                           class: "form-control",
                                           required: true %>
                 </div>
@@ -124,9 +127,11 @@
                   <span class="text-danger">*</span>
                   <%= start_f.text_field :zip,
                                           value: @ride.start_address&.zip,
+                                          id: "ride_start_address_attributes_zip",
                                           class: "form-control",
                                           required: true %>
                 </div>
+
               <% end %>
             </div>
 
@@ -134,45 +139,18 @@
             <div class="col-md-1"></div>
 
             <!-- Destination Address -->
-            <div class="col-md-5">
-              <h5 class="fw-bold text-success text-center">Destination Address</h5>
-              <%= f.fields_for :dest_address do |dest_f| %>
-                <div class="mb-3">
-                  <%= dest_f.label :street, "Street", class: "form-label" %>
-                  <span class="text-danger">*</span>
-                  <%= dest_f.text_field :street,
-                                          value: @ride.dest_address&.street,
-                                          class: "form-control",
-                                          required: true %>
-                </div>
+            <% @all_rides.each_with_index do |address, index| %> <!-- +1 because we want to start at 1, not 0 -->
+              <%= render partial: "stop_fields_edit", locals: { address: address, index: index + 1} %>
+  
+              <!-- Spacer -->
+              <div class="col-md-1"></div>
+            <% end %>
+              
 
-                <div class="mb-3">
-                  <%= dest_f.label :city, "City", class: "form-label" %>
-                  <span class="text-danger">*</span>
-                  <%= dest_f.text_field :city,
-                                          value: @ride.dest_address&.city,
-                                          class: "form-control",
-                                          required: true %>
-                </div>
 
-                <div class="mb-3">
-                  <%= dest_f.label :state, "State", class: "form-label" %>
-                  <span class="text-danger">*</span>
-                  <%= dest_f.text_field :state,
-                                          value: @ride.dest_address&.state,
-                                          class: "form-control",
-                                          required: true %>
-                </div>
 
-                <div class="mb-3">
-                  <%= dest_f.label :zip, "Zip", class: "form-label" %>
-                  <span class="text-danger">*</span>
-                  <%= dest_f.text_field :zip,
-                                          value: @ride.dest_address&.zip,
-                                          class: "form-control",
-                                          required: true %>
-                </div>
-              <% end %>
+
+
             </div>
           </div>
 

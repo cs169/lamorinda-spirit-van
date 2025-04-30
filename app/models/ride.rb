@@ -58,6 +58,16 @@ class Ride < ApplicationRecord
     [e, false]
   end
 
+  def get_all_linked_rides
+    chain = [self]
+    current = self
+    while current.next_ride
+      chain << current.next_ride
+      current = current.next_ride
+    end
+    chain
+  end
+
   private
   def normalize_address(attrs)
     {
