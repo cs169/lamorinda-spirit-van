@@ -26,12 +26,18 @@
 
         <!-- Card footer -->
         <div class="driver-card-footer">
-          <%= link_to "Edit", edit_driver_path(driver), class: "btn btn-sm btn-outline-primary" %>
+          <% if current_user.dispatcher? || current_user.admin? %>
+            <%= link_to "Edit", edit_driver_path(driver), class: "btn btn-sm btn-outline-primary" %>
+          <% end %>
+          
           <%= link_to "Today\'s Rides", today_driver_path(id: driver.id), class: "btn btn-primary", id: "today-btn" %>
-          <%= link_to "Delete", driver, 
-              data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
-              class: "btn btn-sm btn-outline-danger"
-          %>
+          
+          <% if current_user.dispatcher? || current_user.admin? %>
+            <%= link_to "Delete", driver, 
+                data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+                class: "btn btn-sm btn-outline-danger"
+            %>
+          <% end %>
         </div>
       </div>
     </div>
