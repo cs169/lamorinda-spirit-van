@@ -5,6 +5,7 @@
             <span class="text-danger">*</span>
             <input type="text"
                 name="ride[addresses_attributes][][street]"
+                value="<%= address&.street %>"
                 class="form-control dest-autocomplete"
                 id="ride_dest_address_attributes_<%= index %>_street"
                 required
@@ -16,6 +17,7 @@
             <span class="text-danger">*</span>
             <input type="text"
                 name="ride[addresses_attributes][][city]"
+                value="<%= address&.city %>"
                 class="form-control"
                 id="ride_dest_address_attributes_<%= index %>_city"
                 required
@@ -27,6 +29,7 @@
             <span class="text-danger">*</span>
             <input type="text"
                 name="ride[addresses_attributes][][state]"
+                value="<%= address&.state %>"
                 class="form-control"
                 id="ride_dest_address_attributes_<%= index %>_state"
                 required
@@ -38,6 +41,7 @@
             <span class="text-danger">*</span>
             <input type="text"
                 name="ride[addresses_attributes][][zip]"
+                value="<%= address&.zip %>"
                 class="form-control"
                 id="ride_dest_address_attributes_<%= index %>_zip"
                 required

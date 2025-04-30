@@ -194,7 +194,7 @@
              <div class="col-md-1" id="col-space"></div>
 
              <!-- Destination Address -->
-              <%= render partial: "stop_fields", locals: {index: 1} %>                 
+              <%= render partial: "stop_fields", locals: {index: 1, address: nil} %>                 
              </div>
 
              <div class="text-center mt-4">
@@ -208,7 +208,7 @@
 
            <!-- Hidden Template for Additional Destination -->
           <template id="destination-template">
-            <%= render partial: "stop_fields", locals: {index: "__INDEX__"} %>
+            <%= render partial: "stop_fields", locals: {index: "__INDEX__", address: nil} %>
           </template>
 
            <div class="mb-3">

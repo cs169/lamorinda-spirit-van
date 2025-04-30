@@ -150,9 +150,12 @@
           <div class="col-md-1" id="col-space"></div>
 
           <!-- Destination Address (Existing Stops) -->
-          <% @all_rides.each_with_index do |address, index| %>
-            <%= render partial: "stop_fields_edit", locals: { address: address, index: index + 1 } %>
+          <% @all_rides.each_with_index do |ride, index| %>
+            <%= render partial: "stop_fields", locals: { address: ride.dest_address, index: index + 1 } %>
           <% end %>
+
+          <!-- Spacer -->
+          <div class="col-md-1" id="col-space"></div>
         </div>
 
         <!-- Add/Delete Stop Buttons -->
@@ -165,7 +168,7 @@
 
         <!-- Hidden Template for Additional Destination -->
         <template id="destination-template">
-          <%= render partial: "stop_fields", locals: { index: "__INDEX__" } %>
+          <%= render partial: "stop_fields", locals: { index: "__INDEX__", address: nil} %>
         </template>
       </div>
 
