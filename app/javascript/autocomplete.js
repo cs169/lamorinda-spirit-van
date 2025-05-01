@@ -3,10 +3,15 @@
 document.addEventListener("turbo:load", function() {
     // Autocomplete for passengers info
     if (gon.passengers) {
+      console.log("passengers found")
       $( function() {
         $( "#ride_passenger_name" ).autocomplete({
           source: gon.passengers
         });
+
+        // set autocomplete attribute to "ride-address" because jquery 
+        // automatically sets it to "off", which is useless.
+        $("#ride_passenger_name").attr("autocomplete", "ride-address");
       } );
 
       // edits the other fields upon selecting an autocomplete value
@@ -29,7 +34,8 @@ document.addEventListener("turbo:load", function() {
         $( "#ride_start_address_attributes_street" ).autocomplete({
           source: gon.addresses
         });
-        // set autocomplete attribute to "ride-address" because jquery automatically sets it to "off", which is useless.
+        // set autocomplete attribute to "ride-address" because jquery 
+        // automatically sets it to "off", which is useless.
         $("#ride_start_address_attributes_street").attr("autocomplete", "ride-address");
       } );
 
