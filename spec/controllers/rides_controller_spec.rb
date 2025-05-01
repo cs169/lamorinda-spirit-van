@@ -10,13 +10,18 @@ RSpec.describe RidesController, type: :controller do
      @driver1 = FactoryBot.create(:driver)
      @driver2 = FactoryBot.create(:driver)
 
+     @shift1 = FactoryBot.create(:shift, driver: @driver1)
+     @shift2 = FactoryBot.create(:shift, driver: @driver2)
+     @shift_5_days_ago = FactoryBot.create(:shift, date: Date.today - 5.days)
+
+
      @address1 = FactoryBot.create(:address)
 
      @passenger1 = FactoryBot.create(:passenger)
-     @ride1 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1)
-     @ride2 = FactoryBot.create(:ride, driver: @driver2, passenger: @passenger1)
-     @ride3 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1)
-     @ride4 = FactoryBot.create(:ride, date: Date.today - 5.days)
+     @ride1 = FactoryBot.create(:ride, shift: @shift1, passenger: @passenger1)
+     @ride2 = FactoryBot.create(:ride, shift: @shift2, passenger: @passenger1)
+     @ride3 = FactoryBot.create(:ride, shift: @shift1, passenger: @passenger1)
+     @ride4 = FactoryBot.create(:ride, shift: @shift_5_days_ago)
    end
 
   describe "GET #index" do
@@ -31,16 +36,13 @@ RSpec.describe RidesController, type: :controller do
     context "with valid attributes" do
       let(:valid_attributes) do
         {
-          date: @ride1.date,
-          van: @ride1.van,
           hours: @ride1.hours,
           amount_paid: @ride1.amount_paid,
           notes_date_reserved: @ride1.notes_date_reserved,
           confirmed_with_passenger: @ride1.confirmed_with_passenger,
           passenger_id: @ride1.passenger_id,
-          driver_id: @ride1.driver_id,
           notes: @ride1.notes,
-          emailed_driver: @ride1.emailed_driver,
+          shift_id: @ride1.shift_id,
           start_address_id: @ride1.start_address_id,
           dest_address_id: @ride1.dest_address_id
         }

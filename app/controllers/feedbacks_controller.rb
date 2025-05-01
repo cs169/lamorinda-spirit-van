@@ -19,7 +19,7 @@ class FeedbacksController < ApplicationController
 
   # GET /feedbacks/1/edit
   def edit
-    @current_date = @feedback.ride.date
+    @current_date = @feedback.ride.shift.date
     @passenger = @feedback.ride.passenger.name
   end
 

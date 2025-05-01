@@ -99,17 +99,15 @@ class RidesController < ApplicationController
 
   def ride_params
     params.require(:ride).permit(
-      :shift_id,
-      :van,
       :hours,
       :amount_paid,
       :notes_date_reserved,
       :confirmed_with_passenger,
       :passenger_id,
       :notes,
+      :shift_id,
       :start_address_id,
       :dest_address_id,
-      :shift_id,
       start_address_attributes: [:street, :city, :state, :zip],
       dest_address_attributes: [:street, :city, :state, :zip]
     )

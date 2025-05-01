@@ -38,8 +38,8 @@ class DriversController < ApplicationController
                       Time.zone.today
                     end
 
-    @rides = @driver.rides.where(date: @current_date)
     @shift = @driver.shifts.where(date: @current_date).first
+    @rides = @driver.rides.where(shift: @shift)
   end
 
   # GET /drivers/1 or /drivers/1.json

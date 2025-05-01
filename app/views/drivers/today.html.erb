@@ -28,7 +28,7 @@
         <tbody>
           <% @rides.each do |ride| %>
             <tr>
-              <td><%= ride.van %></td>
+              <td><%= ride.shift.van %></td>
               <td><%= ride.notes %></td>
               <td><%= ride.hours %></td>
               <td><%= number_to_currency(ride.amount_paid) %></td>
@@ -43,7 +43,7 @@
       <div class="rides-list">
         <% @rides.each do |ride| %>
           <div class="ride-block">
-            <p><strong>Van:</strong> <%= ride.van %></p>
+            <p><strong>Van:</strong> <%= ride.shift.van %></p>
             <p><strong>Notes:</strong> <%= ride.notes %></p>
             <p><strong>Hours:</strong> <%= ride.hours %></p>
             <p><strong>Fee:</strong> <%= number_to_currency(ride.amount_paid) %></p>
