@@ -52,7 +52,7 @@
                 </td>
 
                 <td><%= ride.date %></td>
-                <td><%= ride.driver&.name || 'N/A' %></td>
+                <td><%= ride.shift.driver&.name || 'N/A' %></td>
                 <td><%= ride.van || 'N/A' %></td>
                 <td><%= ride.passenger&.name || 'N/A' %></td>
                 <td><%= ride.start_address&.full_address || 'N/A' %></td>
@@ -81,7 +81,7 @@
                 </td>
 
                 <td>
-                  <% if ride.emailed_driver.to_s.downcase == "sent" %>
+                  <% if ride.shift.emailed_driver.to_s.downcase == "sent" %>
                     <span class="badge bg-success">Yes</span>
                   <% else %>
                     <span class="badge bg-danger">No</span>

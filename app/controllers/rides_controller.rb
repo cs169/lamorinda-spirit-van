@@ -14,17 +14,14 @@ class RidesController < ApplicationController
   # new (GET Request, displays form)
   def new
     session[:return_to] = request.referer
-    @ride = Ride.new(params.permit(:date, :driver_id))
+    @ride = Ride.new(params.permit(:shift_id))
     @ride.build_start_address
     @ride.build_dest_address
-    # For driver dropdown list in creating / updating
-    @drivers = Driver.order(:name)
-    gon.passengers = Passenger.all.map { |p| { label: p.name, id: p.id, phone: p.phone, notes: p.notes } }
-    gon.addresses = Address.all.map { |a| { label: a.street, zip: a.zip, city: a.city } }
+    set_autofill_variables
   end
 
   def create
-    @ride = Ride.new(ride_params)
+    @ride = Ride.new ride_params
     if @ride.save
       feedback = Feedback.new(ride_id: @ride.id)
       feedback.save
@@ -32,8 +29,8 @@ class RidesController < ApplicationController
       redirect_to session[:return_to], notice: "Ride was successfully created."
     else
       flash[:alert] = @ride.errors.full_messages.join
-      render :new
-      # redirect_to new_ride_path
+      set_autofill_variables
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -95,20 +92,24 @@ class RidesController < ApplicationController
     @ride = Ride.find(params[:id])
   end
 
+  def set_autofill_variables
+    gon.passengers = Passenger.all.map { |p| { label: p.name, id: p.id, phone: p.phone, notes: p.notes } }
+    gon.addresses = Address.all.map { |a| { label: a.street, zip: a.zip, city: a.city } }
+  end
+
   def ride_params
     params.require(:ride).permit(
-      :date,
+      :shift_id,
       :van,
       :hours,
       :amount_paid,
       :notes_date_reserved,
       :confirmed_with_passenger,
       :passenger_id,
-      :driver_id,
       :notes,
-      :emailed_driver,
       :start_address_id,
       :dest_address_id,
+      :shift_id,
       start_address_attributes: [:street, :city, :state, :zip],
       dest_address_attributes: [:street, :city, :state, :zip]
     )

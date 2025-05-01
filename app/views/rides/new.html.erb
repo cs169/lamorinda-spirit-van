@@ -28,35 +28,22 @@
           <div class="col-md-6 border-end">
             <h5 class="fw-bold text-success">Ride Details</h5>
 
-            <div class="mb-3">
-              <%= f.label :date, "Date" %> <span class="text-danger">*</span>
-              <%= f.date_field :date, class: "form-control", required: true %>
-            </div>
+              <div class="mb-3">
+                <%= f.label :shift_date, "Date" %> <span class="text-danger">*</span>
+                <%= f.date_field :shift_date, class: "form-control", required: true, value: (@ride.shift ? @ride.shift.date : nil) %>
+              </div>
 
-            <div class="mb-3">
-              <%= f.label :driver_id, "Driver" %>
-              <%= f.select :driver_id,
-                           options_from_collection_for_select(@drivers, :id, :name, @ride.driver_id),
-                           { prompt: "Select a Driver" },
-                           { class: "form-select", required: true  }%>
-            </div>
-
-            <div class="mb-3">
-              <%= f.label :van, "Van" %>
-              <%= f.number_field :van, class: "form-control" %>
-            </div>
+              <div class="mb-3">
+                <%= f.label :shift_id, "Select Shift" %>
+                <%= f.select :shift_id,
+                           [],
+                           { prompt: "Select a date first" },
+                           { class: "form-select", required: true, value: (@ride.shift ? @ride.shift.id : nil) }%>
+              </div>
 
             <div class="mb-3">
               <%= f.label :notes, "Notes" %>
               <%= f.text_area :notes, class: "form-control", rows: 3 %>
-            </div>
-
-            <div class="mb-3">
-              <%= f.label :emailed_driver, "Emailed Driver?", class: "form-label" %>
-              <%= f.select :emailed_driver,
-                           [["Yes", true], ["No", false]],
-                           {},
-                           class: "form-select", required: true %>
             </div>
           </div>
 

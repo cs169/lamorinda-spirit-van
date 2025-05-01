@@ -13,7 +13,7 @@ class ShiftsController < ApplicationController
 
   # GET /shifts/1 or /shifts/1.json
   def show
-    @rides = Ride.where(date: @shift.date)
+    @rides = @shift.rides
   end
 
   # GET /shifts/new
@@ -79,6 +79,12 @@ class ShiftsController < ApplicationController
       format.html { redirect_to shifts_path, status: :see_other, notice: "Shift was successfully destroyed." }
       format.json { head :no_content }
     end
+  end
+
+  def shifts_for_day
+    @shifts = Shift.where(date: params[:date])
+    @prompt = @shifts.empty? ? "No shifts for that day" : "Select a shift"
+    render :shifts_for_day
   end
 
   private
