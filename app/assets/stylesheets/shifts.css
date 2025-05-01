@@ -36,13 +36,23 @@
     width: 30%;
 }
 
-/* Responsive feedback form button specific to shifts#edit or shifts#feedback */
+/* /feedbacks/id/edit */
 .ride-feedback-btn {
     width: 50%;
 }
 
+/* /shifts/id/feedback */
+.shift-feedback-btn {
+    width: 50%;
+    white-space: nowrap;
+    text-align: center;
+}
+
 @media (max-width:576px) {
     .ride-feedback-btn {
+        width: 80%;
+    }
+    .shift-feedback-btn {
         width: 80%;
     }
 }
