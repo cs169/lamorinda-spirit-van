@@ -21,8 +21,11 @@
             <th>Notes</th>
             <th>Hours</th>
             <th>Fee</th>
-            <th>Info</th>
+            <th class="text-danger">Wheelchair</th>
+            <th>Ride Type</th>
+            <th>Phone:</th>
             <th>Feedback</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -32,12 +35,15 @@
               <td><%= ride.notes %></td>
               <td><%= ride.hours %></td>
               <td><%= number_to_currency(ride.amount_paid) %></td>
-              <td><%= link_to "Info", ride_path(ride.id), class: "btn btn-primary" %></td>
+              <td><strong> <%= ride.wheelchair ? "Yes" : "No" %></strong></td>
+              <td><%= ride.destination_type %></td>
+              <td><%= ride.passenger.phone %></td>
                <% if ride.feedback %>
                 <td><%= link_to "Feedback", edit_feedback_path(ride.feedback), class: "btn btn-primary" %></td>
               <% else %>
                 <td>No Feedback</td>
               <% end %>
+              <td><%= link_to "More Info", ride_path(ride.id), class: "btn btn-primary" %></td>
             </tr>
           <% end %>
         </tbody>
