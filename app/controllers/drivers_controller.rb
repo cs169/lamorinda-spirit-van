@@ -38,7 +38,7 @@ class DriversController < ApplicationController
                       Time.zone.today
                     end
 
-    @rides = @driver.rides.where(date: @current_date)
+    @rides = @driver.rides.where(date: @current_date).where.not(id: Ride.select(:next_ride_id).where.not(next_ride_id: nil))
     @shift = @driver.shifts.where(shift_date: @current_date).first
   end
 

@@ -12,6 +12,7 @@ class RidesController < ApplicationController
   end
 
   def show
+    @all_rides = @ride.get_all_linked_rides
   end
 
   # new (GET Request, displays form)
