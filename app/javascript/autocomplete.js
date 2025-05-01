@@ -9,8 +9,8 @@ document.addEventListener("turbo:load", function() {
           source: gon.passengers
         });
 
-        // set autocomplete attribute to "ride-address" because jquery 
-        // automatically sets it to "off", which is useless.
+        // Set autocomplete attribute because jquery automatically sets it
+        // to "off" after autocomplete function, which doesn't disable Chrome's autofill
         $("#ride_passenger_name").attr("autocomplete", "ride-address");
       } );
 
@@ -34,8 +34,9 @@ document.addEventListener("turbo:load", function() {
         $( "#ride_start_address_attributes_street" ).autocomplete({
           source: gon.addresses
         });
-        // set autocomplete attribute to "ride-address" because jquery 
-        // automatically sets it to "off", which is useless.
+
+        // Set autocomplete attribute because jquery automatically sets it
+        // to "off" after autocomplete function, which doesn't disable Chrome's autofill
         $("#ride_start_address_attributes_street").attr("autocomplete", "ride-address");
       } );
 
@@ -45,12 +46,9 @@ document.addEventListener("turbo:load", function() {
         document.getElementById('ride_start_address_attributes_zip').value=  ui.item.zip;
       } );
       
-      // // Stop Addresses (uses focus event because stops are added dynamically):
+      // Stop Addresses (uses focus event because stops are added dynamically):
       $(document).on("focus", ".dest-autocomplete", function () {
         const $input = $(this);
-    
-        // Avoid re-initializing if already initialized
-        // if ($input.data("ui-autocomplete")) return;
     
         $input.autocomplete({
           source: gon.addresses,
@@ -61,7 +59,13 @@ document.addEventListener("turbo:load", function() {
             $(`#${baseId}_city`).val(ui.item.city);
             $(`#${baseId}_state`).val("CA");
             $(`#${baseId}_zip`).val(ui.item.zip);
-          }
+          },
+
+          // Set autocomplete attribute because jquery automatically sets it
+          // to "off" after autocomplete function, which doesn't disable Chrome's autofill
+          create: function () {
+            this.setAttribute("autocomplete", "ride-address");
+          },
         });
       });
       }

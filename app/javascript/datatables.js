@@ -111,7 +111,7 @@ const initiateCheckboxes = (table) => {
   const initiateDatatables = () => {
     const tables = [
       { selector: '#passengers-table', order: [[15, 'desc']], footerCallback: passengersRelevantData},
-      { selector: '#rides-table', order: [[2, 'desc']], footerCallback: ridesRelevantStats}
+      { selector: '#rides-table', order: [[3, 'desc']], footerCallback: ridesRelevantStats}
     ];
   
     tables.forEach(table => {
