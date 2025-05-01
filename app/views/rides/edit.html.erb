@@ -46,7 +46,32 @@
 
           <div class="mb-3">
             <%= f.label :amount_paid, "Amount Paid" %>
-            <%= f.number_field :amount_paid, step: 0.01, class: "form-control" %>
+            <%= f.number_field :amount_paid, step: 0.01, class: "form-control", id: "amount_paid_field" %>
+            
+            <!-- Quick Amount Selection Buttons -->
+            <div class="mt-2 mb-3">
+              <label class="form-label text-muted small">Quick Select:</label>
+              <div class="btn-group">
+                <% [0, 5, 10, 20].each do |amount| %>
+                  <button type="button" class="btn btn-sm btn-outline-secondary fare-quick-select" 
+                          data-amount="<%= amount %>">
+                    $<%= amount %>
+                  </button>
+                <% end %>
+              </div>
+              <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                  const amountField = document.getElementById('amount_paid_field');
+                  const quickButtons = document.querySelectorAll('.fare-quick-select');
+                  
+                  quickButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                      amountField.value = this.getAttribute('data-amount');
+                    });
+                  });
+                });
+              </script>
+            </div>
           </div>
 
           <div class="mb-3">
@@ -65,7 +90,15 @@
 
         <!-- Right Column (Passenger + Addresses) -->
         <div class="col-md-6">
-          <h5 class="fw-bold text-success">Passenger Details</h5>
+          <h5 class="fw-bold text-success">
+            Passenger Details
+            <% if @ride.passenger && @ride.passenger.rides.count <= 1 %>
+              <span class="badge bg-warning text-dark" data-bs-toggle="tooltip" data-bs-placement="top" 
+                    title="This is a new passenger with no previous ride history">
+                New Passenger <i class="bi bi-exclamation-triangle"></i>
+              </span>
+            <% end %>
+          </h5>
 
           <!-- Read-only passenger fields -->
           <div class="mb-3">
@@ -191,3 +224,13 @@
     <% end %>
   </div>
 </div>
+
+<!-- Initialize Bootstrap tooltips (for fare quickselects) -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+  });
+</script>

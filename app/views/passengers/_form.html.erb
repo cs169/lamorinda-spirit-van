@@ -16,129 +16,186 @@
 
 <%= form_with(model: @passenger, local: true) do |form| %>
   <div class="row">
-    <!-- LEFT COLUMN -->
+    <!-- TOP ROW - 2 Cards -->
     <div class="col-md-6">
-
-      <!-- Name -->
-      <div class="mb-3">
-        <%= form.label :name, "Name", class: "form-label" %>
-        <span class="text-danger">*</span>
-        <%= form.text_field :name, class: "form-control", required: true %>
-      </div>
-
-      <!-- Address -->
-        <%= form.fields_for :address do |address_form| %>
+      <!-- BASIC INFORMATION SECTION -->
+      <div class="card mb-4 h-100" style="padding: 0;">
+        <div class="card-header bg-primary text-white py-3">
+          <h5 class="mb-0">Basic Information</h5>
+        </div>
+        <div class="card-body">
+          <!-- Name -->
           <div class="mb-3">
-            <%= address_form.label :street, "Street", class: "form-label" %>
+            <%= form.label :name, "Name", class: "form-label" %>
             <span class="text-danger">*</span>
-            <%= address_form.text_field :street, 
+            <%= form.text_field :name, class: "form-control", required: true %>
+          </div>
+
+          <!-- Birthday -->
+          <div class="mb-3">
+            <%= form.label :birthday, "Birthday", class: "form-label" %>
+            <span class="text-danger">*</span>
+            <%= form.date_field :birthday, class: "form-control", required: true %>
+          </div>
+
+          <!-- Race -->
+          <div class="mb-3">
+            <%= form.label :race, "Race", class: "form-label" %>
+            <span class="text-danger">*</span>
+            <%= form.number_field :race, class: "form-control", required: true %>
+          </div>
+
+          <!-- Hispanic -->
+          <div class="mb-3">
+            <%= form.label :hispanic, "Hispanic?", class: "form-label" %>
+            <span class="text-danger">*</span>
+            <%= form.select :hispanic, 
+                          [['Yes', true], ['No', false]], 
+                          {}, 
+                          class: "form-select", required: true %>
+          </div>
+
+          <!-- Date Registered -->
+          <div class="mb-3">
+            <%= form.label :date_registered, "Date Registered", class: "form-label" %>
+            <span class="text-danger">*</span>
+            <%= form.date_field :date_registered, 
+                              value: @passenger.date_registered || Date.today, 
+                              class: "form-control", 
+                              required: true %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <!-- ADDRESS SECTION -->
+      <div class="card mb-4 h-100">
+        <div class="card-header bg-success text-white py-3">
+          <h5 class="mb-0">Address Information</h5>
+        </div>
+        <div class="card-body">
+          <%= form.fields_for :address do |address_form| %>
+            <div class="mb-3">
+              <%= address_form.label :street, "Street", class: "form-label" %>
+              <span class="text-danger">*</span>
+              <%= address_form.text_field :street, 
                                         value: @passenger.address&.street,
                                         class: "form-control", 
                                         required: true %>
-          </div>
-    
-          <div class="mb-3">
-            <%= address_form.label :city, "City", class: "form-label" %>
-            <span class="text-danger">*</span>
-            <%= address_form.text_field :city, 
+            </div>
+  
+            <div class="mb-3">
+              <%= address_form.label :city, "City", class: "form-label" %>
+              <span class="text-danger">*</span>
+              <%= address_form.text_field :city, 
                                         value: @passenger.address&.city,
                                         class: "form-control", 
                                         required: true %>
-          </div>
-    
-          <div class="mb-3">
-            <%= address_form.label :state, "State", class: "form-label" %>
-            <span class="text-danger">*</span>
-            <%= address_form.text_field :state, 
+            </div>
+
+            <div class="mb-3">
+              <%= address_form.label :state, "State", class: "form-label" %>
+              <span class="text-danger">*</span>
+              <%= address_form.text_field :state, 
                                         value: @passenger.address&.state,
                                         class: "form-control", 
                                         required: true %>
+            </div>
+
+            <div class="mb-3">
+              <%= address_form.label :zip, "Zip", class: "form-label" %>
+              <span class="text-danger">*</span>
+              <%= address_form.text_field :zip, 
+                                        value: @passenger.address&.zip,
+                                        class: "form-control", 
+                                        required: true %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <!-- BOTTOM ROW - 2 Cards -->
+    <div class="col-md-6">
+      <!-- ACCESSIBILITY SECTION -->
+      <div class="card mb-4 h-100">
+        <div class="card-header bg-info text-white py-3">
+          <h5 class="mb-0">Accessibility & Special Needs</h5>
+        </div>
+        <div class="card-body">
+          <!-- Wheelchair -->
+          <div class="mb-3 form-check">
+            <%= form.check_box :wheelchair, class: "form-check-input" %>
+            <%= form.label :wheelchair, "Requires Wheelchair", class: "form-check-label" %>
           </div>
 
+          <!-- Disabled -->
+          <div class="mb-3 form-check">
+            <%= form.check_box :disabled, class: "form-check-input" %>
+            <%= form.label :disabled, "Has Disability", class: "form-check-label" %>
+          </div>
+
+          <!-- Low Income -->
+          <div class="mb-3 form-check">
+            <%= form.check_box :low_income, class: "form-check-input" %>
+            <%= form.label :low_income, "Low Income", class: "form-check-label" %>
+          </div>
+
+          <!-- Needs Caregiver -->
+          <div class="mb-3 form-check">
+            <%= form.check_box :need_caregiver, class: "form-check-input" %>
+            <%= form.label :need_caregiver, "Needs Caregiver", class: "form-check-label" %>
+          </div>
+
+          <!-- Notes -->
           <div class="mb-3">
-          <%= address_form.label :zip, "Zip", class: "form-label" %>
-          <span class="text-danger">*</span>
-          <%= address_form.text_field :zip, 
-                                      value: @passenger.address&.zip,
-                                      class: "form-control", 
-                                      required: true %>
+            <%= form.label :notes, "Notes", class: "form-label" %>
+            <%= form.text_area :notes, rows: 3, class: "form-control" %>
           </div>
-        <% end %>
-
-      <!-- Birthday -->
-      <div class="mb-3">
-        <%= form.label :birthday, "Birthday", class: "form-label" %>
-        <span class="text-danger">*</span>
-        <%= form.date_field :birthday, class: "form-control", required: true %>
+        </div>
       </div>
-
-      <!-- Race -->
-      <div class="mb-3">
-        <%= form.label :race, "Race", class: "form-label" %>
-        <span class="text-danger">*</span>
-        <%= form.number_field :race, class: "form-control", required: true %>
-      </div>
-
-      <!-- Hispanic -->
-      <div class="mb-3">
-        <%= form.label :hispanic, "Hispanic?", class: "form-label" %>
-        <span class="text-danger">*</span>
-      
-        <%= form.select :hispanic, 
-                        [['Yes', true], ['No', false]], 
-                        {}, 
-                        class: "form-select", required: true %>
-      </div>
-    
-
     </div>
 
-    <!-- RIGHT COLUMN -->
     <div class="col-md-6">
-      <!-- Notes -->
-      <div class="mb-3">
-        <%= form.label :notes, "Notes", class: "form-label" %>
-        <%= form.text_area :notes, rows: 3, class: "form-control" %>
-      </div>
+      <!-- CONTACT SECTION -->
+      <div class="card mb-4 h-100">
+        <div class="card-header bg-warning text-dark py-3">
+          <h5 class="mb-0">Contact Information</h5>
+        </div>
+        <div class="card-body">
+          <!-- Phone -->
+          <div class="mb-3">
+            <%= form.label :phone, "Phone", class: "form-label" %>
+            <%= form.text_field :phone, class: "form-control" %>
+          </div>
 
-      <!-- Phone -->
-      <div class="mb-3">
-        <%= form.label :phone, "Phone", class: "form-label" %>
-        <%= form.text_field :phone, class: "form-control" %>
-      </div>
+          <!-- Alternative Phone -->
+          <div class="mb-3">
+            <%= form.label :alternative_phone, "Alternative Phone", class: "form-label" %>
+            <%= form.text_field :alternative_phone, class: "form-control" %>
+          </div>
 
-      <!-- Email -->
-      <div class="mb-3">
-        <%= form.label :email, "Email", class: "form-label" %>
-        <%= form.email_field :email, class: "form-control" %>
-      </div>
+          <!-- Email -->
+          <div class="mb-3">
+            <%= form.label :email, "Email", class: "form-label" %>
+            <%= form.email_field :email, class: "form-control" %>
+          </div>
 
-      <!-- Alternative Phone -->
-      <div class="mb-3">
-        <%= form.label :alternative_phone, "Alternative Phone", class: "form-label" %>
-        <%= form.text_field :alternative_phone, class: "form-control" %>
-      </div>
-
-      <!-- Audit -->
-      <div class="mb-3">
-        <%= form.label :audit, "Audit", class: "form-label" %>
-        <%= form.text_area :audit, rows: 3, class: "form-control" %>
-      </div>
-
-      <!-- Date Registered -->
-      <div class="mb-3">
-        <%= form.label :date_registered, "Date Registered", class: "form-label" %>
-        <span class="text-danger">*</span>
-        <%= form.date_field :date_registered, 
-                            value: @passenger.date_registered || Date.today, 
-                            class: "form-control", 
-                            required: true %>
+          <!-- Audit -->
+          <div class="mb-3">
+            <%= form.label :audit, "Audit", class: "form-label" %>
+            <%= form.text_area :audit, rows: 3, class: "form-control" %>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Action Buttons -->
-  <div class="d-flex justify-content-between mt-4">
+  <div class="d-flex justify-content-between mt-5">
     <%= link_to 'Back', passengers_path, class: "btn btn-secondary" %>
 
     <%= form.submit @passenger.new_record? ? "Create Passenger" : "Update Passenger", 
