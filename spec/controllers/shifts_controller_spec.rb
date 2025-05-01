@@ -18,10 +18,16 @@ RSpec.describe ShiftsController, type: :controller do
     end
   end
 
-  describe "GET #show" do
-    it "returns a successful response" do
+  describe "GET #show as driver" do
+    it "redirects driver to root_path with alert" do
+      sign_out @user
+      driver_user = FactoryBot.create(:user, :driver)
+      sign_in driver_user
+
       get :show, params: { id: @shift.id }
-      expect(response).to be_successful
+
+      expect(response).to redirect_to(root_path)
+      expect(flash[:alert]).to eq("You are not authorized to view this page.")
     end
   end
 

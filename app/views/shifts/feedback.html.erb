@@ -49,9 +49,6 @@
           <%= form.button "Save Shift Feedback", type: :submit, name: "commit_type", value: "feedback",
               class: "btn btn-primary shift-feedback-btn" %>
 
-          <%= link_to "Show this shift", @shift,
-              class: "btn btn-secondary shift-feedback-btn" %>
-
           <%= link_to "Back", today_driver_path(@shift.driver_id, date: @shift.shift_date),
               class: "btn btn-outline-secondary px-5 ride-feedback-btn" %>
         </div>

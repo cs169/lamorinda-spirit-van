@@ -13,6 +13,12 @@ class ShiftsController < ApplicationController
 
   # GET /shifts/1 or /shifts/1.json
   def show
+    # driver can not visit /shifts/id page
+    if current_user.role == "driver"
+      redirect_to root_path, alert: "You are not authorized to view this page."
+      return
+    end
+
     @rides = Ride.where(date: @shift.shift_date)
   end
 
