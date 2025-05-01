@@ -144,6 +144,20 @@ RSpec.describe FeedbacksController, type: :controller do
         expect(response).to have_http_status(:see_other)
       end
     end
+
+    context "when the driver of the ride was destroyed" do
+      it "redirects to root_path with see_other status" do
+        @driver.destroy
+
+        patch :update, params: {
+          id: @feedback.id,
+          feedback: { note: "invalid driver update" }
+        }
+
+        expect(response).to redirect_to(root_path)
+        expect(response).to have_http_status(:see_other)
+      end
+    end
   end
 
   describe "DELETE #destroy" do

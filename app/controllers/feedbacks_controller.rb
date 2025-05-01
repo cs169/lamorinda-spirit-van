@@ -45,7 +45,7 @@ class FeedbacksController < ApplicationController
       if driver.present?
         redirect_to today_driver_path(driver.id, date: @feedback.ride.date), status: :see_other
       else
-        redirect_to drivers_path, status: :see_other
+        redirect_to root_path, status: :see_other
       end
     else
       respond_to do |format|
