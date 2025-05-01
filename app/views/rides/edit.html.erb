@@ -77,6 +77,12 @@
                 readonly>
         </div>
 
+        <%= f.hidden_field :passenger_id, class: "form-control"  %>
+        <%= f.hidden_field :wheelchair, class: "form-control"  %>
+        <%= f.hidden_field :low_income, class: "form-control"  %>
+        <%= f.hidden_field :disabled, class: "form-control"  %>
+        <%= f.hidden_field :need_caregiver, class: "form-control"  %>
+
         <div class="mb-3">
           <%= f.label :passenger_home_address, "Home Address" %>
           <input type="text" 

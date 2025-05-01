@@ -68,12 +68,35 @@ class RidesController < ApplicationController
   def update
     @ride = Ride.find(params[:id])
     @drivers = Driver.order(:name)
-    if @ride.update(ride_params)
+
+    # Parsing "Yes", "No" from fields into bool vals
+    accessibility_fields = [:wheelchair, :low_income, :disabled, :need_caregiver]
+    ride_attrs = ride_attrs.to_h
+    accessibility_fields.each do |field|
+      if ride_attrs[field].present?
+        ride_attrs[field] = (ride_attrs[field] == "Yes")
+      end
+    end
+
+    ride_attrs = ride_params.except(:addresses_attributes)
+    addresses = ride_params[:addresses_attributes]
+
+    # Destroy old ride chain
+    all_rides = @ride.get_all_linked_rides
+    ActiveRecord::Base.transaction do
+      all_rides.reverse_each(&:destroy!)
+    end
+
+    # Rebuild new ride chain
+    result_rides, success = Ride.build_linked_rides(ride_attrs, addresses)
+
+    if success
+      @ride = result_rides[0]
       flash[:notice] = "Ride was successfully updated."
       redirect_to edit_ride_path(@ride)
-      # else
-      #   flash[:alert] = "There was an error updating the ride."
-      #   render :edit, status: :unprocessable_entity
+    else
+      flash[:alert] = @ride.errors.full_messages.join
+      render :edit
     end
   end
 
@@ -83,10 +106,6 @@ class RidesController < ApplicationController
   rescue ActiveRecord::RecordNotDestroyed
     flash[:alert] = "Failed to remove the ride."
     redirect_to rides_url, status: :unprocessable_entity
-  end
-
-  def filter
-    @rides = Ride.all
   end
 
     private
