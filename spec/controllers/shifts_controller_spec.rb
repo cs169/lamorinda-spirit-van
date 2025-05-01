@@ -18,16 +18,32 @@ RSpec.describe ShiftsController, type: :controller do
     end
   end
 
-  describe "GET #show as driver" do
-    it "redirects driver to root_path with alert" do
-      sign_out @user
-      driver_user = FactoryBot.create(:user, :driver)
-      sign_in driver_user
+  describe "GET #show" do
+    context "when current user is a driver" do
+      it "redirects driver to root_path with alert" do
+        sign_out @user
+        driver_user = FactoryBot.create(:user, :driver)
+        sign_in driver_user
 
-      get :show, params: { id: @shift.id }
+        get :show, params: { id: @shift.id }
 
-      expect(response).to redirect_to(root_path)
-      expect(flash[:alert]).to eq("You are not authorized to view this page.")
+        expect(response).to redirect_to(root_path)
+        expect(flash[:alert]).to eq("You are not authorized to view this page.")
+      end
+    end
+
+    context "when current user is a dispatcher or admin" do
+      it "assigns rides for the shift date" do
+        ride1 = FactoryBot.create(:ride, date: @shift.shift_date)
+        ride2 = FactoryBot.create(:ride, date: @shift.shift_date)
+        ride3 = FactoryBot.create(:ride, date: @shift.shift_date + 1.day)
+
+        get :show, params: { id: @shift.id }
+
+        expect(assigns(:rides)).to include(ride1, ride2)
+        expect(assigns(:rides)).not_to include(ride3)
+        expect(response).to be_successful
+      end
     end
   end
 
