@@ -37,3 +37,21 @@
     align-items: center;
     height: auto;
 }
+
+.drivers-back-btn {
+    width: 30%;
+    text-align: left;
+    margin-top: 1rem;
+}
+
+.drivers-back-btn a {
+    width: 50%;
+}
+
+@media (max-width:576px) {
+    .drivers-back-btn {
+        width: 100%;
+        text-align: center;
+        /* margin-top: 1rem; */
+    }
+}

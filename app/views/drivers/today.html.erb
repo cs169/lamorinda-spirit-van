@@ -5,7 +5,7 @@
     <div class="button-group">
       <%= link_to "Last Day", today_driver_path(date: @current_date - 1.day), class: "btn btn-secondary" %>
       <%= link_to "Back to Today", today_driver_path(date: Time.zone.today), class: "btn btn-primary" %>
-      <%= link_to "Next day", today_driver_path(date: @current_date + 1.day), class: "btn btn-secondary" %>
+      <%= link_to "Next Day", today_driver_path(date: @current_date + 1.day), class: "btn btn-secondary" %>
       <button onclick="window.print()" class="btn btn-primary" id="btn-print">Print</button>
     </div>
   </form>
@@ -94,8 +94,12 @@
   <% end %>
   
   <div class="btn-shift" id="btn-shift">
-    <%= link_to "View Other Drivers", drivers_path(dont_jump: true), class: "btn btn-primary" %>
-    <%= link_to "View All Shifts", shifts_path, class: "btn btn-primary" %>
+    <%# Pass the current page's full URL to the drivers index via the `return_to_drivers_today_from_drivers_index` parameter %>
+    <%= link_to "View Other Drivers", drivers_path(dont_jump: true, return_to_drivers_today_from_drivers_index: request.fullpath), class: "btn btn-primary" %>
+    
+    <%# Pass the current page's full URL to the shifts index via the `return_to` parameter %>
+    <%= link_to "View All Shifts", shifts_path(return_to_drivers_today_from_shifts_index: request.fullpath), class: "btn btn-primary" %>
+    
     <% if @shift %>
       <%= link_to "Shift Feedback", feedback_shift_path(@shift.id), class: "btn btn-primary" %>
     <% end %> 

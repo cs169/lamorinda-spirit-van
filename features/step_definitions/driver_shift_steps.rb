@@ -1,5 +1,28 @@
 # frozen_string_literal: true
 
+Then("I should see the rides for one day ago") do
+  expected_date = (Time.zone.today - 1.day).strftime("%m/%d/%Y")
+  expect(page).to have_content(expected_date)
+end
+
+Then("I should see the rides for two days ago") do
+  expected_date = (Time.zone.today - 2.days).strftime("%m/%d/%Y")
+  expect(page).to have_content(expected_date)
+end
+
+Then("I should see the rides for today") do
+  expected_date = Time.zone.today.strftime("%m/%d/%Y")
+  expect(page).to have_content(expected_date)
+end
+
+When("I remember the current rides page URL") do
+  @rides_page_url = current_url
+end
+
+Then("I should return to the remembered rides page URL") do
+  expect(current_url).to eq(@rides_page_url)
+end
+
 Given(/^I visit the Today's Rides page for that driver$/) do
   driver_id = @driver_id || @driver&.id
   raise "No driver id defined for today's rides page" unless driver_id

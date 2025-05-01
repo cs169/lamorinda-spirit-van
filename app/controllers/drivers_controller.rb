@@ -4,6 +4,9 @@ class DriversController < ApplicationController
   before_action :set_driver, only: %i[ edit update destroy today ]
   before_action -> { require_role("admin", "dispatcher") }, only: [:new, :edit, :create, :update, :destroy]
 
+  # Currently the "capture_return_to" method is used for redirect from the drivers index page to /drivers/id/today?date=XXX page
+  before_action -> { capture_return_to(:return_to_drivers_today_from_drivers_index) }, only: :index
+
   # GET /drivers or /drivers.json
   def index
     dont_jump = params[:dont_jump]
@@ -40,6 +43,11 @@ class DriversController < ApplicationController
 
     @rides = @driver.rides.where(date: @current_date)
     @shift = @driver.shifts.where(shift_date: @current_date).first
+
+    # Clear return_to_driver parameter after redirect from drivers index page to /drivers/id/today?date=XXX page
+    clear_return_to(:return_to_drivers_today_from_drivers_index)
+
+    clear_return_to(:return_to_drivers_today_from_drivers_index)
   end
 
   # NOTE: We deliberately disabled the `show` action.

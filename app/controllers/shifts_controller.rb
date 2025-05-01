@@ -4,6 +4,9 @@ class ShiftsController < ApplicationController
   before_action :set_shift, only: %i[ show edit update destroy ]
   before_action -> { require_role("admin", "dispatcher") }, only: [:new, :edit, :create, :update, :destroy]
 
+  # Currently the "capture_return_to" method is used for redirect from the shifts calendar to /drivers/id/today?date=XXX page
+  before_action -> { capture_return_to(:return_to_drivers_today_from_shifts_index) }, only: :index
+
   # GET /shifts or /shifts.json
   def index
     # @shifts = Shift.all

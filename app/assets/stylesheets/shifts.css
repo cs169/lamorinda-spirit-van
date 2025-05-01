@@ -47,6 +47,7 @@
     color: #ccc;
 }
 
+/* /shifts/id */
 /* /_shift.html.erb */
 .van-col {
     display: inline-block;
@@ -63,6 +64,16 @@
     width: 50%;
     white-space: nowrap;
     text-align: center;
+}
+
+/* /shifts */
+.calendar-back-btn {
+    width: 30%;
+    text-align: left;
+}
+
+.calendar-back-btn a {
+    width: 50%;
 }
 
 @media (max-width:576px) {
@@ -87,4 +98,11 @@
         /* Adjust the width of the table cells for smaller screens */
         min-width: 115px;
     }
+    
+    .calendar-back-btn {
+        width: 100%;
+        text-align: center;
+        margin-top: 1rem;
+    }
+
 }
