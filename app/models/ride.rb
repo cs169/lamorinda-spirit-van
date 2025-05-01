@@ -12,7 +12,7 @@ class Ride < ApplicationRecord
   accepts_nested_attributes_for :dest_address
 
   def emailed_driver?
-    self.emailed_driver == "true"
+    self.shift.emailed_driver == "true"
   end
 
   # # Filtering logic for rides table

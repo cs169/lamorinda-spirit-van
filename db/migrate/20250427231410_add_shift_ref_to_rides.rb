@@ -6,6 +6,6 @@ class AddShiftRefToRides < ActiveRecord::Migration[7.2]
     remove_column :rides, :emailed_driver, :binary
     add_reference :rides, :shift, foreign_key: true
 
-    remove_column :shifts, :emailed_driver, :binary
+    add_column :shifts, :emailed_driver, :binary
   end
 end
