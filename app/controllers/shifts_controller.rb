@@ -2,7 +2,7 @@
 
 class ShiftsController < ApplicationController
   before_action :set_shift, only: %i[ show edit update destroy ]
-  before_action -> { require_role("admin", "dispatcher") }, only: [:new, :edit, :create, :update, :destroy]
+  before_action -> { require_role("admin", "dispatcher") }, only: [:new, :edit, :create, :destroy]
 
   # Currently the "capture_return_to" method is used for redirect from the shifts calendar to /drivers/id/today?date=XXX page
   before_action -> { capture_return_to(:return_to_drivers_today_from_shifts_index) }, only: :index
@@ -65,10 +65,17 @@ class ShiftsController < ApplicationController
   # PATCH/PUT /shifts/1 or /shifts/1.json
   def update
     if params[:commit_type] == "feedback"
-      @shift.update(shift_params)
-      redirect_to today_driver_path(id: @shift.driver_id)
+      # Allow driver to submit feedback
+      if @shift.update(shift_params)
+        redirect_to today_driver_path(id: @shift.driver_id)
+      else
+        render :feedback, status: :unprocessable_entity
+      end
       return
     end
+
+    # For non-feedback updates, still require admin/dispatcher
+    require_role("admin", "dispatcher")
     respond_to do |format|
       if @shift.update(shift_params)
         format.html { redirect_to @shift, notice: "Shift was successfully updated." }

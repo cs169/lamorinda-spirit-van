@@ -114,31 +114,84 @@ RSpec.describe ShiftsController, type: :controller do
   end
 
   describe "PATCH #update" do
-    context "with valid parameters" do
-      it "updates the shift and redirects to the shift page" do
-        patch :update, params: { id: @shift.id, shift: { shift_type: "night" } }
+    context "when submitting feedback as driver" do
+      before do
+        sign_out @user
+        @driver_user = FactoryBot.create(:user, :driver)
+        sign_in @driver_user
+      end
+
+      it "updates feedback fields and redirects to driver's today page" do
+        patch :update, params: {
+          id: @shift.id,
+          shift: {
+            van: 101,
+            pick_up_time: "08:00",
+            drop_off_time: "10:00",
+            odometer_pre: "12345",
+            odometer_post: "12400"
+          },
+          commit_type: "feedback"
+        }
+
         @shift.reload
-        expect(@shift.shift_type).to eq("night")
-        expect(response).to redirect_to(@shift)
+        expect(@shift.van).to eq(101)
+        expect(@shift.pick_up_time).to eq("08:00")
+        expect(@shift.drop_off_time).to eq("10:00")
+        expect(@shift.odometer_pre).to eq("12345")
+        expect(@shift.odometer_post).to eq("12400")
+        expect(response).to redirect_to(today_driver_path(id: @shift.driver_id))
       end
     end
 
-    context "with invalid parameters" do
-      it "does not update the shift and re-renders the edit template" do
-        patch :update, params: { id: @shift.id, shift: { shift_date: nil } }
+    context "when driver tries to modify non-feedback fields" do
+      before do
+        sign_out @user
+        @driver_user = FactoryBot.create(:user, :driver)
+        sign_in @driver_user
+      end
+
+      it "does not allow driver to modify shift_type or driver_id" do
+        old_shift_type = @shift.shift_type
+        old_driver_id = @shift.driver_id
+
+        patch :update, params: {
+          id: @shift.id,
+          shift: {
+            shift_type: "illegal_change",
+            driver_id: 9999
+          },
+          commit_type: "feedback"
+        }
+
         @shift.reload
-        expect(@shift.shift_date).not_to be_nil
+
+        expect(@shift.shift_type).to eq(old_shift_type)
+        expect(@shift.driver_id).to eq(old_driver_id)
+      end
+    end
+
+    context "when dispatcher fails to update shift" do
+      it "re-renders the edit template with unprocessable_entity status" do
+        patch :update, params: { id: @shift.id, shift: { shift_date: nil } }
+
+        expect(response).to have_http_status(:unprocessable_entity)
         expect(response).to render_template(:edit)
       end
     end
-  end
 
-  describe "PATCH #update with commit_type feedback" do
-    it "updates shift and redirects to driver's today page" do
-      patch :update, params: { id: @shift.id, shift: { shift_type: "feedback_type" }, commit_type: "feedback" }
-      @shift.reload
-      expect(@shift.shift_type).to eq("feedback_type")
-      expect(response).to redirect_to(today_driver_path(id: @shift.driver_id))
+    context "when dispatcher successfully updates shift with JSON format" do
+      it "returns status OK and correct content type" do
+        patch :update, params: {
+          id: @shift.id,
+          shift: { shift_type: "night" }
+        }, as: :json
+
+        @shift.reload
+        expect(@shift.shift_type).to eq("night")
+        expect(response).to have_http_status(:ok)
+        expect(response.content_type).to eq("application/json; charset=utf-8")
+      end
     end
   end
 
