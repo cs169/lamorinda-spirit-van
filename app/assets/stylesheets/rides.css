@@ -136,7 +136,7 @@ h1 {
     }
 }
 
-/* print */
+/* Print styles */
 @media print {
     /* Hide all navigation and buttons */
     nav,
@@ -155,6 +155,10 @@ h1 {
         display: none !important;
     }
 
+    .today-page {
+        max-width: 100%;
+    }
+
     .today-page .rides-table th,
     .today-page .rides-table td {
         border: 1px solid black;
@@ -171,36 +175,35 @@ h1 {
         margin: 10mm;
     }
 
-    .today-page {
-        max-width: 100%;
-    }
-}
-
-/* PC */
-@media print and (min-width: 576px) {
-    .today-page .rides-table {
-        display: table !important;
-        width: 100%;
-        border: 1px solid black;
-        font-size: 12px;
-        border-collapse: separate !important;
-        border-spacing: 0 !important;
-    }
-
-    .today-page .rides-list {
-        display: none !important;
-    }
-}
-
-/* mobile */
-@media print and (max-width: 575.98px) {
+    /* Default: hide table, will re-enable on PC */
     .today-page .rides-table {
         display: none !important;
         border-collapse: separate !important;
         border-spacing: 0 !important;
     }
 
-    .today-page .rides-list {
-        display: block !important;
+    /* PC-specific: show rides table */
+    @media (min-width: 576px) {
+        .today-page .rides-table {
+            display: table !important;
+            width: 100%;
+            border: 1px solid black;
+            font-size: 12px;
+        }
+
+        .today-page .rides-list {
+            display: none !important;
+        }
+    }
+
+    /* Mobile-specific: show rides list */
+    @media (max-width: 575.98px) {
+        .today-page .rides-table {
+            display: none !important;
+        }
+
+        .today-page .rides-list {
+            display: block !important;
+        }
     }
 }
