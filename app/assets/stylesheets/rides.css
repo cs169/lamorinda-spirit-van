@@ -155,34 +155,6 @@ h1 {
         display: none !important;
     }
 
-    .today-page .button-group {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        justify-content: center;
-        min-height: 38px; /* Ensure all buttons have the same height */
-        align-items: stretch; /* Make all buttons the same height */
-        margin-top: 10px;
-    }
-
-    .today-page .button-group .btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 38px;
-    }
-
-    .today-page .rides-table {
-        width: 100%;
-        border: 1px solid black;
-        font-size: 12px;
-        display: table !important;
-    }
-
-    .today-page .rides-list {
-        display: none !important;
-    }
-
     .today-page .rides-table th,
     .today-page .rides-table td {
         border: 1px solid black;
@@ -201,5 +173,34 @@ h1 {
 
     .today-page {
         max-width: 100%;
+    }
+}
+
+/* PC */
+@media print and (min-width: 576px) {
+    .today-page .rides-table {
+        display: table !important;
+        width: 100%;
+        border: 1px solid black;
+        font-size: 12px;
+        border-collapse: separate !important;
+        border-spacing: 0 !important;
+    }
+
+    .today-page .rides-list {
+        display: none !important;
+    }
+}
+
+/* mobile */
+@media print and (max-width: 575.98px) {
+    .today-page .rides-table {
+        display: none !important;
+        border-collapse: separate !important;
+        border-spacing: 0 !important;
+    }
+
+    .today-page .rides-list {
+        display: block !important;
     }
 }
