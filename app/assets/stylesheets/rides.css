@@ -138,6 +138,23 @@ h1 {
 
 /* print */
 @media print {
+    /* Hide all navigation and buttons */
+    nav,
+    .navbar,
+    .custom-header,
+    .custom-footer,
+    footer,
+    .flash-container,
+    .pagination,
+    .alert,
+    .button-group,
+    .btn,
+    .shift-button,
+    #btn-print,
+    .btn-shift {
+        display: none !important;
+    }
+
     .today-page .button-group {
         display: flex;
         flex-wrap: wrap;
