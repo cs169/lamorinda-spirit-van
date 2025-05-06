@@ -7,5 +7,11 @@
   </div>
 
   <%= render 'driver' %>
+   
+  <% if @return_to_drivers_today_from_drivers_index.present? %>
+    <div class="drivers-back-btn">
+      <%= link_to "Back", @return_to_drivers_today_from_drivers_index, class: "btn btn-outline-secondary" %>
+    </div>
+  <% end %>
 
 </div>

@@ -276,7 +276,8 @@ Devise.setup do |config|
    :entra_id,
    {
      client_id:     Rails.application.credentials[:ENTRA_CLIENT_ID],
-     client_secret: Rails.application.credentials[:ENTRA_CLIENT_SECRET]
+     client_secret: Rails.application.credentials[:ENTRA_CLIENT_SECRET],
+     tenant_id: Rails.application.credentials[:ENTRA_TENANT_ID]
    }
  )
 

@@ -1,37 +1,108 @@
 /* app/assets/stylesheets/shifts.css */
 
-#shifts-calendar {
+/* style for three buttons */
+.calendar-nav-buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+/* style for the calendar */
+.calendar-body {
+    overflow-x: auto;
+    width: 100%;
+}
+
+.calendar-body table {
     width: 100%;
     border-collapse: collapse;
 }
 
-#shifts-calendar th {
+.calendar-body th {
     background-color: #f0f0f0;
     padding: 10px;
     text-align: center;
 }
 
-#shifts-calendar td {
+.calendar-body td {
     border: 1px solid #ddd;
     padding: 10px;
     vertical-align: top;
 }
 
-#shifts-calendar .day {
+.calendar-body .day {
     height: 100px;
 }
 
-#shifts-calendar .today {
+.calendar-body .today {
     background-color: #ffffcc;
 }
 
-#shifts-calendar .prev-month,
-#shifts-calendar .next-month {
+.calendar-body .prev-month,
+.calendar-body .next-month {
     background-color: #f9f9f9;
     color: #ccc;
 }
 
+/* /shifts/id */
+/* /_shift.html.erb */
 .van-col {
     display: inline-block;
     width: 30%;
+}
+
+/* /feedbacks/id/edit */
+.ride-feedback-btn {
+    width: 50%;
+}
+
+/* /shifts/id/feedback */
+.shift-feedback-btn {
+    width: 50%;
+    white-space: nowrap;
+    text-align: center;
+}
+
+/* /shifts */
+.calendar-back-btn {
+    width: 30%;
+    text-align: left;
+}
+
+.calendar-back-btn a {
+    width: 50%;
+}
+
+@media (max-width:576px) {
+
+    /* /feedbacks/id/edit */
+    .ride-feedback-btn {
+        width: 80%;
+    }
+
+    /* /shifts/id/feedback */
+    .shift-feedback-btn {
+        width: 80%;
+    }
+
+    /* /shifts */
+    .calendar-nav-buttons {
+        justify-content: center;
+    }
+
+    .calendar-body th,
+    .calendar-body td {
+        /* Adjust the width of the table cells for smaller screens */
+        min-width: 115px;
+    }
+    
+    .calendar-back-btn {
+        width: 100%;
+        text-align: center;
+        margin-top: 1rem;
+    }
+
 }

@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
 class DriversController < ApplicationController
-  before_action :set_driver, only: %i[ show edit update destroy today ]
+  before_action :set_driver, only: %i[ edit update destroy today ]
   before_action -> { require_role("admin", "dispatcher") }, only: [:new, :edit, :create, :update, :destroy]
+
+  # Currently the "capture_return_to" method is used for redirect from the drivers index page to /drivers/id/today?date=XXX page
+  before_action -> { capture_return_to(:return_to_drivers_today_from_drivers_index) }, only: :index
 
   # GET /drivers or /drivers.json
   def index
@@ -40,11 +43,17 @@ class DriversController < ApplicationController
 
     @rides = @driver.rides.where(date: @current_date).where.not(id: Ride.select(:next_ride_id).where.not(next_ride_id: nil))
     @shift = @driver.shifts.where(shift_date: @current_date).first
+
+    # Clear return_to_driver parameter after redirect from drivers index page to /drivers/id/today?date=XXX page
+    clear_return_to(:return_to_drivers_today_from_drivers_index)
+
+    clear_return_to(:return_to_drivers_today_from_drivers_index)
   end
 
-  # GET /drivers/1 or /drivers/1.json
-  def show
-  end
+  # NOTE: We deliberately disabled the `show` action.
+  # If you need to add it, please check this commit and modify some related code.
+  # Currently the /drivers shows all drivers.
+  # Invalid URL: /drivers/:id
 
   # GET /drivers/new
   def new
@@ -61,8 +70,8 @@ class DriversController < ApplicationController
 
     respond_to do |format|
       if @driver.save
-        format.html { redirect_to @driver, notice: "Driver was successfully created." }
-        format.json { render :show, status: :created, location: @driver }
+        format.html { redirect_to drivers_path, notice: "Driver was successfully created." }
+        format.json { render json: @driver, status: :created }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @driver.errors, status: :unprocessable_entity }
@@ -74,8 +83,8 @@ class DriversController < ApplicationController
   def update
     respond_to do |format|
       if @driver.update(driver_params)
-        format.html { redirect_to @driver, notice: "Driver was successfully updated." }
-        format.json { render :show, status: :ok, location: @driver }
+        format.html { redirect_to drivers_path, notice: "Driver was successfully updated." }
+        format.json { render json: @driver, status: :ok }
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @driver.errors, status: :unprocessable_entity }
