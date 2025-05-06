@@ -50,7 +50,8 @@ Rails.application.routes.draw do
 
   resources :shift_templates, only: [:new, :create, :edit, :update, :destroy]
 
-  resources :drivers do
+  resources :drivers, except: [:show] do
+
     member do
       get "all_shifts"
       get "today"

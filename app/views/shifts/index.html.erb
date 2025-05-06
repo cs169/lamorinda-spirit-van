@@ -34,6 +34,14 @@
       </div>
     <% end %>
   <% end %>
+
+  <%# Display a Back button only if a return path was previously captured %>
+  <% if @return_to_drivers_today_from_shifts_index.present? %>
+    <div class="calendar-back-btn" >
+        <%= link_to "Back", @return_to_drivers_today_from_shifts_index, class: "btn btn-outline-secondary" %>
+    </div>
+  <% end %>
+
 </div>
 
 <% if current_user.admin? %>

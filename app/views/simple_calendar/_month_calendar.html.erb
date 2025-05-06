@@ -3,15 +3,26 @@
   <div class="calendar-heading">
     <time datetime="<%= start_date.strftime('%Y-%m') %>" class="calendar-title"><%= t('date.month_names')[start_date.month] %> <%= start_date.year %></time>
 
-    <nav>
-      <%= link_to t('simple_calendar.previous', default: 'Last Month'), calendar.url_for_previous_view %>
-      <%= link_to t('simple_calendar.today', default: 'Jump to Today'), calendar.url_for_today_view %>
-      <%= link_to t('simple_calendar.next', default: 'Next Month'), calendar.url_for_next_view %>
+    <% extras = @return_to_drivers_today_from_shifts_index.present? ? { return_to_drivers_today_from_shifts_index: @return_to_drivers_today_from_shifts_index } : {} %>
+
+    <nav class="calendar-nav-buttons">
+      <%= link_to t('simple_calendar.previous', default: 'Last Month'),
+                  shifts_path(start_date: start_date.prev_month.beginning_of_month, **extras),
+                  class: "btn btn-outline-primary" %>
+
+      <%= link_to t('simple_calendar.today', default: 'Jump to Today'),
+                  shifts_path(start_date: Date.current.beginning_of_month, **extras),
+                  class: "btn btn-outline-primary" %>
+
+      <%= link_to t('simple_calendar.next', default: 'Next Month'),
+                  shifts_path(start_date: start_date.next_month.beginning_of_month, **extras),
+                  class: "btn btn-outline-primary" %>
     </nav>
   </div>
 
-  <table class="table table-striped">
-    <thead>
+  <div class="calendar-body">
+    <table class="table table-striped">
+      <thead>
       <tr>
         <% date_range.slice(0, 7).each do |day| %>
           <th><%= t('date.abbr_day_names')[day.wday] %></th>
@@ -19,16 +30,18 @@
       </tr>
     </thead>
 
-    <tbody>
-      <% date_range.each_slice(7) do |week| %>
-        <tr>
-          <% week.each do |day| %>
-            <%= content_tag :td, class: calendar.td_classes_for(day) do %>
-              <% instance_exec(day, calendar.sorted_events_for(day), &passed_block) %>
+      <tbody>
+        <% date_range.each_slice(7) do |week| %>
+        <% next if week.all? { |day| day.month != start_date.month } %>
+          <tr>
+            <% week.each do |day| %>
+              <%= content_tag :td, class: calendar.td_classes_for(day) do %>
+                <% instance_exec(day, calendar.sorted_events_for(day), &passed_block) %>
+              <% end %>
             <% end %>
-          <% end %>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 </div>
