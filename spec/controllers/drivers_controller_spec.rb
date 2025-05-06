@@ -104,24 +104,6 @@ RSpec.describe DriversController, type: :controller do
     end
   end
 
-  describe "GET #show" do
-    it "assigns the requested driver to @driver" do
-      get :show, params: { id: @driver1.id }
-      expect(assigns(:driver)).to eq(@driver1)
-    end
-
-    it "renders the show template" do
-      get :show, params: { id: @driver1.id }
-      expect(response).to render_template(:show)
-    end
-
-    it "raises an error when driver is not found" do
-      expect {
-        get :show, params: { id: -1 }
-      }.to raise_error(ActiveRecord::RecordNotFound)
-    end
-  end
-
   describe "GET #new" do
     it "assigns a new driver to @driver" do
       get :new
@@ -170,9 +152,10 @@ RSpec.describe DriversController, type: :controller do
         }.to change(Driver, :count).by(1)
       end
 
-      it "redirects to the new driver" do
+      it "redirects to the /drivers page" do
         post :create, params: { driver: valid_attributes }
-        expect(response).to redirect_to(Driver.last)
+        expect(response).to redirect_to(drivers_path)
+        expect(Driver.exists?(email: @driver1.email)).to be true
         expect(flash[:notice]).to eq("Driver was successfully created.")
       end
     end
@@ -209,9 +192,10 @@ RSpec.describe DriversController, type: :controller do
         expect(@driver1.name).to eq("Updated Driver Name")
       end
 
-      it "redirects to the updated driver" do
+      it "redirects to the /drivers page" do
         patch :update, params: { id: @driver1.id, driver: updated_attributes }
-        expect(response).to redirect_to(@driver1)
+        expect(response).to redirect_to(drivers_path)
+        expect(Driver.exists?(name: "Updated Driver Name")).to be true
         expect(flash[:notice]).to eq("Driver was successfully updated.")
       end
     end

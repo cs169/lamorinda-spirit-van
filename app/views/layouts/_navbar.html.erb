@@ -1,39 +1,33 @@
 <header class="custom-header py-2 mb-3">
-<div class="container d-flex justify-content-between align-items-center">
-
-  <div>
-    <%= link_to role_home_path, class: "d-inline-block" do %>
-      <img src="<%= asset_path('lamorindalogo.png') %>" alt="Lafayette Spirit Van" class="app-logo white">
-    <% end %>
-  </div>
-
-  <div class="directories d-flex align-items-center gap-3">
-    <% if user_signed_in? %>
-      <% if current_user.admin? %>
-        <%= link_to "Admin", admin_users_path, class: "admin-link #{'active' if current_page?(admin_users_path)}" %>
-        <%= link_to "Reports", blazer_path, class: "blazer-link #{'active' if current_page?(blazer_path)}" %>
-
-        <!-- Divider -->
-        <span class="vr" style="width:5px ; height: 50px; currentColor: #fff; opacity: 1;"></span>
+  <div class="container navbar-main d-flex justify-content-between align-items-center">
+    
+    <div class="navbar-logo">
+      <%= link_to role_home_path, class: "d-inline-block" do %>
+        <img src="<%= asset_path('lamorindalogo.png') %>" alt="Lafayette Spirit Van" class="app-logo white">
       <% end %>
-
-      <% if current_user.dispatcher? || current_user.admin? %>
-        <%= link_to "Passengers", passengers_path, class: "passengers-link #{'active' if current_page?(passengers_path)}" %>
-        <%= link_to "Rides", rides_path, class: "rides-link #{'active' if current_page?(rides_path)}" %>
-        <%= link_to "Calendar", shifts_path, class: "shifts-link #{'active' if current_page?(shifts_path)}" %>
-        <%= link_to "Drivers", drivers_path, class: "drivers-link #{'active' if current_page?(drivers_path)}" %>
-      <% end %>
-      
-    <% end %>
-  </div>
-
-
-  <% if user_signed_in? %>
-    <div style="display: flex; flex-direction: row; align-items: center;">
-      <span>Hello! <%= current_user.role %></span>
-      <%= button_to 'Sign Out', destroy_user_session_path, method: :delete, form: { data: { turbo: 'false' } }, class: "btn btn-outline-light btn-sm ms-2" %>
     </div>
-  <% end %>
 
-</div>
+    <% if user_signed_in? %>
+      <div class="navbar-links d-flex align-items-center gap-3 flex-wrap">
+        <% if current_user.admin? %>
+          <%= link_to "Admin", admin_users_path, class: "admin-link #{'active' if current_page?(admin_users_path)}" %>
+          <%= link_to "Reports", blazer_path, class: "blazer-link #{'active' if current_page?(blazer_path)}" %>
+          <span class="vr" style="width:5px; height: 50px; background-color: #fff; opacity: 1;"></span>
+        <% end %>
+
+        <% if current_user.dispatcher? || current_user.admin? %>
+          <%= link_to "Passengers", passengers_path, class: "passengers-link #{'active' if current_page?(passengers_path)}" %>
+          <%= link_to "Rides", rides_path, class: "rides-link #{'active' if current_page?(rides_path)}" %>
+          <%= link_to "Calendar", shifts_path, class: "shifts-link #{'active' if current_page?(shifts_path)}" %>
+          <%= link_to "Drivers", drivers_path, class: "drivers-link #{'active' if current_page?(drivers_path)}" %>
+        <% end %>
+      </div>
+
+      <div class="navbar-user d-flex align-items-center">
+        <span>Hello! <%= current_user.role %></span>
+        <%= button_to 'Sign Out', destroy_user_session_path, method: :delete, form: { data: { turbo: 'false' } }, class: "btn btn-outline-light btn-sm ms-2" %>
+      </div>
+    <% end %>
+
+  </div>
 </header>

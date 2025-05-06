@@ -42,4 +42,19 @@ class ApplicationController < ActionController::Base
   def after_sign_in_path_for(resource)
     role_home_path
   end
+
+  # Captures a `return_to`-like parameter into session storage.
+  # Accepts a session key to differentiate between different controllers.
+  def capture_return_to(session_key = :return_to)
+    if params[session_key].present?
+      session[session_key] = params[session_key]
+    end
+    instance_variable_set("@#{session_key}", session[session_key])
+  end
+
+  # Clears a previously captured `return_to`-like parameter from session.
+  # Should be called once the user navigates back to the intended page.
+  def clear_return_to(session_key = :return_to)
+    session.delete(session_key)
+  end
 end

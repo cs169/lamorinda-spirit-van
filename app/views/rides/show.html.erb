@@ -59,6 +59,18 @@
     </div>
   </div>
 
-  <%= link_to "Edit Ride", edit_ride_path(@ride), class: "btn btn-primary me-2" %>
-  <%= link_to "Back to All Rides", rides_path, class: "btn btn-secondary" %>
+  <div class="row mt-4 g-2">
+    <% if current_user.dispatcher? || current_user.admin? %>
+      <div class="col-12 mb-2 col-md-auto">
+        <%= link_to "Edit Ride", edit_ride_path(@ride), class: "btn btn-primary w-100" %>
+      </div>
+      <div class="col-12 mb-2 col-md-auto">
+        <%= link_to "Back to All Rides", rides_path, class: "btn btn-secondary w-100" %>
+      </div>   
+    <% end %>
+    
+    <div class="col-12 mb-2 col-md-auto">
+      <%= link_to "Back", today_driver_path(@ride.driver_id, date: @ride.date), class: "btn btn-outline-secondary w-100" %>
+    </div>
+  </div>
 </div>
