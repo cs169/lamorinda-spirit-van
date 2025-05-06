@@ -102,8 +102,11 @@ class RidesController < ApplicationController
   end
 
   def destroy
-    @ride.destroy!
-    redirect_to rides_url, notice: "Ride was successfully removed."
+    all_rides = @ride.get_all_linked_rides
+    ActiveRecord::Base.transaction do
+      all_rides.reverse_each(&:destroy!)
+    end
+    redirect_to rides_url, notice: "Ride(s) were successfully removed."
   rescue ActiveRecord::RecordNotDestroyed
     flash[:alert] = "Failed to remove the ride."
     redirect_to rides_url, status: :unprocessable_entity
