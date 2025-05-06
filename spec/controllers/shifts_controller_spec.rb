@@ -36,7 +36,7 @@ RSpec.describe ShiftsController, type: :controller do
     context "with valid parameters" do
       it "creates a new shift and redirects to the shift page" do
         expect {
-          post :create, params: { shift: { shift_date: Date.today, shift_type: "evening", driver_id: @driver.id } }
+          post :create, params: { shift: { date: Date.today, shift_type: "evening", driver_id: @driver.id } }
         }.to change(Shift, :count).by(1)
 
         expect(response).to redirect_to(shifts_path)
@@ -46,7 +46,7 @@ RSpec.describe ShiftsController, type: :controller do
     context "with empty shift_type" do
       it "does not create a shift and re-renders the new template" do
         expect {
-          post :create, params: { shift: { shift_date: Date.today, shift_type: "", driver_id: @driver.id } }
+          post :create, params: { shift: { date: Date.today, shift_type: "", driver_id: @driver.id } }
         }.not_to change(Shift, :count)
 
         expect(response).to have_http_status(:unprocessable_entity)
@@ -57,7 +57,7 @@ RSpec.describe ShiftsController, type: :controller do
     context "with missing driver_id" do
       it "does not create a shift and redirects to new_shift_path with an alert" do
         expect {
-          post :create, params: { shift: { shift_date: Date.today, shift_type: "evening", driver_id: nil } }
+          post :create, params: { shift: { date: Date.today, shift_type: "evening", driver_id: nil } }
         }.not_to change(Shift, :count)
 
         expect(response).to redirect_to(new_shift_path)
@@ -68,7 +68,7 @@ RSpec.describe ShiftsController, type: :controller do
     context "with invalid driver_id" do
       it "does not create a shift and redirects to new_shift_path with an alert" do
         expect {
-          post :create, params: { shift: { shift_date: Date.today, shift_type: "evening", driver_id: 9999 } }
+          post :create, params: { shift: { date: Date.today, shift_type: "evening", driver_id: 9999 } }
         }.not_to change(Shift, :count)
 
         expect(response).to redirect_to(new_shift_path)
@@ -103,9 +103,9 @@ RSpec.describe ShiftsController, type: :controller do
 
     context "with invalid parameters" do
       it "does not update the shift and re-renders the edit template" do
-        patch :update, params: { id: @shift.id, shift: { shift_date: nil } }
+        patch :update, params: { id: @shift.id, shift: { date: nil } }
         @shift.reload
-        expect(@shift.shift_date).not_to be_nil
+        expect(@shift.date).not_to be_nil
         expect(response).to render_template(:edit)
       end
     end

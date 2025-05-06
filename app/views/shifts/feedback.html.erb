@@ -1,6 +1,6 @@
 <% content_for :title, "Shift Feedback" %>
 
-<h1>Feedback for <%= @shift.shift_type %> shift on <%= @shift.shift_date %></h1>
+<h1>Feedback for <%= @shift.shift_type %> shift on <%= @shift.date %></h1>
 
 <%= form_with(model: @shift) do |form| %>
   <% if @shift.errors.any? %>

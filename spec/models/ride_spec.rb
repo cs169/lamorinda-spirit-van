@@ -10,9 +10,13 @@ RSpec.describe Ride, type: :model do
     today = Time.zone.today
     today.strftime("%a")
 
-    @ride1 = FactoryBot.create(:ride, driver: @driver1, date: Time.zone.today - 1.day, emailed_driver: true)
-    @ride2 = FactoryBot.create(:ride, driver: @driver2)
-    @ride3 = FactoryBot.create(:ride, driver: @driver1, date: Time.zone.today + 1.day)
+    @shift_yesterday = FactoryBot.create(:shift, driver: @driver1, date: Time.zone.today - 1.day, emailed_driver: true)
+    @shift_today =  FactoryBot.create(:shift, driver: @driver2)
+    @shift_tomorrow = FactoryBot.create(:shift, driver: @driver1, date: Time.zone.today + 1.day)
+
+    @ride1 = FactoryBot.create(:ride, shift: @shift_yesterday)
+    @ride2 = FactoryBot.create(:ride, shift: @shift_today)
+    @ride3 = FactoryBot.create(:ride, shift: @shift_tomorrow)
   end
 
   describe "Validations" do
@@ -89,10 +93,5 @@ RSpec.describe Ride, type: :model do
       expect(ride.dest_address.state).to eq("CA")
       expect(ride.dest_address.zip).to eq("94105")
     end
-  end
-
-  after(:each) do
-    Ride.delete_all
-    Driver.delete_all
   end
 end

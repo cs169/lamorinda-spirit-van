@@ -5,8 +5,9 @@
     <div class="card-body">
       <h5 class="card-title">Basic Info</h5>
       <ul class="list-group list-group-flush">
-        <li class="list-group-item"><strong>Date:</strong> <%= @ride.date.strftime("%B %d, %Y") %></li>
-        <li class="list-group-item"><strong>Van Number:</strong> <%= @ride.van %></li>
+        <li class="list-group-item"><strong>Date:</strong> <%= @ride.shift.date.strftime("%B %d, %Y") %></li>
+        <li class="list-group-item"><strong>Shift:</strong> <%= @ride.shift.shift_type %></li>
+        <li class="list-group-item"><strong>Van Number:</strong> <%= @ride.shift.van %></li>
         <li class="list-group-item"><strong>Hours:</strong> <%= @ride.hours %></li>
         <li class="list-group-item"><strong>Amount Paid:</strong> <%= number_to_currency(@ride.amount_paid) %></li>
       </ul>
@@ -18,7 +19,7 @@
       <h5 class="card-title">People</h5>
       <ul class="list-group list-group-flush">
         <li class="list-group-item"><strong>Passenger:</strong> <%= @ride.passenger&.name || "Not Assigned" %></li>
-        <li class="list-group-item"><strong>Driver:</strong> <%= @ride.driver&.name || "Not Assigned" %></li>
+        <li class="list-group-item"><strong>Driver:</strong> <%= @ride.shift.driver&.name || "Not Assigned" %></li>
       </ul>
     </div>
   </div>
@@ -54,7 +55,7 @@
         <li class="list-group-item"><strong>General Notes:</strong> <%= simple_format(@ride.notes) %></li>
         <li class="list-group-item"><strong>Notes (Date Reserved):</strong> <%= simple_format(@ride.notes_date_reserved) %></li>
         <li class="list-group-item"><strong>Confirmed with Passenger:</strong> <%= simple_format(@ride.confirmed_with_passenger) %></li>
-        <li class="list-group-item"><strong>Emailed Driver:</strong> <%= @ride.emailed_driver.present? ? "Yes" : "No" %></li>
+        <li class="list-group-item"><strong>Emailed Driver:</strong> <%= @ride.shift.emailed_driver.present? ? "Yes" : "No" %></li>
       </ul>
     </div>
   </div>

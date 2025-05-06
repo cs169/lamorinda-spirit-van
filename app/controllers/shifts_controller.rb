@@ -8,12 +8,12 @@ class ShiftsController < ApplicationController
   def index
     # @shifts = Shift.all
     @date = params[:start_date] ? Date.parse(params[:start_date]) : Date.today
-    @shifts = Shift.where(shift_date: @date.beginning_of_month..@date.end_of_month)
+    @shifts = Shift.where(date: @date.beginning_of_month..@date.end_of_month)
   end
 
   # GET /shifts/1 or /shifts/1.json
   def show
-    @rides = Ride.where(date: @shift.shift_date)
+    @rides = @shift.rides
   end
 
   # GET /shifts/new
@@ -81,6 +81,12 @@ class ShiftsController < ApplicationController
     end
   end
 
+  def shifts_for_day
+    @shifts = Shift.where(date: params[:date])
+    @prompt = @shifts.empty? ? "No shifts for that day" : "Select a shift"
+    render :shifts_for_day
+  end
+
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_shift
@@ -89,6 +95,6 @@ class ShiftsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def shift_params
-    params.require(:shift).permit(:shift_date, :shift_type, :driver_id, :van, :notes, :pick_up_time, :drop_off_time, :odometer_pre, :odometer_post)
+    params.require(:shift).permit(:date, :shift_type, :driver_id, :van, :notes, :pick_up_time, :drop_off_time, :odometer_pre, :odometer_post)
   end
 end
