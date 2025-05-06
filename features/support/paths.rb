@@ -35,6 +35,9 @@ module NavigationHelpers
     when /^the today's rides page$/i
       today_rides_path
 
+    when /^the drivers page$/i
+      drivers_path
+
     when /^the shifts calendar page$/i
       shifts_path
 

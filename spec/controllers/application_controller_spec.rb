@@ -4,6 +4,8 @@ require "rails_helper"
 
 RSpec.describe ApplicationController, type: :controller do
   controller do
+    before_action -> { capture_return_to(:custom_return_to) }, only: :index
+
     def index
       render plain: "OK"
     end
@@ -32,9 +34,35 @@ RSpec.describe ApplicationController, type: :controller do
       expect(result).to eq(root_path)
     end
 
-    it "redirects users with no role to defalut homepage" do
+    it "redirects users with no role to default homepage" do
       result = controller.send(:after_sign_in_path_for, @no_role)
       expect(result).to eq(root_path)
+    end
+  end
+
+  describe "#capture_return_to" do
+    before do
+      @user = FactoryBot.create(:user, role: "dispatcher")
+      sign_in @user
+    end
+
+    context "when params has the return_to parameter" do
+      it "stores the return_to value into session and sets instance variable" do
+        test_path = "/drivers/1/today?date=2025-04-29"
+        get :index, params: { custom_return_to: test_path }
+
+        expect(session[:custom_return_to]).to eq(test_path)
+        expect(assigns(:custom_return_to)).to eq(test_path)
+      end
+    end
+
+    context "when params does not have the return_to parameter" do
+      it "does not modify session or set instance variable" do
+        get :index
+
+        expect(session[:custom_return_to]).to be_nil
+        expect(assigns(:custom_return_to)).to be_nil
+      end
     end
   end
 end
