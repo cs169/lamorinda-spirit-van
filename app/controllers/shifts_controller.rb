@@ -13,7 +13,7 @@ class ShiftsController < ApplicationController
 
   # GET /shifts/1 or /shifts/1.json
   def show
-    @rides = Ride.where(date: @shift.shift_date)
+    @rides = Ride.where(date: @shift.shift_date).where.not(id: Ride.select(:next_ride_id).where.not(next_ride_id: nil))
   end
 
   # GET /shifts/new

@@ -106,7 +106,7 @@ RSpec.describe RidesController, type: :controller do
           state: "CA",
           zip: "94704"
         }
-        
+
         expect {
           post :create, params: { ride: valid_attributes }
         }.to change(Ride, :count).by(2)
