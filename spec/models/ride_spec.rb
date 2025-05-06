@@ -134,6 +134,45 @@ RSpec.describe Ride, type: :model do
     end
   end
 
+  describe ".extract_attrs_from_params" do
+    it "parses addresses and converts Yes/No fields into booleans" do
+      raw_params = {
+        date: "2025-05-01",
+        van: "2",
+        hours: "3",
+        passenger_id: 1,
+        driver_id: 1,
+        notes: "Sample ride",
+        emailed_driver: "sent",
+        wheelchair: "Yes",
+        low_income: "No",
+        disabled: "Yes",
+        need_caregiver: "No",
+        addresses_attributes: [
+          { street: "123 Main", city: "Oakland", state: "CA", zip: "94601" },
+          { street: "456 Elm", city: "Berkeley", state: "CA", zip: "94704" }
+        ]
+      }
+
+      input_params = ActionController::Parameters.new(raw_params).permit(
+        :date, :van, :hours, :passenger_id, :driver_id, :notes, :emailed_driver,
+        :wheelchair, :low_income, :disabled, :need_caregiver,
+        addresses_attributes: [:street, :city, :state, :zip]
+      )
+
+      attrs, addresses = Ride.extract_attrs_from_params(input_params)
+
+      expect(attrs[:wheelchair]).to eq(true)
+      expect(attrs[:low_income]).to eq(false)
+      expect(attrs[:disabled]).to eq(true)
+      expect(attrs[:need_caregiver]).to eq(false)
+      expect(attrs[:date]).to eq("2025-05-01")
+      expect(attrs[:notes]).to eq("Sample ride")
+      expect(addresses.length).to eq(2)
+      expect(addresses.first[:city]).to eq("Oakland")
+    end
+  end
+
   describe "create multi-stop rides" do
     let(:ride_attrs) do
       {

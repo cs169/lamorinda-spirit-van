@@ -53,7 +53,7 @@ RSpec.describe RidesController, type: :controller do
               city: "Berkeley",
               state: "CA",
               zip: "94704"
-            }
+            },
           ]
         }
       end
@@ -68,9 +68,12 @@ RSpec.describe RidesController, type: :controller do
         expect(response).to have_http_status(:success)
       end
 
-      # Tests successful creation of a ride
+      # Tests successful creation of a ride with multiple stops
       it "creates a new ride and redirects" do
-        post :create, params: { ride: valid_attributes }
+        expect {
+          post :create, params: { ride: valid_attributes }
+        }.to change(Ride, :count).by(1)
+
         expect(response).to redirect_to(rides_path)
         expect(flash[:notice]).to eq("Ride was successfully created.")
       end
@@ -80,24 +83,125 @@ RSpec.describe RidesController, type: :controller do
         post :create, params: { ride: { driver_id: nil } }
         expect(response).to render_template(:new)
       end
+
+      it "creates a new ride with 3 addresses" do
+        valid_attributes[:addresses_attributes] << {
+          street: "789 Third Ave",
+          city: "Lamorinda",
+          state: "CA",
+          zip: "94704"
+        }
+        expect {
+          post :create, params: { ride: valid_attributes }
+        }.to change(Ride, :count).by(2)
+
+        expect(response).to redirect_to(rides_path)
+        expect(flash[:notice]).to eq("Ride was successfully created.")
+      end
+
+      it "creates a new ride with duplicate addresses" do
+        valid_attributes[:addresses_attributes] << {
+          street: "456 Second Ave",
+          city: "Berkeley",
+          state: "CA",
+          zip: "94704"
+        }
+
+        expect {
+          post :create, params: { ride: valid_attributes }
+        }.to change(Ride, :count).by(2)
+
+        expect(response).to redirect_to(rides_path)
+        expect(flash[:notice]).to eq("Ride was successfully created.")
+      end
     end
   end
 
   describe "PUT #update" do
-    # Tests successful update of a ride
     it "updates the ride and redirects" do
-      put :update, params: { id: @ride1.id, ride: { driver: "Updated Driver" } }
-      expect(response).to redirect_to(edit_ride_path(@ride1))
+      update_attrs = {
+        date: Date.today + 1.day,
+        driver_id: @driver2.id,
+        passenger_id: @passenger1.id,
+        addresses_attributes: [
+          {
+            street: "789 Oak St",
+            city: "Walnut Creek",
+            state: "CA",
+            zip: "94596"
+          },
+          {
+            street: "101 Pine Rd",
+            city: "Concord",
+            state: "CA",
+            zip: "94520"
+          }
+        ]
+      }
+
+      put :update, params: { id: @ride1.id, ride: update_attrs }
+      new_ride = Ride.order(:created_at).last
+      expect(response).to redirect_to(edit_ride_path(new_ride))
       expect(flash[:notice]).to eq("Ride was successfully updated.")
     end
 
-    # Tests failed update due to invalid parameters
-    # All possible illegal input caught by fonrtend, no need for validation here.
-    # it "renders edit when ride update fails" do
-    #   put :update, params: { id: @ride1.id, ride: { date: "invalid-date" } }
-    #   expect(response).to have_http_status(:unprocessable_entity)
-    #   expect(response).to render_template(:edit)
-    # end
+    it "renders edit on failure" do
+      put :update, params: { id: @ride1.id, ride: { driver_id: nil } }
+      expect(response).to render_template(:edit)
+    end
+
+    it "adds a new destination to the ride chain" do
+      # Start with 2 stops
+      ride1 = FactoryBot.create(:ride, passenger: @passenger1, driver: @driver1)
+      ride2 = FactoryBot.create(:ride, passenger: @passenger1, driver: @driver1, previous_ride: ride1)
+      ride1.update!(next_ride: ride2)
+
+      # New set of 3 destinations
+      update_attrs = {
+        date: ride1.date,
+        driver_id: ride1.driver_id,
+        passenger_id: ride1.passenger_id,
+        addresses_attributes: [
+          { street: "1 Start St", city: "A", state: "CA", zip: "90001" },
+          { street: "2 Middle St", city: "B", state: "CA", zip: "90002" },
+          { street: "3 End St", city: "C", state: "CA", zip: "90003" },
+          { street: "4 More End St", city: "D", state: "CA", zip: "90004" },
+        ]
+      }
+
+      expect {
+        put :update, params: { id: ride1.id, ride: update_attrs }
+      }.to change(Ride, :count).by(1)
+
+      expect(flash[:notice]).to eq("Ride was successfully updated.")
+    end
+
+    it "removes a destination from the ride chain" do
+      # Start with 3 rides
+      ride1 = FactoryBot.create(:ride, passenger: @passenger1, driver: @driver1)
+      ride2 = FactoryBot.create(:ride, passenger: @passenger1, driver: @driver1, previous_ride: ride1)
+      ride3 = FactoryBot.create(:ride, passenger: @passenger1, driver: @driver1, previous_ride: ride2)
+      ride1.update!(next_ride: ride2)
+      ride2.update!(next_ride: ride3)
+
+      # Now send only 2 stops
+      update_attrs = {
+        date: ride1.date,
+        driver_id: ride1.driver_id,
+        passenger_id: ride1.passenger_id,
+        addresses_attributes: [
+          { street: "1 Start St", city: "A", state: "CA", zip: "90001" },
+          { street: "2 Middle St", city: "B", state: "CA", zip: "90002" },
+          { street: "3 End St", city: "C", state: "CA", zip: "90003" },
+        ]
+      }
+
+      expect {
+        put :update, params: { id: ride1.id, ride: update_attrs }
+      }.to change(Ride, :count).by(-1)
+
+      expect(flash[:notice]).to eq("Ride was successfully updated.")
+    end
   end
 
   describe "DELETE #destroy" do
@@ -109,13 +213,30 @@ RSpec.describe RidesController, type: :controller do
       expect(response).to have_http_status(:unprocessable_entity)
       expect(flash[:alert]).to eq("Failed to remove the ride.")
     end
+
     it "destroys the ride and redirects with success message" do
       expect {
         delete :destroy, params: { id: @ride1.id }
       }.to change(Ride, :count).by(-1)
 
       expect(response).to redirect_to(rides_url)
-      expect(flash[:notice]).to eq("Ride was successfully removed.")
+      expect(flash[:notice]).to eq("Ride(s) were successfully removed.")
+    end
+
+    it "destroys a ride chain and redirects with success message" do
+      ride1 = FactoryBot.create(:ride, passenger: @passenger1, driver: @driver1)
+      ride2 = FactoryBot.create(:ride, passenger: @passenger1, driver: @driver1, previous_ride: ride1)
+      ride1.update!(next_ride: ride2)
+
+      ride3 = FactoryBot.create(:ride, passenger: @passenger1, driver: @driver1, previous_ride: ride2)
+      ride2.update!(next_ride: ride3)
+
+      expect {
+        delete :destroy, params: { id: ride1.id }
+      }.to change(Ride, :count).by(-3)
+
+      expect(response).to redirect_to(rides_url)
+      expect(flash[:notice]).to eq("Ride(s) were successfully removed.")
     end
   end
 
@@ -133,15 +254,6 @@ RSpec.describe RidesController, type: :controller do
       }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
-
-  # got rid of filter
-  # describe "GET #filter" do
-  #   # Test if filter returns no rides without params
-  #   it "assigns the requested ride to @ride" do
-  #     get :filter
-  #     expect(assigns(:ride)).to eq(nil)
-  #   end
-  # end
 
   after(:each) do
   end
