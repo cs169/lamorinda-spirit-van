@@ -31,18 +31,7 @@ class RidesController < ApplicationController
   end
 
   def create
-    ride_attrs = ride_params.except(:addresses_attributes)
-    addresses = ride_params[:addresses_attributes]
-
-    # Parsing "Yes", "No" from fields into bool vals
-    accessibility_fields = [:wheelchair, :low_income, :disabled, :need_caregiver]
-    ride_attrs = ride_attrs.to_h
-    accessibility_fields.each do |field|
-      if ride_attrs[field].present?
-        ride_attrs[field] = (ride_attrs[field] == "Yes")
-      end
-    end
-
+    ride_attrs, addresses = Ride.extract_attrs_from_params(ride_params)
     result_rides, success = Ride.build_linked_rides(ride_attrs, addresses)
 
     if success
@@ -70,17 +59,7 @@ class RidesController < ApplicationController
     @ride = Ride.find(params[:id])
     @drivers = Driver.order(:name)
 
-    # Parsing "Yes", "No" from fields into bool vals
-    accessibility_fields = [:wheelchair, :low_income, :disabled, :need_caregiver]
-    ride_attrs = ride_attrs.to_h
-    accessibility_fields.each do |field|
-      if ride_attrs[field].present?
-        ride_attrs[field] = (ride_attrs[field] == "Yes")
-      end
-    end
-
-    ride_attrs = ride_params.except(:addresses_attributes)
-    addresses = ride_params[:addresses_attributes]
+    ride_attrs, addresses = Ride.extract_attrs_from_params(ride_params)
 
     # Destroy old ride chain
     all_rides = @ride.get_all_linked_rides
