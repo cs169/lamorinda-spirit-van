@@ -13,14 +13,14 @@ Feature: Driver Ride and Shift Navigation
   
   Scenario: Navigating dates on the Today's Rides page
     Given I visit the Today's Rides page for that driver
-    Then I should see "Last Day" button
+    Then I should see "Previous Day" button
     Then I should see "Back to Today" button
     Then I should see "Next Day" button
 
-    When I click on "Last Day" button
+    When I click on "Previous Day" button
     Then I should see the rides for one day ago
 
-    When I click on "Last Day" button
+    When I click on "Previous Day" button
     Then I should see the rides for two days ago
 
     When I click on "Next Day" button
@@ -34,7 +34,7 @@ Feature: Driver Ride and Shift Navigation
     Given I visit the Today's Rides page for that driver
     Then I should see "View Other Drivers" button
     
-    When I click on "Last Day" button
+    When I click on "Previous Day" button
     Then I should see the rides for one day ago
 
     And I remember the current rides page URL
@@ -63,7 +63,7 @@ Feature: Driver Ride and Shift Navigation
     Given I visit the Today's Rides page for that driver
     Then I should see "View All Shifts" button
     
-    When I click on "Last Day" button
+    When I click on "Previous Day" button
     Then I should see the rides for one day ago
 
     And I remember the current rides page URL
