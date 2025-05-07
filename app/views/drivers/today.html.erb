@@ -3,7 +3,7 @@
   <h2>Driver: <%= @driver.name %></h2>
   <form class="today-form">
     <div class="button-group">
-      <%= link_to "Last Day", today_driver_path(date: @current_date - 1.day), class: "btn btn-secondary" %>
+      <%= link_to "Previous Day", today_driver_path(date: @current_date - 1.day), class: "btn btn-secondary" %>
       <%= link_to "Back to Today", today_driver_path(date: Time.zone.today), class: "btn btn-primary" %>
       <%= link_to "Next Day", today_driver_path(date: @current_date + 1.day), class: "btn btn-secondary" %>
       <button onclick="window.print()" class="btn btn-primary" id="btn-print">Print</button>
@@ -25,7 +25,6 @@
             <th>Disabled</th>
             <th>Needs Caregiver</th>
             <th>Fee</th>
-            <th class="text-danger">Wheelchair</th>
             <th>Ride Type</th>
             <th>Phone:</th>
             <th>Feedback</th>
@@ -39,11 +38,10 @@
               <td><%= ride.notes %></td>
               <td><%= ride.hours %></td>
               <td><%= ride.passenger.name %></td>
-              <td><%= ride.wheelchair ? "Yes" : "" %></td>
+              <td><%= ride.wheelchair ? "Yes" : "No" %></td>
               <td><%= ride.disabled ? "Yes" : "" %></td>
               <td><%= ride.need_caregiver ? "Yes" : "" %></td>
               <td><%= number_to_currency(ride.amount_paid) %></td>
-              <td><strong> <%= ride.wheelchair ? "Yes" : "No" %></strong></td>
               <td><%= ride.destination_type %></td>
               <td><%= ride.passenger.phone %></td>
                <% if ride.feedback %>
