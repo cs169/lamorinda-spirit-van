@@ -78,10 +78,10 @@
         </div>
 
         <%= f.hidden_field :passenger_id, class: "form-control"  %>
-        <%= f.hidden_field :wheelchair, class: "form-control"  %>
-        <%= f.hidden_field :low_income, class: "form-control"  %>
-        <%= f.hidden_field :disabled, class: "form-control"  %>
-        <%= f.hidden_field :need_caregiver, class: "form-control"  %>
+        <%= f.hidden_field :wheelchair, class: "form-control" , value: @ride.wheelchair ? "Yes" : "No" %>
+        <%= f.hidden_field :low_income, class: "form-control" , value: @ride.low_income ? "Yes" : "No" %>
+        <%= f.hidden_field :disabled, class: "form-control" , value: @ride.disabled ? "Yes" : "No" %>
+        <%= f.hidden_field :need_caregiver, class: "form-control" , value: @ride.need_caregiver ? "Yes" : "No" %>
 
         <div class="mb-3">
           <%= f.label :passenger_home_address, "Home Address" %>
