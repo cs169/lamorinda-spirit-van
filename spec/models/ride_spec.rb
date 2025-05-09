@@ -10,9 +10,9 @@ RSpec.describe Ride, type: :model do
     today = Time.zone.today
     today.strftime("%a")
 
-    @ride1 = FactoryBot.create(:ride, driver: @driver1, date: Time.zone.today - 1.day, emailed_driver: true)
+    @ride1 = FactoryBot.create(:ride, driver: @driver1, date: Time.zone.today - 1, emailed_driver: true)
     @ride2 = FactoryBot.create(:ride, driver: @driver2)
-    @ride3 = FactoryBot.create(:ride, driver: @driver1, date: Time.zone.today + 1.day)
+    @ride3 = FactoryBot.create(:ride, driver: @driver1, date: Time.zone.today + 1)
   end
 
   describe "Validations" do

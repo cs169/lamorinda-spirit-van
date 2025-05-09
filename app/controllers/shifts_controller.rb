@@ -10,7 +10,7 @@ class ShiftsController < ApplicationController
   # GET /shifts or /shifts.json
   def index
     # @shifts = Shift.all
-    @date = params[:start_date] ? Date.parse(params[:start_date]) : Date.today
+    @date = params[:start_date] ? Date.parse(params[:start_date]) : Time.zone.today
     @shifts = Shift.where(shift_date: @date.beginning_of_month..@date.end_of_month)
   end
 

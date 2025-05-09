@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 Then("I should see the rides for one day ago") do
-  expected_date = (Time.zone.today - 1.day).strftime("%m/%d/%Y")
+  expected_date = (Time.zone.today - 1).strftime("%m/%d/%Y")
   expect(page).to have_content(expected_date)
 end
 
 Then("I should see the rides for two days ago") do
-  expected_date = (Time.zone.today - 2.days).strftime("%m/%d/%Y")
+  expected_date = (Time.zone.today - 2).strftime("%m/%d/%Y")
   expect(page).to have_content(expected_date)
 end
 
@@ -52,13 +52,13 @@ Then("I should see the current month title") do
 end
 
 Then("I should see the previous month title") do
-  expected_title = (Time.zone.today - 1.month).strftime("%B %Y")
+  expected_title = Time.zone.today.prev_month.strftime("%B %Y")
   actual_title = find(".calendar-title").text
   expect(actual_title).to eq(expected_title)
 end
 
 Then("I should see the next month title") do
-  expected_title = (Time.zone.today + 1.month).strftime("%B %Y")
+  expected_title = Time.zone.today.next_month.strftime("%B %Y")
   actual_title = find(".calendar-title").text
   expect(actual_title).to eq(expected_title)
 end
