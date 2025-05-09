@@ -7,6 +7,7 @@ Feature: Autocomplete for new ride passengers
     Background:
         Given a dispatcher is logged in
         And the following passengers exist:
+            | name    |
             | Alice   |
             | Bob     |
             | Bill    |
