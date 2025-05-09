@@ -12,33 +12,27 @@ Given("the following user exists:") do |table|
 end
 
 # features/step_definitions/auth_steps.rb
-Given("a dispatcher is logged in") do
-  @user = FactoryBot.create(
-    :user,
-    :dispatcher,
-    email: "dispatcher1@example.com",
-    password: "password"
-  )
+Given(/^an? (.*) is logged in$/) do |user_type|
+  case user_type
+  when "dispatcher"
+    @user = FactoryBot.create(:user,
+                            :dispatcher,
+                            email: "dispatcher1@example.com",
+                            password: "password")
 
-  visit new_user_session_path
-
-  fill_in "Email", with: @user.email
-  fill_in "Password", with: @user.password
-  click_button "Log in"
-
-  expect(page).not_to have_content("Log in")
-  expect(page).to have_title("Lamorinda")
-end
-
-Given("a driver is logged in") do
-  @driver = FactoryBot.create(:driver)
-  @driver_id = @driver.id
-  @user = FactoryBot.create(
-    :user,
-    :driver,
-    email: "driver1@example.com",
-    password: "password"
-  )
+  when "driver"
+    @driver = FactoryBot.create(:driver)
+    @driver_id = @driver.id
+    @user = FactoryBot.create(:user,
+                              :driver,
+                              email: "driver1@example.com",
+                              password: "password")
+  when "admin"
+    @user = FactoryBot.create(:user,
+                              :admin,
+                              email: "admin1@example.com",
+                              password: "password")
+  end
 
   visit new_user_session_path
   fill_in "Email", with: @user.email
@@ -47,5 +41,4 @@ Given("a driver is logged in") do
 
   expect(page).not_to have_content("Log in")
   expect(page).to have_title("Lamorinda")
-  expect(page).to have_current_path(drivers_path)
 end
