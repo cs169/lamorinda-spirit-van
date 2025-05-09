@@ -50,7 +50,7 @@
                       class: "btn btn-sm btn-danger" %>
                 </td>
 
-                <td><%= ride.date %></td>
+                <td><%= ride.date_and_time.strftime("%B %d, %Y %I:%M %p") %></td>
                 <td><%= ride.driver&.name || 'N/A' %></td>
                 <td><%= ride.van || 'N/A' %></td>
                 <td><%= ride.passenger&.name || 'N/A' %></td>
@@ -63,7 +63,7 @@
                 </td>
                 <td><%= ride.start_address&.full_address || 'N/A' %></td>
                 <td><%= ride.dest_address&.full_address || 'N/A' %></td>
-                <td><%= ride.destination_type %></td>
+                <td><%= ride.ride_type %></td>
                 <% [:wheelchair, :low_income, :disabled, :need_caregiver].each do |field| %>
                 <td>
                   <span class="badge <%= ride.send(field) ? 'bg-success' : 'bg-danger' %>">
@@ -85,7 +85,7 @@
                 </td>
 
                 <td>
-                  <% if ride.emailed_driver.to_s.downcase == "sent" %>
+                  <% if ride.emailed_driver? %>
                     <span class="badge bg-success">Yes</span>
                   <% else %>
                     <span class="badge bg-danger">No</span>

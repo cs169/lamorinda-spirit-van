@@ -13,10 +13,6 @@ class Ride < ApplicationRecord
   # accepts_nested_attributes_for :start_address
   # accepts_nested_attributes_for :dest_address
 
-  def emailed_driver?
-    self.emailed_driver == "true"
-  end
-
   def start_address_attributes=(attrs)
     normalized = normalize_address(attrs)
     self.start_address = Address.find_or_create_by!(normalized)
@@ -84,8 +80,6 @@ class Ride < ApplicationRecord
     {
       street: attrs[:street].to_s.strip.titleize,
       city: attrs[:city].to_s.strip.titleize,
-      state: attrs[:state].to_s.strip.upcase,
-      zip: attrs[:zip].to_s.strip
     }
   end
 end

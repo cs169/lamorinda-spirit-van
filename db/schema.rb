@@ -10,15 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_04_18_014022) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_07_202923) do
   create_table "addresses", force: :cascade do |t|
     t.string "street"
     t.string "city"
-    t.string "state"
-    t.string "zip"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["street", "city", "state", "zip"], name: "index_addresses_on_full_address", unique: true
+    t.string "name"
+    t.string "phone"
+    t.index ["street", "city"], name: "index_addresses_on_full_address", unique: true
   end
 
   create_table "blazer_audits", force: :cascade do |t|
@@ -121,7 +121,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_18_014022) do
   end
 
   create_table "rides", force: :cascade do |t|
-    t.date "date", null: false
     t.integer "van"
     t.float "hours"
     t.decimal "amount_paid", precision: 10, scale: 2
@@ -135,14 +134,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_18_014022) do
     t.binary "emailed_driver"
     t.integer "start_address_id"
     t.integer "dest_address_id"
-    t.string "address_name"
-    t.text "notes_about_location"
-    t.string "destination_type"
+    t.string "ride_type"
     t.boolean "wheelchair", default: false, null: false
     t.boolean "low_income", default: false, null: false
     t.boolean "disabled", default: false, null: false
     t.boolean "need_caregiver", default: false, null: false
     t.integer "next_ride_id"
+    t.datetime "date_and_time"
     t.index ["driver_id"], name: "index_rides_on_driver_id"
     t.index ["next_ride_id"], name: "index_rides_on_next_ride_id"
     t.index ["passenger_id"], name: "index_rides_on_passenger_id"
