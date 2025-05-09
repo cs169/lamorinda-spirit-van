@@ -9,9 +9,15 @@ class Ride < ApplicationRecord
   belongs_to :next_ride, class_name: "Ride", optional: true
   has_one :previous_ride, class_name: "Ride", foreign_key: "next_ride_id", dependent: :destroy
 
+  before_validation :normalize_emailed_driver
+
   # this causes problems -- duplicated addresses
   # accepts_nested_attributes_for :start_address
   # accepts_nested_attributes_for :dest_address
+
+  def normalize_emailed_driver
+    self.emailed_driver = emailed_driver == "true" if emailed_driver.is_a?(String)
+  end
 
   def start_address_attributes=(attrs)
     normalized = normalize_address(attrs)

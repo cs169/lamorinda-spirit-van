@@ -36,8 +36,8 @@
 
 
            <div class="mb-3">
-             <%= f.label :date, "Date" %> <span class="text-danger">*</span>
-             <%= f.date_field :date, class: "form-control", required: true %>
+             <%= f.label :date_and_time, "Date and Time" %> <span class="text-danger">*</span>
+             <%= f.text_field :date_and_time, type: "datetime-local", value: f.object.date_and_time&.strftime("%Y-%m-%dT%H:%M"), class: "form-control", required: true %>
            </div>
 
 
@@ -65,7 +65,7 @@
            <div class="mb-3">
              <%= f.label :emailed_driver, "Emailed Driver?", class: "form-label" %>
              <%= f.select :emailed_driver,
-                          [["Yes", true], ["No", false]],
+                          [["Yes", "true"], ["No", "false"]],
                           {},
                           class: "form-select", required: true %>
            </div>
@@ -135,8 +135,8 @@
            </div>
 
            <div class="mb-3">
-            <%= f.label :destination_type, "Destination Type:" %>
-            <%= f.text_field :destination_type, class: "form-control", rows: 3 %>
+            <%= f.label :ride_type, "Ride Type:" %>
+            <%= f.text_field :ride_type, class: "form-control", rows: 3 %>
            </div>
 
            <!-- New Address Container with Justify Content Row -->
@@ -144,6 +144,15 @@
              <!-- Origin Address -->
               <div class="col-md-5">
                 <h5 class="fw-bold text-success text-center">Origin</h5>
+                    <div class="mb-3">
+                        <label class="form-label" for="ride_start_address_attributes_name">Address Name</label>
+                        <input type="text"
+                            name="ride[addresses_attributes][][name]"
+                            class="form-control"
+                            id="ride_start_address_attributes_name"
+                            autocomplete="ride-name">
+                    </div>
+
                     <div class="mb-3">
                         <label class="form-label" for="ride_start_address_attributes_street">Street</label>
                         <span class="text-danger">*</span>
@@ -168,26 +177,12 @@
 
                     <div class="mb-3">
                         <label class="form-label" for="ride_start_address_attributes_phone">Phone</label>
-                        <span class="text-danger">*</span>
                         <input type="text"
-                            name="ride[addresses_attributes][][state]"
+                            name="ride[addresses_attributes][][phone]"
                             class="form-control"
-                            id="ride_start_address_attributes_state"
-                            required
-                            autocomplete="ride-state">
+                            id="ride_start_address_attributes_phone"
+                            autocomplete="ride-phone">
                     </div>
-
-                    <div class="mb-3">
-                        <label class="form-label" for="ride_start_address_attributes_zip">Zip</label>
-                        <span class="text-danger">*</span>
-                        <input type="text"
-                            name="ride[addresses_attributes][][zip]"
-                            class="form-control"
-                            id="ride_start_address_attributes_zip"
-                            required
-                            autocomplete="ride-zip">
-                    </div>
-
                 </div>
 
              <!-- Spacer -->

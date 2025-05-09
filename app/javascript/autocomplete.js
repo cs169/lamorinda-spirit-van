@@ -3,7 +3,6 @@
 document.addEventListener("turbo:load", function() {
     // Autocomplete for passengers info
     if (gon.passengers) {
-      console.log("passengers found")
       $( function() {
         $( "#ride_passenger_name" ).autocomplete({
           source: gon.passengers
@@ -32,33 +31,76 @@ document.addEventListener("turbo:load", function() {
          // Origin address:
       $( function() {
         $( "#ride_start_address_attributes_street" ).autocomplete({
+          source: gon.addresses.map(a => ({
+              label: a.street,
+              value: a.street,
+              name: a.name,
+              city: a.city,
+              phone: a.phone,
+          })
+          )
+        });
+
+        $( "#ride_start_address_attributes_name" ).autocomplete({
           source: gon.addresses
+           .filter(a => a.name)
+           .map(a => ({
+              label: `${a.name}, ${a.street}`,
+              value: a.name,
+              street: a.street,
+              city: a.city,
+              phone: a.phone,
+           })),
         });
 
         // Set autocomplete attribute because jquery automatically sets it
         // to "off" after autocomplete function, which doesn't disable Chrome's autofill
         $("#ride_start_address_attributes_street").attr("autocomplete", "ride-address");
+        $("#ride_start_address_attributes_name").attr("autocomplete", "ride-address_name");
+      });
+
+      $( "#ride_start_address_attributes_name" ).on( "autocompleteselect", function( event, ui ) {
+        document.getElementById('ride_start_address_attributes_street').value=  ui.item.street;
+        document.getElementById('ride_start_address_attributes_city').value=  ui.item.city;
+        document.getElementById('ride_start_address_attributes_phone').value=  ui.item.phone;
       } );
 
       $( "#ride_start_address_attributes_street" ).on( "autocompleteselect", function( event, ui ) {
+        document.getElementById('ride_start_address_attributes_name').value=  ui.item.name;
         document.getElementById('ride_start_address_attributes_city').value=  ui.item.city;
-        document.getElementById('ride_start_address_attributes_state').value=  "CA";
-        document.getElementById('ride_start_address_attributes_zip').value=  ui.item.zip;
+        document.getElementById('ride_start_address_attributes_phone').value=  ui.item.phone;
       } );
       
       // Stop Addresses (uses focus event because stops are added dynamically):
       $(document).on("focus", ".dest-autocomplete", function () {
         const $input = $(this);
+        const inputId = this.id; // e.g. ride_dest_address_attributes_1_street or _name
+        const isNameField = inputId.endsWith("_name");
+        const baseId = inputId.replace(/_(street|name)$/, "");
+
+        const source = isNameField
+          ? gon.addresses.filter(a => a.name).map(a => ({
+              label: `${a.name}, ${a.street}`,
+              value: a.name,
+              street: a.street,
+              city: a.city,
+              phone: a.phone
+            }))
+          : gon.addresses.map(a => ({
+              label: a.street,
+              value: a.street,
+              name: a.name,
+              city: a.city,
+              phone: a.phone
+            }));
     
         $input.autocomplete({
-          source: gon.addresses,
+          source: source,
           select: function (event, ui) {
-            const inputId = this.id;               // ex. "ride_dest_address_attributes_1_street"
-            const baseId = inputId.replace(/_street$/, ""); // remove "_street" suffix
-  
+            $(`#${baseId}_name`).val(ui.item.name)
+            $(`#${baseId}_street`).val(ui.item.street);
             $(`#${baseId}_city`).val(ui.item.city);
-            $(`#${baseId}_state`).val("CA");
-            $(`#${baseId}_zip`).val(ui.item.zip);
+            $(`#${baseId}_phone`).val(ui.item.phone);
           },
 
           // Set autocomplete attribute because jquery automatically sets it

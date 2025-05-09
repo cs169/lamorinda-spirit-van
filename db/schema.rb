@@ -131,7 +131,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_07_202923) do
     t.integer "passenger_id"
     t.integer "driver_id"
     t.text "notes"
-    t.binary "emailed_driver"
+    t.boolean "emailed_driver"
     t.integer "start_address_id"
     t.integer "dest_address_id"
     t.string "ride_type"
@@ -154,7 +154,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_07_202923) do
     t.datetime "updated_at", null: false
     t.index ["driver_id"], name: "index_shift_templates_on_driver_id"
   end
-  
+
   create_table "shifts", force: :cascade do |t|
     t.date "shift_date"
     t.string "shift_type"

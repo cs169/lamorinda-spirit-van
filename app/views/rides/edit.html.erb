@@ -22,8 +22,8 @@
           <h5 class="fw-bold text-success">Ride Details</h5>
 
           <div class="mb-3">
-            <%= f.label :date, "Date" %> <span class="text-danger">*</span>
-            <%= f.date_field :date, class: "form-control", required: true %>
+            <%= f.label :date_and_time, "Date and Time" %> <span class="text-danger">*</span>
+            <%= f.text_field :date_and_time, type: "datetime-local", value: f.object.date_and_time&.strftime("%Y-%m-%dT%H:%M"), class: "form-control", required: true %>
           </div>
 
           <div class="mb-3">
@@ -57,7 +57,7 @@
           <div class="mb-3">
             <%= f.label :emailed_driver, "Emailed Driver?", class: "form-label" %>
             <%= f.select :emailed_driver,
-                          [["Yes", true], ["No", false]],
+                          [["Yes", "true"], ["No", "false"]],
                           {},
                           class: "form-select", required: true %>
           </div>
@@ -78,10 +78,10 @@
         </div>
 
         <%= f.hidden_field :passenger_id, class: "form-control"  %>
-        <%= f.hidden_field :wheelchair, class: "form-control"  %>
-        <%= f.hidden_field :low_income, class: "form-control"  %>
-        <%= f.hidden_field :disabled, class: "form-control"  %>
-        <%= f.hidden_field :need_caregiver, class: "form-control"  %>
+        <%= f.hidden_field :wheelchair, class: "form-control" , value: @ride.wheelchair ? "Yes" : "No"  %>
+        <%= f.hidden_field :low_income, class: "form-control" , value: @ride.low_income ? "Yes" : "No"  %>
+        <%= f.hidden_field :disabled, class: "form-control" , value: @ride.disabled ? "Yes" : "No"  %>
+        <%= f.hidden_field :need_caregiver, class: "form-control" , value: @ride.need_caregiver ? "Yes" : "No"  %>
 
         <div class="mb-3">
           <%= f.label :passenger_home_address, "Home Address" %>
@@ -93,64 +93,59 @@
         </div>
 
         <div class="mb-3">
-          <%= f.label :destination_type, "Destination Type:" %>
-          <%= f.text_field :destination_type, class: "form-control" %>
+          <%= f.label :ride_type, "Ride Type:" %>
+          <%= f.text_field :ride_type, class: "form-control" %>
         </div>
 
         <!-- Address Container with Justify Content Row -->
         <div class="row g-4" id="address-grid" data-last-index="<%= @all_rides.size %>">
           <!-- Origin Address -->
-          <div class="col-md-5">
-            <h5 class="fw-bold text-success text-center">Origin</h5>
+            <div class="col-md-5">
+              <h5 class="fw-bold text-success text-center">Origin</h5>
+                <div class="mb-3">
+                    <label class="form-label" for="ride_start_address_attributes_name">Address Name</label>
+                    <input type="text"
+                        value="<%= @ride.start_address&.name %>"
+                        name="ride[addresses_attributes][][name]"
+                        class="form-control"
+                        id="ride_start_address_attributes_name"
+                        autocomplete="ride-name">
+                </div>
 
-            <div class="mb-3">
-              <label class="form-label" for="ride_start_address_attributes_street">Street</label>
-              <span class="text-danger">*</span>
-              <input type="text"
-                    value="<%= @ride.start_address&.street %>"
-                    name="ride[addresses_attributes][][street]"
-                    class="form-control"
-                    id="ride_start_address_attributes_street"
-                    required
-                    autocomplete="ride-address">
-            </div>
+                <div class="mb-3">
+                    <label class="form-label" for="ride_start_address_attributes_street">Street</label>
+                    <span class="text-danger">*</span>
+                    <input type="text"
+                        value="<%= @ride.start_address&.street %>"
+                        name="ride[addresses_attributes][][street]"
+                        class="form-control"
+                        id="ride_start_address_attributes_street"
+                        required
+                        autocomplete="ride-address">
+                </div>
 
-            <div class="mb-3">
-              <label class="form-label" for="ride_start_address_attributes_city">City</label>
-              <span class="text-danger">*</span>
-              <input type="text"
-                    value="<%= @ride.start_address&.city %>"
-                    name="ride[addresses_attributes][][city]"
-                    class="form-control"
-                    id="ride_start_address_attributes_city"
-                    required
-                    autocomplete="ride-city">
-            </div>
+                <div class="mb-3">
+                    <label class="form-label" for="ride_start_address_attributes_city">City</label>
+                    <span class="text-danger">*</span>
+                    <input type="text"
+                        value="<%= @ride.start_address&.city %>"
+                        name="ride[addresses_attributes][][city]"
+                        class="form-control"
+                        id="ride_start_address_attributes_city"
+                        required
+                        autocomplete="ride-city">
+                </div>
 
-            <div class="mb-3">
-              <label class="form-label" for="ride_start_address_attributes_state">State</label>
-              <span class="text-danger">*</span>
-              <input type="text"
-                    value="<%= @ride.start_address&.state %>"
-                    name="ride[addresses_attributes][][state]"
-                    class="form-control"
-                    id="ride_start_address_attributes_state"
-                    required
-                    autocomplete="ride-state">
+                <div class="mb-3">
+                    <label class="form-label" for="ride_start_address_attributes_phone">Phone</label>
+                    <input type="text"
+                        value="<%= @ride.start_address&.phone %>"
+                        name="ride[addresses_attributes][][phone]"
+                        class="form-control"
+                        id="ride_start_address_attributes_phone"
+                        autocomplete="ride-phone">
+                </div>
             </div>
-
-            <div class="mb-3">
-              <label class="form-label" for="ride_start_address_attributes_zip">Zip</label>
-              <span class="text-danger">*</span>
-              <input type="text"
-                    value="<%= @ride.start_address&.zip %>"
-                    name="ride[addresses_attributes][][zip]"
-                    class="form-control"
-                    id="ride_start_address_attributes_zip"
-                    required
-                    autocomplete="ride-zip">
-            </div>
-          </div>
 
           <!-- Spacer -->
           <div class="col-md-1" id="col-space"></div>
