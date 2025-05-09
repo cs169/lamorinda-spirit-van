@@ -32,16 +32,17 @@ h1 {
 .today-page .button-group {
     display: flex;
     gap: 10px;
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
-.today-page .btn {
-    padding: 10px 15px;
+.today-page .button-group .btn {
+    display: flex;
+    align-items: center; /* Center vertically */
+    min-height: 41px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     text-decoration: none;
-    font-size: 14px;
 }
 
 .today-page .btn-primary {
@@ -68,6 +69,7 @@ h1 {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+    margin-bottom: 20px;
     table-layout: auto;
     overflow-x: auto;
 }
@@ -91,7 +93,6 @@ h1 {
     font-weight: bold;
 }
 
-/* mobile */
 .today-page .rides-list {
     display: none;
 }
@@ -102,7 +103,7 @@ h1 {
 }
 
 /* mobile */
-@media (pointer:none), (pointer:coarse) {
+@media (max-width:576px) {
     .today-page .rides-table {
         display: none;
     }
@@ -122,24 +123,40 @@ h1 {
     .today-page .ride-block p {
         margin: 5px 0;
     }
+
+    .btn-shift {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        width: 70%;
+    }
+
+    .btn-shift .btn {
+        margin-bottom: 10px;
+    }
 }
 
-/* print */
+/* Print styles */
 @media print {
-    .today-page .btn,
-    .today-page .button-group {
-        display: none;
-    }
-
-    .today-page .rides-table {
-        width: 100%;
-        border: 1px solid black;
-        font-size: 12px;
-        display: table !important;
-    }
-
-    .today-page .rides-list {
+    /* Hide all navigation and buttons */
+    nav,
+    .navbar,
+    .custom-header,
+    .custom-footer,
+    footer,
+    .flash-container,
+    .pagination,
+    .alert,
+    .button-group,
+    .btn,
+    .shift-button,
+    #btn-print,
+    .btn-shift {
         display: none !important;
+    }
+
+    .today-page {
+        max-width: 100%;
     }
 
     .today-page .rides-table th,
@@ -158,7 +175,35 @@ h1 {
         margin: 10mm;
     }
 
-    .today-page {
-        max-width: 100%;
+    /* Default: hide table, will re-enable on PC */
+    .today-page .rides-table {
+        display: none !important;
+        border-collapse: separate !important;
+        border-spacing: 0 !important;
+    }
+
+    /* PC-specific: show rides table */
+    @media (min-width: 576px) {
+        .today-page .rides-table {
+            display: table !important;
+            width: 100%;
+            border: 1px solid black;
+            font-size: 12px;
+        }
+
+        .today-page .rides-list {
+            display: none !important;
+        }
+    }
+
+    /* Mobile-specific: show rides list */
+    @media (max-width: 575.98px) {
+        .today-page .rides-table {
+            display: none !important;
+        }
+
+        .today-page .rides-list {
+            display: block !important;
+        }
     }
 }

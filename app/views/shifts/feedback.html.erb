@@ -1,41 +1,58 @@
 <% content_for :title, "Shift Feedback" %>
 
-<h1>Feedback for <%= @shift.shift_type %> shift on <%= @shift.shift_date %></h1>
+<div class="container mx-auto mx-sm-0 mt-4">
+  <h1 class="mb-4">Feedback for <%= @shift.shift_type %> shift on <%= @shift.shift_date %></h1>
+</div>
 
-<%= form_with(model: @shift) do |form| %>
-  <% if @shift.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(@shift.errors.count, "error") %> prohibited this shift from being saved:</h2>
+<%= form_with(model: @shift, html: { class: "needs-validation" }) do |form| %>
+  <div class="container mx-auto mx-sm-0">
+    <% if @shift.errors.any? %>
+      <div class="alert alert-danger">
+        <h4 class="alert-heading"><%= pluralize(@shift.errors.count, "error") %> prohibited this shift from being saved:</h4>
+        <ul class="mb-0">
+          <% @shift.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
 
-      <ul>
-        <% @shift.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
+    <div class="row">
+      <div class="col-12 col-sm-8 col-md-6 col-lg-5">
+
+        <div class="mb-3">
+          <%= form.label :van, "Van", class: "form-label" %>
+          <%= form.number_field :van, class: "form-control" %>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :pick_up_time, "Van pick up time from base", class: "form-label" %>
+          <%= form.text_field :pick_up_time, class: "form-control" %>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :drop_off_time, "Van drop off time from base", class: "form-label" %>
+          <%= form.text_field :drop_off_time, class: "form-control" %>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :odometer_pre, "Odometer reading pre-trip", class: "form-label" %>
+          <%= form.text_field :odometer_pre, class: "form-control" %>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :odometer_post, "Odometer reading post-trip", class: "form-label" %>
+          <%= form.text_field :odometer_post, class: "form-control" %>
+        </div>
+
+        <div class="mt-4 text-center text-sm-start d-flex flex-column align-items-center align-items-sm-start gap-3">
+          <%= form.button "Save Shift Feedback", type: :submit, name: "commit_type", value: "feedback",
+              class: "btn btn-primary shift-feedback-btn" %>
+
+          <%= link_to "Back", today_driver_path(@shift.driver_id, date: @shift.shift_date),
+              class: "btn btn-outline-secondary px-5 ride-feedback-btn" %>
+        </div>
+      </div>
     </div>
-  <% end %>
-
-  <div>
-    <%= form.label :van, "Van: ", style: "display: block" %>
-    <%= form.number_field :van, required: false, value: @shift.van %>
-    <%= form.label :pick_up_time, "Van pick up time from base: ", style: "display: block" %>
-    <%= form.text_field :pick_up_time, required: false, value: @shift.pick_up_time %>
-    <%= form.label :drop_off_time, "Van drop off time from base: ", style: "display: block" %>
-    <%= form.text_field :drop_off_time, required: false, value: @shift.drop_off_time %>
-    <%= form.label :odometer_pre, "Odometer reading pre-trip: ", style: "display: block" %>
-    <%= form.text_field :odometer_pre, required: false, value: @shift.odometer_pre %>
-    <%= form.label :odometer_post, "Odometer reading post-trip: ", style: "display: block" %>
-    <%= form.text_field :odometer_post, required: false, value: @shift.odometer_post %>
-  </div>
-
-  <div>
-    <%= form.button "Save Feedback", type: :submit, name: "commit_type", value: "feedback" %>
   </div>
 <% end %>
-
-<br>
-
-<div>
-  <%= link_to "Show this shift", @shift %> |
-  <%= link_to "Back to today", today_driver_path(id: @shift.driver_id) %>
-</div>

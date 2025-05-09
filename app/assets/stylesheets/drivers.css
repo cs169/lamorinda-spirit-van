@@ -1,32 +1,57 @@
 /* A custom card class for drivers */
 .driver-card {
-    border: 1px solid #000000; 
-    border-radius: 0.25rem;   
-    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
-    height: 100%; 
-    }
-    
-    /* Card header */
-    .driver-card-header {
-    background-color: #49799a; 
+    border: 1px solid #000000;
+    border-radius: 0.25rem;
+    box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075);
+    height: 100%;
+}
+
+/* Card header */
+.driver-card-header {
+    background-color: #49799a;
     color: #fff;
-    padding: 0.75rem 1.25rem; 
+    padding: 0.75rem 1.25rem;
     border-bottom: 1px solid #17a2b8;
-    }
-    
-    /* Card body */
-    .driver-card-body {
-    background-color: #e8f0f8; 
-    color: #212529;          
+}
+
+/* Card body */
+.driver-card-body {
+    background-color: #e8f0f8;
+    color: #212529;
     padding: 1.25rem;
-    }
-    
-    /* Card footer */
-    .driver-card-footer {
+}
+
+/* Card footer */
+.driver-card-footer {
     background-color: #f3f7fb;
     border-top: 0;
     padding: 0.75rem 1.25rem;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: stretch;
+    gap: 0.75rem;
+}
+
+.driver-card-footer .btn {
+    display: flex;
     align-items: center;
+    height: auto;
+}
+
+.drivers-back-btn {
+    width: 30%;
+    text-align: left;
+    margin-top: 1rem;
+}
+
+.drivers-back-btn a {
+    width: 50%;
+}
+
+@media (max-width:576px) {
+    .drivers-back-btn {
+        width: 100%;
+        text-align: center;
+        /* margin-top: 1rem; */
     }
+}

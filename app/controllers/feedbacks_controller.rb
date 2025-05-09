@@ -40,17 +40,15 @@ class FeedbacksController < ApplicationController
 
   # PATCH/PUT /feedbacks/1 or /feedbacks/1.json
   def update
-    respond_to do |format|
-      if @feedback.update(feedback_params)
-        matched_driver = Driver.find_by("LOWER(email) = ?", current_user.email.downcase)
-        if matched_driver
-          redirect_to today_driver_path(matched_driver.id)
-          return
-        else
-          redirect_to drivers_path
-          return
-        end
+    if @feedback.update(feedback_params)
+      driver = @feedback.ride.driver
+      if driver.present?
+        redirect_to today_driver_path(driver.id, date: @feedback.ride.date), status: :see_other
       else
+        redirect_to root_path, status: :see_other
+      end
+    else
+      respond_to do |format|
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @feedback.errors, status: :unprocessable_entity }
       end
