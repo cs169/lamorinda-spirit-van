@@ -51,8 +51,8 @@
               <% end %>
               <td title="<%= passenger.notes %>">
                 <%= truncate(passenger.notes.presence,
-                              length:   100,        # max chars
-                              omission: '…',        # what to append
+                              length:   20,        # max chars
+                              omission: '…',        # appends (omission) parameter at the end of the string
                               separator: '')        # '' means “hard” char-count rather than words
                 %>
               </td>
@@ -60,9 +60,9 @@
               <td><%= passenger.date_registered.to_date %></td>
               <td title="<%= passenger.audit %>">
               <%= truncate(passenger.audit.presence,
-                            length:   100,        # max chars
-                            omission: '…',        # what to append
-                            separator: '')        # '' means “hard” char-count rather than words
+                              length:   20,        # max chars
+                              omission: '…',        # appends (omission) parameter at the end of the string
+                              separator: '')        # '' means “hard” char-count rather than words
               %>
               </td>
             </tr>
