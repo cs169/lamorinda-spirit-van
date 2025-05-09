@@ -2,6 +2,7 @@
 
 class ShiftsController < ApplicationController
   before_action :set_shift, only: %i[ show edit update destroy ]
+  before_action -> { require_role("admin") }, only: [:fill_from_template, :clear_month]
   before_action -> { require_role("admin", "dispatcher") }, only: [:new, :edit, :create, :destroy]
 
   # Currently the "capture_return_to" method is used for redirect from the shifts calendar to /drivers/id/today?date=XXX page
@@ -12,6 +13,7 @@ class ShiftsController < ApplicationController
     # @shifts = Shift.all
     @date = params[:start_date] ? Date.parse(params[:start_date]) : Date.today
     @shifts = Shift.where(shift_date: @date.beginning_of_month..@date.end_of_month)
+    @shift_templates = ShiftTemplate.all
   end
 
   # GET /shifts/1 or /shifts/1.json
@@ -38,6 +40,19 @@ class ShiftsController < ApplicationController
   # GET /shifts/1/feedback
   def feedback
     @shift = Shift.find(params[:id])
+  end
+
+  # POST /shifts/fill_from_template
+  def fill_from_template
+    error_messages = Shift.fill_month(ShiftTemplate.all, Date.parse(params[:date]))
+    flash[:alert] = "Error with creating shifts from templates" unless error_messages.empty?
+    redirect_to shifts_path(start_date: params[:date])
+  end
+
+  # POST /shifts/clear_month
+  def clear_month
+    Shift.clear_month(Date.parse(params[:date]))
+    redirect_to shifts_path(start_date: params[:date])
   end
 
   # POST /shifts or /shifts.json
