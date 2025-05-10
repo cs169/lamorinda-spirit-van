@@ -39,10 +39,16 @@ Rails.application.routes.draw do
   end
 
   resources :shifts do
+    collection do
+      post "fill_from_template"
+      post "clear_month"
+    end
     member do
       get "feedback"
     end
   end
+
+  resources :shift_templates, only: [:new, :create, :edit, :update, :destroy]
 
   resources :drivers, except: [:show] do
     member do
