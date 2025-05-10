@@ -2,15 +2,13 @@
 
 FactoryBot.define do
   factory :ride do
-    date { Time.zone.today }
+    date_and_time { Time.zone.now.change(min: 0, sec: 0) }
     association :driver
     van { 1 }
     association :passenger
     association :start_address, factory: :address
     association :dest_address, factory: :address
-    address_name { "Default Address Name" }
-    destination_type { "Default Type" }
-    notes_about_location { "Default Note About Location" }
+    ride_type { "Default Type" }
     wheelchair { false }
     low_income { false }
     disabled { false }
@@ -19,6 +17,6 @@ FactoryBot.define do
     hours { 1.0 }
     amount_paid { 0 }
     confirmed_with_passenger { "No" }
-    emailed_driver { nil }
+    emailed_driver { 0 }
   end
 end

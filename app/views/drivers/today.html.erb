@@ -39,10 +39,10 @@
               <td><%= ride.hours %></td>
               <td><%= ride.passenger.name %></td>
               <td><%= ride.wheelchair ? "Yes" : "No" %></td>
-              <td><%= ride.disabled ? "Yes" : "" %></td>
-              <td><%= ride.need_caregiver ? "Yes" : "" %></td>
+              <td><%= ride.disabled ? "Yes" : "No" %></td>
+              <td><%= ride.need_caregiver ? "Yes" : "No" %></td>
               <td><%= number_to_currency(ride.amount_paid) %></td>
-              <td><%= ride.destination_type %></td>
+              <td><%= ride.ride_type %></td>
               <td><%= ride.passenger.phone %></td>
                <% if ride.feedback %>
                 <td><%= link_to "Feedback", edit_feedback_path(ride.feedback), class: "btn btn-primary" %></td>

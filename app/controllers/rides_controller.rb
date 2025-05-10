@@ -18,7 +18,7 @@ class RidesController < ApplicationController
   # new (GET Request, displays form)
   def new
     session[:return_to] = request.referer
-    @ride = Ride.new(params.permit(:date, :driver_id))
+    @ride = Ride.new(params.permit(:date_and_time, :driver_id))
     @ride.build_start_address
     @ride.build_dest_address
 

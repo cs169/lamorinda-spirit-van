@@ -61,8 +61,8 @@
                     <span class="badge bg-danger">No</span>
                   <% end %>
                 </td>
-                <td><%= ride.start_address&.full_address || 'N/A' %></td>
-                <td><%= ride.dest_address&.full_address || 'N/A' %></td>
+                <td><%= ride.start_address&.name || ride.start_address&.full_address || 'N/A' %></td>
+                <td><%= ride.dest_address&.name || ride.dest_address&.full_address || 'N/A' %></td>
                 <td><%= ride.ride_type %></td>
                 <% [:wheelchair, :low_income, :disabled, :need_caregiver].each do |field| %>
                 <td>
