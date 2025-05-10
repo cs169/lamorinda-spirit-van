@@ -53,14 +53,14 @@ RSpec.describe Ride, type: :model do
 
   describe "#start_address_attributes=" do
     it "assigns existing address if found" do
-      existing_address = FactoryBot.create(:address, name: "Kaiser", street: "123 Main St", city: "Berkeley", phone:"(123)456-7890")
+      existing_address = FactoryBot.create(:address, name: "Kaiser", street: "123 Main St", city: "Berkeley", phone: "(123)456-7890")
       ride = FactoryBot.build(:ride, driver: @driver1)
 
       ride.start_address_attributes = {
         name: "Kaiser",
         street: " 123 main st ",
         city: "berkeley",
-        phone:"(123)456-7890",
+        phone: "(123)456-7890",
       }
 
       expect(ride.start_address).to eq(existing_address)
@@ -149,7 +149,7 @@ RSpec.describe Ride, type: :model do
         disabled: "Yes",
         need_caregiver: "No",
         addresses_attributes: [
-          { name: "Origin", street: "123 Main", city: "Oakland", phone:"(123)456-7890" },
+          { name: "Origin", street: "123 Main", city: "Oakland", phone: "(123)456-7890" },
           { name: "Destination", street: "456 Elm", city: "Berkeley", phone: "(456)123-1234" }
         ]
       }
