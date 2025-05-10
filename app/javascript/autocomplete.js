@@ -1,59 +1,114 @@
-
+// Using gon if the controller action hasn't set it causes js errors, 
+// so as a hack only load this code on pages where its needed
 document.addEventListener("turbo:load", function() {
-    // using gon if the controller action hasn't set it causes js errors, so as a hack only load this code on pages where its needed
-    if (document.getElementById("ride_passenger_name")){
-
-      // basic autocomplete setup
+    // Autocomplete for passengers info
+    if (gon.passengers) {
       $( function() {
         $( "#ride_passenger_name" ).autocomplete({
           source: gon.passengers
         });
+
+        // Set autocomplete attribute because jquery automatically sets it
+        // to "off" after autocomplete function, which doesn't disable Chrome's autofill
+        $("#ride_passenger_name").attr("autocomplete", "ride-address");
       } );
 
       // edits the other fields upon selecting an autocomplete value
-      $( "#ride_passenger_name" ).on( "autocompleteselect", function( event, ui ) {
-        document.getElementById('ride_passenger_phone').value=  ui.item.phone;
-        document.getElementById('ride_passenger_notes').value=  ui.item.notes;
-        document.getElementById('ride_passenger_id').value=  ui.item.id;
-      } );
+      $("#ride_passenger_name").on("autocompleteselect", function (event, ui) {
+        const yesNo = (val) => (val ? "Yes" : "No");
+        document.getElementById("ride_passenger_phone").value = ui.item.phone;
+        document.getElementById("ride_wheelchair").value = yesNo(ui.item.wheelchair);
+        document.getElementById("ride_low_income").value = yesNo(ui.item.low_income);
+        document.getElementById("ride_disabled").value = yesNo(ui.item.disabled);
+        document.getElementById("ride_need_caregiver").value = yesNo(ui.item.need_caregiver);
+        document.getElementById("ride_passenger_notes").value = ui.item.notes;
+        document.getElementById("ride_passenger_id").value = ui.item.id;
+      });
+    }
 
-
-      //Addresses:
+    // Autocomplete for addresses
+    if (gon.addresses) {
+         // Origin address:
       $( function() {
         $( "#ride_start_address_attributes_street" ).autocomplete({
-          source: gon.addresses
+          source: gon.addresses.map(a => ({
+              label: a.street,
+              value: a.street,
+              name: a.name,
+              city: a.city,
+              phone: a.phone,
+          })
+          )
         });
-        // set autocomplete attribute to "ride-address" because jquery automatically sets it to "off", which is useless.
+
+        $( "#ride_start_address_attributes_name" ).autocomplete({
+          source: gon.addresses
+           .filter(a => a.name)
+           .map(a => ({
+              label: `${a.name}, ${a.street}`,
+              value: a.name,
+              street: a.street,
+              city: a.city,
+              phone: a.phone,
+           })),
+        });
+
+        // Set autocomplete attribute because jquery automatically sets it
+        // to "off" after autocomplete function, which doesn't disable Chrome's autofill
         $("#ride_start_address_attributes_street").attr("autocomplete", "ride-address");
+        $("#ride_start_address_attributes_name").attr("autocomplete", "ride-address_name");
+      });
+
+      $( "#ride_start_address_attributes_name" ).on( "autocompleteselect", function( event, ui ) {
+        document.getElementById('ride_start_address_attributes_street').value=  ui.item.street;
+        document.getElementById('ride_start_address_attributes_city').value=  ui.item.city;
+        document.getElementById('ride_start_address_attributes_phone').value=  ui.item.phone;
       } );
 
       $( "#ride_start_address_attributes_street" ).on( "autocompleteselect", function( event, ui ) {
+        document.getElementById('ride_start_address_attributes_name').value=  ui.item.name;
         document.getElementById('ride_start_address_attributes_city').value=  ui.item.city;
-        document.getElementById('ride_start_address_attributes_state').value=  "CA";
-        document.getElementById('ride_start_address_attributes_zip').value=  ui.item.zip;
+        document.getElementById('ride_start_address_attributes_phone').value=  ui.item.phone;
       } );
       
-      //Addresses:
-      $( function() {
-        $( "#ride_dest_address_attributes_street" ).autocomplete({
-          source: gon.addresses
+      // Stop Addresses (uses focus event because stops are added dynamically):
+      $(document).on("focus", ".dest-autocomplete", function () {
+        const $input = $(this);
+        const inputId = this.id; // e.g. ride_dest_address_attributes_1_street or _name
+        const isNameField = inputId.endsWith("_name");
+        const baseId = inputId.replace(/_(street|name)$/, "");
+
+        const source = isNameField
+          ? gon.addresses.filter(a => a.name).map(a => ({
+              label: `${a.name}, ${a.street}`,
+              value: a.name,
+              street: a.street,
+              city: a.city,
+              phone: a.phone
+            }))
+          : gon.addresses.map(a => ({
+              label: a.street,
+              value: a.street,
+              name: a.name,
+              city: a.city,
+              phone: a.phone
+            }));
+    
+        $input.autocomplete({
+          source: source,
+          select: function (event, ui) {
+            $(`#${baseId}_name`).val(ui.item.name)
+            $(`#${baseId}_street`).val(ui.item.street);
+            $(`#${baseId}_city`).val(ui.item.city);
+            $(`#${baseId}_phone`).val(ui.item.phone);
+          },
+
+          // Set autocomplete attribute because jquery automatically sets it
+          // to "off" after autocomplete function, which doesn't disable Chrome's autofill
+          create: function () {
+            this.setAttribute("autocomplete", "ride-address");
+          },
         });
-        $("#ride_dest_address_attributes_street").attr("autocomplete", "ride-address");
-      } );
-
-      $( "#ride_dest_address_attributes_street" ).on( "autocompleteselect", function( event, ui ) {
-        document.getElementById('ride_dest_address_attributes_city').value=  ui.item.city;
-        document.getElementById('ride_dest_address_attributes_state').value=  "CA";
-        document.getElementById('ride_dest_address_attributes_zip').value=  ui.item.zip;
-      } );
-
-    }
+      });
+      }
   })
-
-  /*
-   // E
-   document.addEventListener('change', (event) => {
-    if (event.target.matches('#ride_passenger_name')) {
-      document.getElementById('ride_notes_date_reserved').value=  gon.passengers;
-    }
-  });*/
