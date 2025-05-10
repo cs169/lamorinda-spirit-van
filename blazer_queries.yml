@@ -11,20 +11,22 @@
   :data_source: main
 - :name: Passenger Trips By City
   :description: ''
-  :statement: "SELECT 'Lafayette' AS city, passengers.name, COUNT(*) AS ride_count\r\nFROM
-    rides\r\nJOIN passengers ON rides.passenger_id = passengers.id\r\nJOIN addresses
-    ON passengers.address_id = addresses.id\r\nWHERE rides.date >= {start_time} \r\n
-    \ AND rides.date <= {end_time}\r\n  AND addresses.city = 'Lafayette'\r\nGROUP
-    BY passengers.name\r\n\r\nUNION ALL\r\n\r\nSELECT 'Moraga' AS city, passengers.name,
+  :statement: "SELECT 'Lafayette' AS city, passengers.name, STRFTIME('%Y-%m', rides.date)
+    AS year_month, COUNT(*) AS ride_count\r\nFROM rides\r\nJOIN passengers ON rides.passenger_id
+    = passengers.id\r\nJOIN addresses ON passengers.address_id = addresses.id\r\nWHERE
+    rides.date >= {start_time} \r\n  AND rides.date <= {end_time}\r\n  AND addresses.city
+    = 'Lafayette'\r\nGROUP BY passengers.name, year_month\r\n\r\nUNION ALL\r\n\r\nSELECT
+    'Moraga' AS city, passengers.name, STRFTIME('%Y-%m', rides.date) AS year_month,
     COUNT(*) AS ride_count\r\nFROM rides\r\nJOIN passengers ON rides.passenger_id
     = passengers.id\r\nJOIN addresses ON passengers.address_id = addresses.id\r\nWHERE
     rides.date >= {start_time} \r\n  AND rides.date <= {end_time}\r\n  AND addresses.city
-    = 'Moraga'\r\nGROUP BY passengers.name\r\n\r\nUNION ALL\r\n\r\nSELECT 'Orinda'
-    AS city, passengers.name, COUNT(*) AS ride_count\r\nFROM rides\r\nJOIN passengers
-    ON rides.passenger_id = passengers.id\r\nJOIN addresses ON passengers.address_id
-    = addresses.id\r\nWHERE rides.date >= {start_time} \r\n  AND rides.date <= {end_time}\r\n
-    \ AND addresses.city = 'Orinda'\r\nGROUP BY passengers.name\r\n\r\nORDER BY city,
-    ride_count DESC;\r\n"
+    = 'Moraga'\r\nGROUP BY passengers.name, year_month\r\n\r\nUNION ALL\r\n\r\nSELECT
+    'Orinda' AS city, passengers.name, STRFTIME('%Y-%m', rides.date) AS year_month,
+    COUNT(*) AS ride_count\r\nFROM rides\r\nJOIN passengers ON rides.passenger_id
+    = passengers.id\r\nJOIN addresses ON passengers.address_id = addresses.id\r\nWHERE
+    rides.date >= {start_time} \r\n  AND rides.date <= {end_time}\r\n  AND addresses.city
+    = 'Orinda'\r\nGROUP BY passengers.name, year_month\r\n\r\nORDER BY city, name,
+    year_month;"
   :data_source: main
 - :name: Fare by Passengers
   :description: ''
@@ -37,35 +39,50 @@
     Total Low Income Rides, Total Rides, % Low Income Rides
   :statement: "SELECT\r\n  COUNT(DISTINCT passengers.id) FILTER (WHERE passengers.low_income
     IS TRUE) AS \"Total Low Income Passengers\",\r\n  COUNT(DISTINCT passengers.id)
-    AS \"Total Passengers\",\r\n  ROUND(\r\n  (\r\n    COUNT(DISTINCT passengers.id)
-    FILTER (WHERE passengers.low_income IS TRUE) * 100.0 / COUNT(DISTINCT passengers.id)),
-    2) AS \"% Low Income Passengers\",\r\n  COUNT(*) FILTER (WHERE passengers.low_income
-    IS TRUE) AS \"Low Income Rides\",\r\n  COUNT(*) AS \"Total Rides\",\r\n  ROUND(\r\n
-    \ (\r\n    COUNT(*) FILTER (WHERE passengers.low_income IS TRUE) * 100.0 / COUNT(*)),
-    2) AS \"% Low Income Rides\"\r\nFROM rides\r\nJOIN passengers ON rides.passenger_id
-    = passengers.id\r\nWHERE rides.date >= {start_time} AND rides.date <= {end_time};"
+    AS \"Total Passengers\",\r\n  ROUND(\r\n    COUNT(DISTINCT passengers.id) FILTER
+    (WHERE passengers.low_income IS TRUE) * 100.0 / NULLIF(COUNT(DISTINCT passengers.id),
+    0), \r\n    2\r\n  ) AS \"% Low Income Passengers\",\r\n  COUNT(*) FILTER (WHERE
+    passengers.low_income IS TRUE) AS \"Low Income Rides\",\r\n  COUNT(*) AS \"Total
+    Rides\",\r\n  ROUND(\r\n    COUNT(*) FILTER (WHERE passengers.low_income IS TRUE)
+    * 100.0 / NULLIF(COUNT(*), 0), \r\n    2\r\n  ) AS \"% Low Income Rides\"\r\nFROM
+    rides\r\nJOIN passengers ON rides.passenger_id = passengers.id\r\nWHERE rides.date
+    >= {start_time} AND rides.date <= {end_time};"
   :data_source: main
 - :name: 5310 Report
   :description: ''
   :statement: "WITH rides_stats AS (\r\n    SELECT \r\n        van AS \"Van\", \r\n
     \       COUNT(DISTINCT date) AS \"Days Used\", \r\n        ROUND(SUM(hours), 1)
-    AS \"Service Hours\",\r\n        COUNT(CASE WHEN passengers.wheelchair IS TRUE
-    AND passengers.need_caregiver IS TRUE THEN 1 END) AS \"Wheelchair with Caregiver\",\r\n
-    \       COUNT(CASE WHEN passengers.wheelchair IS TRUE AND passengers.need_caregiver
-    IS FALSE THEN 1 END) AS \"Wheelchair without Caregiver\",\r\n        COUNT(CASE
-    WHEN passengers.disabled IS TRUE THEN 1 END) AS \"Disabled\",\r\n        COUNT(CASE
-    WHEN (JULIANDAY(rides.date) - JULIANDAY(passengers.birthday)) / 365.25 >= 65 THEN
-    1 END) AS \"Senior\",\r\n        COUNT(CASE WHEN passengers.need_caregiver IS
-    TRUE THEN 1 END) AS \"Trips with Caregivers\",\r\n        COUNT(CASE WHEN passengers.need_caregiver
-    IS FALSE THEN 1 END) AS \"Trips without Caregiver\",\r\n        COUNT(*) AS \"Grand
-    Total Trips\"\r\n    FROM rides \r\n    JOIN passengers ON rides.passenger_id
-    = passengers.id\r\n    WHERE rides.date >= {start_time} AND rides.date <= {end_time}\r\n
-    \   GROUP BY van\r\n)\r\n\r\nSELECT *,\r\n       SUM(\"Grand Total Trips\") OVER
-    () AS \"Total Trips Across ALL Vans\"\r\nFROM rides_stats;"
+    AS \"Service Hours\",\r\n        COUNT(CASE \r\n            WHEN passengers.wheelchair
+    IS TRUE \r\n                AND passengers.need_caregiver IS TRUE \r\n                THEN
+    1 END) AS \"Wheelchair with Caregiver\",\r\n        COUNT(CASE \r\n            WHEN
+    passengers.wheelchair IS TRUE \r\n                AND passengers.need_caregiver
+    IS FALSE \r\n                THEN 1 END) AS \"Wheelchair without Caregiver\",\r\n
+    \       COUNT(CASE \r\n            WHEN \r\n                passengers.wheelchair
+    IS FALSE \r\n                AND passengers.disabled IS TRUE \r\n                THEN
+    1 END) AS \"Disabled\",\r\n        COUNT(CASE \r\n            WHEN \r\n                passengers.disabled
+    IS FALSE \r\n                    AND passengers.wheelchair IS FALSE\r\n                    THEN
+    1 END) AS \"Seniors\",\r\n        -- Excluding passengers with wheelchairs and
+    have a caregiver\r\n        COUNT(CASE WHEN passengers.need_caregiver IS TRUE
+    AND passengers.wheelchair IS FALSE THEN 1 END) AS \"Trips with Caregivers\"\r\n
+    \   FROM rides \r\n    JOIN passengers ON rides.passenger_id = passengers.id\r\n
+    \   WHERE rides.date >= {start_time} AND rides.date <= {end_time}\r\n    GROUP
+    BY van\r\n), \r\n-- Formula on the 5310 form -- \r\nrides_stats_2 AS (\r\n    SELECT
+    *,\r\n        SUM(\"Wheelchair with Caregiver\" + \"Wheelchair without Caregiver\"
+    + \"Disabled\" + \"Seniors\") OVER (PARTITION BY \"Van\") AS \"Total Trips w/o
+    Caregivers\"\r\n    FROM rides_stats\r\n)\r\n\r\n-- DOES TRIPS WITH CAREGIVERS
+    INCLUDE WHEELCHAIR WITH CAREGIVER?\r\nSELECT *, SUM(\"Trips with Caregivers\"
+    + \"Total Trips w/o Caregivers\") OVER (PARTITION BY \"Van\") AS \"Grand Total\"\r\nFROM
+    rides_stats_2\r\n"
   :data_source: main
 - :name: New Passengers
   :description: ''
   :statement: "SELECT a.city, GROUP_CONCAT(p.name, ', ') AS names\r\nFROM passengers
     p JOIN addresses a\r\nON p.address_id = a.id\r\nWHERE p.date_registered >= {start_time}
     AND p.date_registered <= {end_time}\r\nGROUP BY a.city"
+  :data_source: main
+- :name: Service Miles per Van
+  :description: ''
+  :statement: "SELECT van, SUM(odometer_post - odometer_pre) AS \"Service Miles\"\r\nFROM
+    shifts\r\nWHERE shift_date >= {start_time} AND shift_date <= {end_time}\r\nGROUP
+    BY van;"
   :data_source: main
