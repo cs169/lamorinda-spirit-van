@@ -77,8 +77,8 @@ RSpec.describe Passenger, type: :model do
             email: "unique@example.com",
             race: 1,
             hispanic: "Yes",
-            birthday: Date.today,
-            date_registered: Date.today,
+            birthday: Time.zone.today,
+            date_registered: Time.zone.today,
             address_attributes: address_attrs
           )
         }.to change(Address, :count).by(1)
@@ -95,8 +95,8 @@ RSpec.describe Passenger, type: :model do
           email: "duplicate@example.com",
           race: 1,
           hispanic: "Yes",
-          birthday: Date.today,
-          date_registered: Date.today,
+          birthday: Time.zone.today,
+          date_registered: Time.zone.today,
           address_attributes: {
             street: "123 Shared St",
             city:   "Orinda",

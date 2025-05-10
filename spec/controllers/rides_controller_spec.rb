@@ -16,7 +16,7 @@ RSpec.describe RidesController, type: :controller do
      @ride1 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1)
      @ride2 = FactoryBot.create(:ride, driver: @driver2, passenger: @passenger1)
      @ride3 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1)
-     @ride4 = FactoryBot.create(:ride, date: Date.today - 5.days)
+     @ride4 = FactoryBot.create(:ride, date: Time.zone.today - 5)
    end
 
   describe "GET #index" do
