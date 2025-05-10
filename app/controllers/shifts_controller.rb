@@ -24,7 +24,7 @@ class ShiftsController < ApplicationController
       return
     end
 
-    @rides = Ride.where(date: @shift.shift_date)
+    @rides = Ride.where(date: @shift.shift_date).where.not(id: Ride.select(:next_ride_id).where.not(next_ride_id: nil))
   end
 
   # GET /shifts/new
