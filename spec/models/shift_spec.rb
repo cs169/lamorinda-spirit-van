@@ -59,4 +59,32 @@ RSpec.describe Shift, type: :model do
       expect(Shift.today_driver_shifts(driver.id)).to eq(shift)
     end
   end
+
+
+  describe ".fill_month" do
+    it "adds shifts to a month from the given shift templates" do
+      FactoryBot.create(:shift_template, day_of_week: 1)
+      FactoryBot.create(:shift_template, day_of_week: 4)
+      errors = Shift.fill_month(ShiftTemplate.all, Date.new(2025, 3, 15))
+      expect(errors).to be_empty
+      expect(Shift.count).to eq(9)
+      shift_dates = Shift.all.map { |shift| shift.shift_date }
+      expect(shift_dates).to eq([Date.new(2025, 3, 3),
+                                 Date.new(2025, 3, 6),
+                                 Date.new(2025, 3, 10),
+                                 Date.new(2025, 3, 13),
+                                 Date.new(2025, 3, 17),
+                                 Date.new(2025, 3, 20),
+                                 Date.new(2025, 3, 24),
+                                 Date.new(2025, 3, 27),
+                                 Date.new(2025, 3, 31)])
+    end
+
+    it "doesn't add shifts and returns errors list if something goes wrong" do
+      FactoryBot.build(:shift_template, shift_type: nil).save(validate: false)
+      errors = Shift.fill_month(ShiftTemplate.all, Date.new(2025, 3, 15))
+      expect(errors).to_not be_empty
+      expect(Shift.count).to eq(0)
+    end
+  end
 end
