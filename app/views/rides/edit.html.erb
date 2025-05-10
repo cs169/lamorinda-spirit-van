@@ -46,7 +46,32 @@
 
           <div class="mb-3">
             <%= f.label :amount_paid, "Amount Paid" %>
-            <%= f.number_field :amount_paid, step: 0.01, class: "form-control" %>
+            <%= f.number_field :amount_paid, step: 0.01, class: "form-control", id: "amount_paid_field" %>
+            
+            <!-- Quick Amount Selection Buttons -->
+            <div class="mt-2 mb-3">
+              <label class="form-label text-muted small">Quick Select:</label>
+              <div class="btn-group">
+                <% [0, 5, 10, 20].each do |amount| %>
+                  <button type="button" class="btn btn-sm btn-outline-secondary fare-quick-select" 
+                          data-amount="<%= amount %>">
+                    $<%= amount %>
+                  </button>
+                <% end %>
+              </div>
+              <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                  const amountField = document.getElementById('amount_paid_field');
+                  const quickButtons = document.querySelectorAll('.fare-quick-select');
+                  
+                  quickButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                      amountField.value = this.getAttribute('data-amount');
+                    });
+                  });
+                });
+              </script>
+            </div>
           </div>
 
           <div class="mb-3">
@@ -65,7 +90,15 @@
 
         <!-- Right Column (Passenger + Addresses) -->
         <div class="col-md-6">
-          <h5 class="fw-bold text-success">Passenger Details</h5>
+          <h5 class="fw-bold text-success">
+            Passenger Details
+            <% if @ride.passenger && @ride.passenger.rides.count <= 1 %>
+              <span class="badge bg-warning text-dark" data-bs-toggle="tooltip" data-bs-placement="top" 
+                    title="This is a new passenger with no previous ride history">
+                New Passenger <i class="bi bi-exclamation-triangle"></i>
+              </span>
+            <% end %>
+          </h5>
 
           <!-- Read-only passenger fields -->
           <div class="mb-3">
@@ -85,6 +118,97 @@
                     value="<%= @ride.passenger&.full_address || 'N/A' %>"
                     readonly>
           </div>
+
+          <!-- NEW: Accessibility Information -->
+          <div class="card mb-3">
+            <div class="card-header bg-success text-white py-2">
+              <h6 class="mb-0">Accessibility Needs</h6>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-check mb-2">
+                    <% if @ride.passenger&.wheelchair %>
+                      <input type="checkbox" 
+                            class="form-check-input bg-primary"
+                            checked
+                            disabled
+                            id="wheelchair_display">
+                      <label class="form-check-label fw-bold" for="wheelchair_display">Requires Wheelchair</label>
+                    <% else %>
+                      <input type="checkbox" 
+                            class="form-check-input bg-secondary opacity-50"
+                            disabled
+                            id="wheelchair_display">
+                      <label class="form-check-label" for="wheelchair_display">Requires Wheelchair</label>
+                    <% end %>
+                  </div>
+                  
+                  <div class="form-check mb-2">
+                    <% if @ride.passenger&.disabled %>
+                      <input type="checkbox" 
+                            class="form-check-input bg-primary"
+                            checked
+                            disabled
+                            id="disabled_display">
+                      <label class="form-check-label fw-bold" for="disabled_display">Has Disability</label>
+                    <% else %>
+                      <input type="checkbox" 
+                            class="form-check-input bg-secondary opacity-50"
+                            disabled
+                            id="disabled_display">
+                      <label class="form-check-label" for="disabled_display">Has Disability</label>
+                    <% end %>
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <div class="form-check mb-2">
+                    <% if @ride.passenger&.low_income %>
+                      <input type="checkbox" 
+                            class="form-check-input bg-primary"
+                            checked
+                            disabled
+                            id="low_income_display">
+                      <label class="form-check-label fw-bold" for="low_income_display">Low Income</label>
+                    <% else %>
+                      <input type="checkbox" 
+                            class="form-check-input bg-secondary opacity-50"
+                            disabled
+                            id="low_income_display">
+                      <label class="form-check-label" for="low_income_display">Low Income</label>
+                    <% end %>
+                  </div>
+                  
+                  <div class="form-check mb-2">
+                    <% if @ride.passenger&.need_caregiver %>
+                      <input type="checkbox" 
+                            class="form-check-input bg-primary"
+                            checked
+                            disabled
+                            id="need_caregiver_display">
+                      <label class="form-check-label fw-bold" for="need_caregiver_display">Needs Caregiver</label>
+                    <% else %>
+                      <input type="checkbox" 
+                            class="form-check-input bg-secondary opacity-50"
+                            disabled
+                            id="need_caregiver_display">
+                      <label class="form-check-label" for="need_caregiver_display">Needs Caregiver</label>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Passenger Notes -->
+              <div class="mt-3">
+                <label class="form-label">Accessibility Notes:</label>
+                <textarea class="form-control bg-light" 
+                         readonly
+                         rows="2"><%= @ride.passenger&.notes || 'No notes available' %></textarea>
+              </div>
+            </div>
+          </div>
+          <!-- END: Accessibility Information -->
 
           <!-- Addresses: Side-by-Side -->
           <div class="d-flex justify-content-between">
@@ -191,3 +315,13 @@
     <% end %>
   </div>
 </div>
+
+<!-- Initialize Bootstrap tooltips (for fare quickselects) -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+  });
+</script>
