@@ -32,3 +32,40 @@
     2)) AS total_fare\r\nFROM rides\r\nJOIN passengers ON rides.passenger_id = passengers.id\r\nWHERE
     rides.date >= {start_time} AND rides.date <= {end_time}\r\nGROUP BY passengers.name\r\n"
   :data_source: main
+- :name: Foundation Report
+  :description: Total Low Income Passengers, Total Passengers, % Low Income Passengers,
+    Total Low Income Rides, Total Rides, % Low Income Rides
+  :statement: "SELECT\r\n  COUNT(DISTINCT passengers.id) FILTER (WHERE passengers.low_income
+    IS TRUE) AS \"Total Low Income Passengers\",\r\n  COUNT(DISTINCT passengers.id)
+    AS \"Total Passengers\",\r\n  ROUND(\r\n  (\r\n    COUNT(DISTINCT passengers.id)
+    FILTER (WHERE passengers.low_income IS TRUE) * 100.0 / COUNT(DISTINCT passengers.id)),
+    2) AS \"% Low Income Passengers\",\r\n  COUNT(*) FILTER (WHERE passengers.low_income
+    IS TRUE) AS \"Low Income Rides\",\r\n  COUNT(*) AS \"Total Rides\",\r\n  ROUND(\r\n
+    \ (\r\n    COUNT(*) FILTER (WHERE passengers.low_income IS TRUE) * 100.0 / COUNT(*)),
+    2) AS \"% Low Income Rides\"\r\nFROM rides\r\nJOIN passengers ON rides.passenger_id
+    = passengers.id\r\nWHERE rides.date >= {start_time} AND rides.date <= {end_time};"
+  :data_source: main
+- :name: 5310 Report
+  :description: ''
+  :statement: "WITH rides_stats AS (\r\n    SELECT \r\n        van AS \"Van\", \r\n
+    \       COUNT(DISTINCT date) AS \"Days Used\", \r\n        ROUND(SUM(hours), 1)
+    AS \"Service Hours\",\r\n        COUNT(CASE WHEN passengers.wheelchair IS TRUE
+    AND passengers.need_caregiver IS TRUE THEN 1 END) AS \"Wheelchair with Caregiver\",\r\n
+    \       COUNT(CASE WHEN passengers.wheelchair IS TRUE AND passengers.need_caregiver
+    IS FALSE THEN 1 END) AS \"Wheelchair without Caregiver\",\r\n        COUNT(CASE
+    WHEN passengers.disabled IS TRUE THEN 1 END) AS \"Disabled\",\r\n        COUNT(CASE
+    WHEN (JULIANDAY(rides.date) - JULIANDAY(passengers.birthday)) / 365.25 >= 65 THEN
+    1 END) AS \"Senior\",\r\n        COUNT(CASE WHEN passengers.need_caregiver IS
+    TRUE THEN 1 END) AS \"Trips with Caregivers\",\r\n        COUNT(CASE WHEN passengers.need_caregiver
+    IS FALSE THEN 1 END) AS \"Trips without Caregiver\",\r\n        COUNT(*) AS \"Grand
+    Total Trips\"\r\n    FROM rides \r\n    JOIN passengers ON rides.passenger_id
+    = passengers.id\r\n    WHERE rides.date >= {start_time} AND rides.date <= {end_time}\r\n
+    \   GROUP BY van\r\n)\r\n\r\nSELECT *,\r\n       SUM(\"Grand Total Trips\") OVER
+    () AS \"Total Trips Across ALL Vans\"\r\nFROM rides_stats;"
+  :data_source: main
+- :name: New Passengers
+  :description: ''
+  :statement: "SELECT a.city, GROUP_CONCAT(p.name, ', ') AS names\r\nFROM passengers
+    p JOIN addresses a\r\nON p.address_id = a.id\r\nWHERE p.date_registered >= {start_time}
+    AND p.date_registered <= {end_time}\r\nGROUP BY a.city"
+  :data_source: main
