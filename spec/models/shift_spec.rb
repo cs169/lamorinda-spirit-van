@@ -9,7 +9,7 @@ RSpec.describe Shift, type: :model do
 
   context "validations" do
     it "is valid with valid attributes" do
-      shift = Shift.new(shift_date: Date.today, shift_type: "am", driver: @driver)
+      shift = Shift.new(shift_date: Time.zone.today, shift_type: "am", driver: @driver)
       expect(shift).to be_valid
     end
 
@@ -20,13 +20,13 @@ RSpec.describe Shift, type: :model do
     end
 
     it "is invalid without a shift_type" do
-      shift = Shift.new(shift_date: Date.today, shift_type: nil, driver: @driver)
+      shift = Shift.new(shift_date: Time.zone.today, shift_type: nil, driver: @driver)
       expect(shift).not_to be_valid
       expect(shift.errors[:shift_type]).to include("can't be blank")
     end
 
     it "is invalid without a driver" do
-      shift = Shift.new(shift_date: Date.today, shift_type: "am", driver: nil)
+      shift = Shift.new(shift_date: Time.zone.today, shift_type: "am", driver: nil)
       expect(shift).not_to be_valid
       expect(shift.errors[:driver]).to include("must exist")
     end
@@ -34,10 +34,10 @@ RSpec.describe Shift, type: :model do
 
   describe ".shifts_by_date" do
     it "filters shifts by date" do
-      shift1 = FactoryBot.create(:shift, shift_date: Date.today)
+      shift1 = FactoryBot.create(:shift, shift_date: Time.zone.today)
       FactoryBot.create(:shift, shift_date: Date.yesterday)
 
-      expect(Shift.shifts_by_date(Shift.all, Date.today)).to contain_exactly(shift1)
+      expect(Shift.shifts_by_date(Shift.all, Time.zone.today)).to contain_exactly(shift1)
     end
   end
 
