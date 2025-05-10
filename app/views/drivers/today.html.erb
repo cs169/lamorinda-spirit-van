@@ -17,9 +17,9 @@
       <table class="rides-table">
         <thead>
           <tr>
+            <th>Time</th>
             <th>Van</th>
             <th>Notes</th>
-            <th>Hours</th>
             <th>Passenger</th>
             <th>Wheelchair</th>
             <th>Disabled</th>
@@ -34,9 +34,9 @@
         <tbody>
           <% @rides.each do |ride| %>
             <tr>
+              <td><%= ride.date_and_time.strftime("%I:%M %p") %></td>
               <td><%= ride.van %></td>
               <td><%= ride.notes %></td>
-              <td><%= ride.hours %></td>
               <td><%= ride.passenger.name %></td>
               <td><%= ride.wheelchair ? "Yes" : "No" %></td>
               <td><%= ride.disabled ? "Yes" : "No" %></td>
@@ -60,7 +60,6 @@
         <% @rides.each do |ride| %>
           <div class="ride-block">
             <p><strong>Notes:</strong> <%= ride.notes %></p>
-            <p><strong>Hours:</strong> <%= ride.hours %></p>
             <p><strong>Passenger:</strong> <%= ride.passenger.name %></p>
 
             <% if ride.wheelchair %>
@@ -73,8 +72,8 @@
               <p><strong>Needs Caregiver:</strong> Yes</p>
             <% end %>
 
-            <p><strong>Start Address:</strong> <%= ride.start_address.full_address || "N/A" %></p>
-            <p><strong>Destination Address:</strong> <%= ride.dest_address.full_address || "N/A" %></p>
+            <p><strong>Start Address:</strong> <%= ride.start_address&.name || ride.start_address&.full_address || 'N/A' %></p>
+            <p><strong>Destination Address:</strong> <%= ride.dest_address&.name || ride.dest_address&.full_address || 'N/A' %></p>
             <%= link_to "Info", ride_path(ride.id), class: "btn btn-primary" %>
             <% if ride.feedback %>
               <%= link_to "Feedback", edit_feedback_path(ride.feedback), class: "btn btn-primary" %>
