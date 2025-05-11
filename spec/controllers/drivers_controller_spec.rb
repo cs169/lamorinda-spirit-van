@@ -18,8 +18,8 @@ RSpec.describe DriversController, type: :controller do
     @ride1 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1)
     @ride2 = FactoryBot.create(:ride, driver: @driver2, passenger: @passenger1)
     @ride3 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger2)
-    @ride4 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1, date: Time.zone.today + 1.days)
-    @ride5 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1, date: Time.zone.today - 1.days)
+    @ride4 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1, date: Time.zone.today + 1)
+    @ride5 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1, date: Time.zone.today - 1)
   end
 
   describe "Access control: driver user restrictions" do
@@ -94,12 +94,12 @@ RSpec.describe DriversController, type: :controller do
     end
 
     it "returns yesterday's rides" do
-      get :today, params: { id: @driver1.id, date: Time.zone.today - 1.days }
+      get :today, params: { id: @driver1.id, date: Time.zone.today - 1 }
       expect(assigns(:rides)).to match_array([ @ride5 ])
     end
 
     it "returns tomorrow's rides" do
-      get :today, params: { id: @driver1.id, date: Time.zone.today + 1.days }
+      get :today, params: { id: @driver1.id, date: Time.zone.today + 1 }
       expect(assigns(:rides)).to match_array([ @ride4 ])
     end
   end

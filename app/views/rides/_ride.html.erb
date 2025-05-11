@@ -54,7 +54,7 @@
                 <td><%= ride.driver&.name || 'N/A' %></td>
                 <td><%= ride.van || 'N/A' %></td>
                 <td><%= ride.passenger&.name || 'N/A' %></td>
-                 <td>
+                <td>
                   <% if ride.next_ride_id? %>
                     <span class="badge bg-success">Yes</span>
                   <% else %>
