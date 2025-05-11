@@ -11,7 +11,8 @@ class Address < ApplicationRecord
   before_validation :normalize_fields
 
   def full_address
-    [street, city].compact.join(", ")
+    name_part = name.present? ? "(#{name}) " : ""
+    "#{name_part}#{street}, #{city}"
   end
 
   private
