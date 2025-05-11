@@ -9,11 +9,11 @@
 <div id="shifts-calendar">
   <%# The following line starts with the following parameter which can be replaced by
   'week_calendar' or 'month_calendar' or 'calendar' %>
-  <%= month_calendar(attribute: :shift_date, events: @shifts, start_day: :sunday) do |date, shifts| %>
+  <%= month_calendar(attribute: :shift_date, events: @shifts) do |date, shifts| %>
     <%= date %>
 
     <% if date.month == @date.month && date.year == @date.year && (current_user.admin? || current_user.dispatcher?) %>
-      <%= link_to "New shift", new_shift_path(date: date) %>
+      <%= link_to "New shift", new_shift_path(date: date), data: { date: date.to_s }, class: "new-shift-btn" %>
     <% end %>
 
     <% shifts.each do |shift| %>
@@ -34,4 +34,16 @@
       </div>
     <% end %>
   <% end %>
+
+  <%# Display a Back button only if a return path was previously captured %>
+  <% if @return_to_drivers_today_from_shifts_index.present? %>
+    <div class="calendar-back-btn" >
+        <%= link_to "Back", @return_to_drivers_today_from_shifts_index, class: "btn btn-outline-secondary" %>
+    </div>
+  <% end %>
+
 </div>
+
+<% if current_user.admin? %>
+  <%= render "shift_templates/index" %>
+<% end %>
