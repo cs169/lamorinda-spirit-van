@@ -47,7 +47,7 @@
           <div class="mb-3">
             <%= f.label :amount_paid, "Amount Paid" %>
             <%= f.number_field :amount_paid, step: 0.01, class: "form-control", id: "amount_paid_field" %>
-            
+
             <!-- Quick Amount Selection Buttons -->
             <div class="mt-2 mb-3">
               <label class="form-label text-muted small">Quick Select:</label>
@@ -63,7 +63,7 @@
                 document.addEventListener('DOMContentLoaded', function() {
                   const amountField = document.getElementById('amount_paid_field');
                   const quickButtons = document.querySelectorAll('.fare-quick-select');
-                  
+
                   quickButtons.forEach(button => {
                     button.addEventListener('click', function() {
                       amountField.value = this.getAttribute('data-amount');
@@ -82,7 +82,7 @@
           <div class="mb-3">
             <%= f.label :emailed_driver, "Emailed Driver?", class: "form-label" %>
             <%= f.select :emailed_driver,
-                          [["Yes", "true"], ["No", "false"]],
+                          [["Yes", true], ["No", false]],
                           {},
                           class: "form-select", required: true %>
           </div>
@@ -100,35 +100,34 @@
             <% end %>
           </h5>
 
-        <%= f.hidden_field :passenger_id, class: "form-control"  %>
-        <%= f.hidden_field :wheelchair, class: "form-control" , value: @ride.wheelchair ? "Yes" : "No"  %>
-        <%= f.hidden_field :low_income, class: "form-control" , value: @ride.low_income ? "Yes" : "No"  %>
-        <%= f.hidden_field :disabled, class: "form-control" , value: @ride.disabled ? "Yes" : "No"  %>
-        <%= f.hidden_field :need_caregiver, class: "form-control" , value: @ride.need_caregiver ? "Yes" : "No"  %>
+          <%= f.hidden_field :passenger_id, class: "form-control" %>
+          <%= f.hidden_field :wheelchair, class: "form-control", value: @ride.wheelchair ? "Yes" : "No" %>
+          <%= f.hidden_field :low_income, class: "form-control", value: @ride.low_income ? "Yes" : "No" %>
+          <%= f.hidden_field :disabled, class: "form-control", value: @ride.disabled ? "Yes" : "No" %>
+          <%= f.hidden_field :need_caregiver, class: "form-control", value: @ride.need_caregiver ? "Yes" : "No" %>
 
-        <!-- Read-only passenger fields -->
-        <div class="mb-3">
-          <%= f.label :passenger_name, "Passenger Name" %>
-          <input type="text" 
-                class="form-control bg-secondary text-white opacity-50"
-                style="cursor: not-allowed"
-                value="<%= @ride.passenger&.name || 'N/A' %>" 
-                readonly>
-        </div>
-          
-        <div class="mb-3">
-          <%= f.label :passenger_home_address, "Home Address" %>
-          <input type="text" 
-                class="form-control bg-secondary text-white opacity-50"
-                style="cursor: not-allowed"
-                value="<%= @ride.passenger&.full_address || 'N/A' %>"
-                readonly>
-        </div>
+          <div class="mb-3">
+            <%= f.label :passenger_name, "Passenger Name" %>
+            <input type="text" 
+                   class="form-control bg-secondary text-white opacity-50"
+                   style="cursor: not-allowed"
+                   value="<%= @ride.passenger&.name || 'N/A' %>" 
+                   readonly>
+          </div>
 
-        <div class="mb-3">
-          <%= f.label :ride_type, "Ride Type:" %>
-          <%= f.text_field :ride_type, class: "form-control" %>
-        </div>
+          <div class="mb-3">
+            <%= f.label :passenger_home_address, "Home Address" %>
+            <input type="text" 
+                   class="form-control bg-secondary text-white opacity-50"
+                   style="cursor: not-allowed"
+                   value="<%= @ride.passenger&.full_address || 'N/A' %>"
+                   readonly>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :ride_type, "Ride Type:" %>
+            <%= f.text_field :ride_type, class: "form-control" %>
+          </div>
 
           <!-- NEW: Accessibility Information -->
           <div class="card mb-3">
@@ -141,81 +140,81 @@
                   <div class="form-check mb-2">
                     <% if @ride.passenger&.wheelchair %>
                       <input type="checkbox" 
-                            class="form-check-input bg-primary"
-                            checked
-                            disabled
-                            id="wheelchair_display">
+                             class="form-check-input bg-primary"
+                             checked
+                             disabled
+                             id="wheelchair_display">
                       <label class="form-check-label fw-bold" for="wheelchair_display">Requires Wheelchair</label>
                     <% else %>
                       <input type="checkbox" 
-                            class="form-check-input bg-secondary opacity-50"
-                            disabled
-                            id="wheelchair_display">
+                             class="form-check-input bg-secondary opacity-50"
+                             disabled
+                             id="wheelchair_display">
                       <label class="form-check-label" for="wheelchair_display">Requires Wheelchair</label>
                     <% end %>
                   </div>
-                  
+
                   <div class="form-check mb-2">
                     <% if @ride.passenger&.disabled %>
                       <input type="checkbox" 
-                            class="form-check-input bg-primary"
-                            checked
-                            disabled
-                            id="disabled_display">
+                             class="form-check-input bg-primary"
+                             checked
+                             disabled
+                             id="disabled_display">
                       <label class="form-check-label fw-bold" for="disabled_display">Has Disability</label>
                     <% else %>
                       <input type="checkbox" 
-                            class="form-check-input bg-secondary opacity-50"
-                            disabled
-                            id="disabled_display">
+                             class="form-check-input bg-secondary opacity-50"
+                             disabled
+                             id="disabled_display">
                       <label class="form-check-label" for="disabled_display">Has Disability</label>
                     <% end %>
                   </div>
                 </div>
-                
+
                 <div class="col-md-6">
                   <div class="form-check mb-2">
                     <% if @ride.passenger&.low_income %>
                       <input type="checkbox" 
-                            class="form-check-input bg-primary"
-                            checked
-                            disabled
-                            id="low_income_display">
+                             class="form-check-input bg-primary"
+                             checked
+                             disabled
+                             id="low_income_display">
                       <label class="form-check-label fw-bold" for="low_income_display">Low Income</label>
                     <% else %>
                       <input type="checkbox" 
-                            class="form-check-input bg-secondary opacity-50"
-                            disabled
-                            id="low_income_display">
+                             class="form-check-input bg-secondary opacity-50"
+                             disabled
+                             id="low_income_display">
                       <label class="form-check-label" for="low_income_display">Low Income</label>
                     <% end %>
                   </div>
-                  
+
                   <div class="form-check mb-2">
                     <% if @ride.passenger&.need_caregiver %>
                       <input type="checkbox" 
-                            class="form-check-input bg-primary"
-                            checked
-                            disabled
-                            id="need_caregiver_display">
+                             class="form-check-input bg-primary"
+                             checked
+                             disabled
+                             id="need_caregiver_display">
                       <label class="form-check-label fw-bold" for="need_caregiver_display">Needs Caregiver</label>
                     <% else %>
                       <input type="checkbox" 
-                            class="form-check-input bg-secondary opacity-50"
-                            disabled
-                            id="need_caregiver_display">
+                             class="form-check-input bg-secondary opacity-50"
+                             disabled
+                             id="need_caregiver_display">
                       <label class="form-check-label" for="need_caregiver_display">Needs Caregiver</label>
                     <% end %>
                   </div>
                 </div>
               </div>
-              
+
               <!-- Passenger Notes -->
               <div class="mt-3">
                 <label class="form-label">Accessibility Notes:</label>
                 <textarea class="form-control bg-light" 
-                         readonly
-                         rows="2"><%= @ride.passenger&.notes || 'No notes available' %></textarea>
+                          readonly
+                          rows="2"><%= @ride.passenger&.notes || 'No notes available' %></textarea>
               </div>
             </div>
           </div>
@@ -226,88 +225,87 @@
             <!-- Origin Address -->
             <div class="col-md-5">
               <h5 class="fw-bold text-success text-center">Origin</h5>
-                <div class="mb-3">
-                    <label class="form-label" for="ride_start_address_attributes_name">Address Name</label>
-                    <input type="text"
-                        value="<%= @ride.start_address&.name %>"
-                        name="ride[addresses_attributes][][name]"
-                        class="form-control"
-                        id="ride_start_address_attributes_name"
-                        autocomplete="ride-name">
-                </div>
 
-                <div class="mb-3">
-                    <label class="form-label" for="ride_start_address_attributes_street">Street</label>
-                    <span class="text-danger">*</span>
-                    <input type="text"
-                        value="<%= @ride.start_address&.street %>"
-                        name="ride[addresses_attributes][][street]"
-                        class="form-control"
-                        id="ride_start_address_attributes_street"
-                        required
-                        autocomplete="ride-address">
-                </div>
+              <div class="mb-3">
+                <label class="form-label" for="ride_start_address_attributes_name">Address Name</label>
+                <input type="text"
+                       value="<%= @ride.start_address&.name %>"
+                       name="ride[addresses_attributes][][name]"
+                       class="form-control"
+                       id="ride_start_address_attributes_name"
+                       autocomplete="ride-name">
+              </div>
 
-                <div class="mb-3">
-                    <label class="form-label" for="ride_start_address_attributes_city">City</label>
-                    <span class="text-danger">*</span>
-                    <input type="text"
-                        value="<%= @ride.start_address&.city %>"
-                        name="ride[addresses_attributes][][city]"
-                        class="form-control"
-                        id="ride_start_address_attributes_city"
-                        required
-                        autocomplete="ride-city">
-                </div>
+              <div class="mb-3">
+                <label class="form-label" for="ride_start_address_attributes_street">Street</label>
+                <span class="text-danger">*</span>
+                <input type="text"
+                       value="<%= @ride.start_address&.street %>"
+                       name="ride[addresses_attributes][][street]"
+                       class="form-control"
+                       id="ride_start_address_attributes_street"
+                       required
+                       autocomplete="ride-address">
+              </div>
 
-                <div class="mb-3">
-                    <label class="form-label" for="ride_start_address_attributes_phone">Phone</label>
-                    <input type="text"
-                        value="<%= @ride.start_address&.phone %>"
-                        name="ride[addresses_attributes][][phone]"
-                        class="form-control"
-                        id="ride_start_address_attributes_phone"
-                        autocomplete="ride-phone">
-                </div>
+              <div class="mb-3">
+                <label class="form-label" for="ride_start_address_attributes_city">City</label>
+                <span class="text-danger">*</span>
+                <input type="text"
+                       value="<%= @ride.start_address&.city %>"
+                       name="ride[addresses_attributes][][city]"
+                       class="form-control"
+                       id="ride_start_address_attributes_city"
+                       required
+                       autocomplete="ride-city">
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label" for="ride_start_address_attributes_phone">Phone</label>
+                <input type="text"
+                       value="<%= @ride.start_address&.phone %>"
+                       name="ride[addresses_attributes][][phone]"
+                       class="form-control"
+                       id="ride_start_address_attributes_phone"
+                       autocomplete="ride-phone">
+              </div>
             </div>
 
-          <!-- Spacer -->
-          <div class="col-md-1" id="col-space"></div>
+            <!-- Spacer -->
+            <div class="col-md-1" id="col-space"></div>
 
-          <!-- Destination Address (Existing Stops) -->
-          <% @all_rides.each_with_index do |ride, index| %>
-            <%= render partial: "stop_fields", locals: { address: ride.dest_address, index: index + 1 } %>
-          <% end %>
-
-          <!-- Spacer -->
-          <div class="col-md-1" id="col-space"></div>
-        </div>
-
-        <!-- Add/Delete Stop Buttons -->
-        <div class="text-center mt-4">
-          <div class="mt-3">
-            <button type="button" class="btn btn-success mt-3" id="add-stop-button">Add Stop</button>
-            <button type="button" class="btn btn-danger mt-3" id="delete-stop-button">Delete Stop</button>
+            <!-- Destination Address (Existing Stops) -->
+            <% @all_rides.each_with_index do |ride, index| %>
+              <%= render partial: "stop_fields", locals: { address: ride.dest_address, index: index + 1 } %>
+            <% end %>
           </div>
+
+          <!-- Add/Delete Stop Buttons -->
+          <div class="text-center mt-4">
+            <div class="mt-3">
+              <button type="button" class="btn btn-success mt-3" id="add-stop-button">Add Stop</button>
+              <button type="button" class="btn btn-danger mt-3" id="delete-stop-button">Delete Stop</button>
+            </div>
+          </div>
+
+          <!-- Hidden Template for Additional Destination -->
+          <template id="destination-template">
+            <%= render partial: "stop_fields", locals: { index: "__INDEX__", address: nil } %>
+          </template>
         </div>
 
-        <!-- Hidden Template for Additional Destination -->
-        <template id="destination-template">
-          <%= render partial: "stop_fields", locals: { index: "__INDEX__", address: nil} %>
-        </template>
-      </div>
+        <div class="mb-3">
+          <%= f.label :notes_date_reserved, "Notes / Date Reserved" %>
+          <%= f.text_area :notes_date_reserved, class: "form-control", rows: 3 %>
+        </div>
 
-      <div class="mb-3">
-        <%= f.label :notes_date_reserved, "Notes / Date Reserved" %>
-        <%= f.text_area :notes_date_reserved, class: "form-control", rows: 3 %>
+        <!-- Action Buttons -->
+        <div class="text-center mt-4">
+          <%= f.submit "Update", class: "btn btn-primary" %>
+          <%= link_to "Back", request.referer || root_path, class: "btn btn-secondary" %>
+        </div>
+        <% end %>
       </div>
-
-      <!-- Action Buttons -->
-      <div class="text-center mt-4">
-        <%= f.submit "Update", class: "btn btn-primary" %>
-        <%= link_to "Back to Rides", rides_path, class: "btn btn-secondary" %>
-      </div>
-    <% end %>
   </div>
 </div>
 
