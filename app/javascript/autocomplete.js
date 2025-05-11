@@ -3,7 +3,6 @@
 document.addEventListener("turbo:load", function() {
     // Autocomplete for passengers info
     if (gon.passengers) {
-      console.log("passengers found")
       $( function() {
         $( "#ride_passenger_name" ).autocomplete({
           source: gon.passengers
