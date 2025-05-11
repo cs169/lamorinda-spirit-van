@@ -94,12 +94,12 @@ RSpec.describe DriversController, type: :controller do
     end
 
     it "returns yesterday's rides" do
-      get :today, params: { id: @driver1.id, date: Time.zone.today - 1.days }
+      get :today, params: { id: @driver1.id, date: Time.zone.today - 1 }
       expect(assigns(:rides)).to match_array([ @ride5 ])
     end
 
     it "returns tomorrow's rides" do
-      get :today, params: { id: @driver1.id, date: Time.zone.today + 1.days }
+      get :today, params: { id: @driver1.id, date: Time.zone.today + 1 }
       expect(assigns(:rides)).to match_array([ @ride4 ])
     end
   end

@@ -47,7 +47,7 @@ if User.all.empty?
 end
 
 
-(Date.today.upto(Date.today + 60)).each do |day|
+(Time.zone.today.upto(Time.zone.today + 60)).each do |day|
   drivers = Driver.all
   driver_id_am = day.mday % 6
   driver_id_pm = (day.mday + 1) % 5
