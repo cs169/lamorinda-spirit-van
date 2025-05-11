@@ -87,7 +87,7 @@
   <% if shift_today %>
     <div class="shift-notes">
       <h3>Timeline & Notes</h3>
-      <p><%= shift_today.notes.presence || "No info available for this shift." %></p>
+      <%= simple_format(shift_today.notes.presence || "No info available for this shift.") %>
     </div>
   <% else %>
     <p>No shift found for this driver on <%= @current_date.strftime("%m/%d/%Y") %>.</p>
