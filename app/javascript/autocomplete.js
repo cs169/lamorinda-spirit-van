@@ -16,6 +16,10 @@ document.addEventListener("turbo:load", function() {
       // edits the other fields upon selecting an autocomplete value
       $("#ride_passenger_name").on("autocompleteselect", function (event, ui) {
         const yesNo = (val) => (val ? "Yes" : "No");
+        document.getElementById("ride_start_address_attributes_street").value = ui.item.street;
+        document.getElementById("ride_start_address_attributes_city").value = ui.item.city;
+        document.getElementById("ride_start_address_attributes_state").value = ui.item.state;
+        document.getElementById("ride_start_address_attributes_zip").value = ui.item.zip;
         document.getElementById("ride_passenger_phone").value = ui.item.phone;
         document.getElementById("ride_wheelchair").value = yesNo(ui.item.wheelchair);
         document.getElementById("ride_low_income").value = yesNo(ui.item.low_income);

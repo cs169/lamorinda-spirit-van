@@ -26,7 +26,7 @@ class RidesController < ApplicationController
     @drivers = Driver.order(:name)
 
     # Mapping data for autocomplete
-    gon.passengers = Passenger.all.map { |p| { label: p.name, id: p.id, phone: p.phone, wheelchair: p.wheelchair, low_income: p.low_income, disabled: p.disabled, need_caregiver: p.need_caregiver, notes: p.notes } }
+    gon.passengers = Passenger.all.map { |p| { label: p.name, id: p.id, street: p.address&.street, city: p.address&.city, state: p.address&.state, zip: p.address&.zip,  phone: p.phone, wheelchair: p.wheelchair, low_income: p.low_income, disabled: p.disabled, need_caregiver: p.need_caregiver, notes: p.notes } }
     gon.addresses = Address.all.map { |a| { label: a.street, zip: a.zip, city: a.city } }
   end
 
