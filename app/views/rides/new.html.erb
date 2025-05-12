@@ -138,9 +138,12 @@
 
            <!-- New Address Container with Justify Content Row -->
            <div class="row g-4" id="address-grid">
+              
              <!-- Origin Address -->
               <div class="col-md-5">
                 <h5 class="fw-bold text-success text-center">Origin</h5>
+
+                <%= f.fields_for :addresses do |address_fields| %>
                     <div class="mb-3">
                         <label class="form-label" for="ride_start_address_attributes_street">Street</label>
                         <span class="text-danger">*</span>

@@ -61,18 +61,16 @@
     IS FALSE \r\n                AND passengers.disabled IS TRUE \r\n                THEN
     1 END) AS \"Disabled\",\r\n        COUNT(CASE \r\n            WHEN \r\n                passengers.disabled
     IS FALSE \r\n                    AND passengers.wheelchair IS FALSE\r\n                    THEN
-    1 END) AS \"Seniors\",\r\n        -- Excluding passengers with wheelchairs and
-    have a caregiver\r\n        COUNT(CASE WHEN passengers.need_caregiver IS TRUE
-    AND passengers.wheelchair IS FALSE THEN 1 END) AS \"Trips with Caregivers\"\r\n
-    \   FROM rides \r\n    JOIN passengers ON rides.passenger_id = passengers.id\r\n
-    \   WHERE rides.date >= {start_time} AND rides.date <= {end_time}\r\n    GROUP
-    BY van\r\n), \r\n-- Formula on the 5310 form -- \r\nrides_stats_2 AS (\r\n    SELECT
-    *,\r\n        SUM(\"Wheelchair with Caregiver\" + \"Wheelchair without Caregiver\"
-    + \"Disabled\" + \"Seniors\") OVER (PARTITION BY \"Van\") AS \"Total Trips w/o
-    Caregivers\"\r\n    FROM rides_stats\r\n)\r\n\r\n-- DOES TRIPS WITH CAREGIVERS
-    INCLUDE WHEELCHAIR WITH CAREGIVER?\r\nSELECT *, SUM(\"Trips with Caregivers\"
-    + \"Total Trips w/o Caregivers\") OVER (PARTITION BY \"Van\") AS \"Grand Total\"\r\nFROM
-    rides_stats_2\r\n"
+    1 END) AS \"Seniors\",\r\n        COUNT(CASE WHEN passengers.need_caregiver IS
+    TRUE THEN 1 END) AS \"Trips with Caregivers\"\r\n    FROM rides \r\n    JOIN passengers
+    ON rides.passenger_id = passengers.id\r\n    WHERE rides.date >= {start_time}
+    AND rides.date <= {end_time}\r\n    GROUP BY van\r\n), \r\n-- Formula on the 5310
+    form -- \r\nrides_stats_2 AS (\r\n    SELECT *,\r\n        SUM(\"Wheelchair with
+    Caregiver\" + \"Wheelchair without Caregiver\" + \"Disabled\" + \"Seniors\") OVER
+    (PARTITION BY \"Van\") AS \"Total Trips w/o Caregivers\"\r\n    FROM rides_stats\r\n)\r\n\r\n--
+    DOES TRIPS WITH CAREGIVERS INCLUDE WHEELCHAIR WITH CAREGIVER?\r\nSELECT *, SUM(\"Trips
+    with Caregivers\" + \"Total Trips w/o Caregivers\") OVER (PARTITION BY \"Van\")
+    AS \"Grand Total\"\r\nFROM rides_stats_2\r\n"
   :data_source: main
 - :name: New Passengers
   :description: ''
