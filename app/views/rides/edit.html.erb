@@ -306,7 +306,8 @@
         <!-- Action Buttons -->
         <div class="text-center mt-4">
           <%= f.submit "Update", class: "btn btn-primary" %>
-          <%= link_to "Back", request.referer || root_path, class: "btn btn-secondary" %>
+          <%= link_to "All Rides", rides_path, class: "btn btn-secondary" %>
+          <%= link_to "All Shifts", shifts_path, class: "btn btn-secondary" %>
         </div>
         <% end %>
       </div>

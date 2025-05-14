@@ -42,70 +42,6 @@ const initiateCheckboxes = (table) => {
         });
     });
   }
-
-  // Updates footer with relevant stats
-  const updateFooter = (index, dataTable, footerTH) => {
-    const footerClass = footerTH.attr('class');
-    const parseAmount = val => parseFloat(val.replace(/[\$,]/g, '')) || 0;
-
-    const filteredData = dataTable
-      .cells(null, index, { search: 'applied' })
-      .render('display')
-      .toArray()
-      .filter(val => val && val.trim() !== '');
-
-    if (footerClass.includes('stat-total')) {
-        const total = filteredData.reduce((sum, val) => sum + parseAmount(val), 0);
-        footerTH.html(`${total.toFixed(2)}`);
-
-    } else if (footerClass.includes('stat-total-money')) {
-        const total = filteredData.reduce((sum, val) => sum + parseAmount(val), 0);
-        footerTH.html(`$${total.toFixed(2)}`);
-
-    } else if (footerClass.includes('stat-percentage')) {
-        const cityCounts = {};
-        const total = filteredData.length;
-
-        filteredData.forEach(val => {
-            const cityMatch = val.match(/,\s*(\w+)\s*,/);
-            const city = cityMatch ? cityMatch[1] : "Unknown";
-            cityCounts[city] = (cityCounts[city] || 0) + 1;
-        });
-
-        const percentages = Object.entries(cityCounts)
-            .map(([city, count]) => `${city}: ${(count / total * 100).toFixed(1)}%`)
-            .join("<br>");
-
-        footerTH.html(percentages);
-
-    } else if (footerClass.includes('stat-count')) {
-        footerTH.html(`${filteredData.length} entries`);
-    }
-  } 
-  
-  // Displays relevant data for rides table needed for forms
-  const ridesRelevantStats = function() {
-    const dataTable = this.api();
-    
-    dataTable.columns().every((index) => {
-        const footerTH = $(dataTable.table().footer()).find('tr.column-summary th').eq(index);
-        if (!footerTH.hasClass('ignore')) {
-            updateFooter(index, dataTable, footerTH);
-        }
-    });
-  }
-  
-  // Displays relevant data for passengers table needed for forms
-  const passengersRelevantData = function() {
-    const dataTable = this.api();
-    
-    dataTable.columns().every((index) => {
-        const footerTH = $(dataTable.table().footer()).find('tr.column-summary th').eq(index);
-        if (!footerTH.hasClass('ignore')) {
-            updateFooter(index, dataTable, footerTH);
-        }
-    });
-  }
   
   // Creates the Datatables
   const initiateDatatables = () => {
@@ -129,7 +65,6 @@ const initiateCheckboxes = (table) => {
           dom: "<'row'<'col-md-6'l><'col-md-6'>>" +
             "<'row'<'col-md-12'tr>>" +
             "<'row'<'col-md-6'i><'col-md-6'p>>",
-          // footerCallback: table.footerCallback,
         });
         initiateCheckboxes(newTable);
         initiateSearchbars(newTable);
