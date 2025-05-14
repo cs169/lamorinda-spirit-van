@@ -14,7 +14,7 @@ class Address < ApplicationRecord
     [street, city, state, zip].compact.join(", ")
   end
 
-    private
+  private
   def normalize_fields
     self.street = street.strip.titleize
     self.city = city.strip.titleize

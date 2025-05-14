@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_04_17_221441) do
+ActiveRecord::Schema[7.2].define(version: 2025_04_18_014022) do
   create_table "addresses", force: :cascade do |t|
     t.string "street"
     t.string "city"
@@ -142,7 +142,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_17_221441) do
     t.boolean "low_income", default: false, null: false
     t.boolean "disabled", default: false, null: false
     t.boolean "need_caregiver", default: false, null: false
+    t.integer "next_ride_id"
     t.index ["driver_id"], name: "index_rides_on_driver_id"
+    t.index ["next_ride_id"], name: "index_rides_on_next_ride_id"
     t.index ["passenger_id"], name: "index_rides_on_passenger_id"
   end
 
@@ -154,7 +156,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_17_221441) do
     t.datetime "updated_at", null: false
     t.index ["driver_id"], name: "index_shift_templates_on_driver_id"
   end
-  
+
   create_table "shifts", force: :cascade do |t|
     t.date "shift_date"
     t.string "shift_type"
@@ -187,6 +189,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_17_221441) do
   add_foreign_key "passengers", "addresses"
   add_foreign_key "rides", "drivers"
   add_foreign_key "rides", "passengers"
+  add_foreign_key "rides", "rides", column: "next_ride_id"
   add_foreign_key "shift_templates", "drivers"
   add_foreign_key "shifts", "drivers"
 end

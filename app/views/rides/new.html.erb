@@ -1,199 +1,225 @@
 <!-- app/views/rides/new.html.erb -->
-  <div class="row justify-content-center">
-    <div class="col-md-10">
-      <h1 class="mb-4 text-center">New Ride (THIS PAGE WILL BE REWORKED) </h1>
+ <div class="row justify-content-center">
+   <div class="col-md-10">
+     <h1 class="mb-4 text-center">New Ride </h1>
 
-      <!-- Display error messages -->
-      <% if @ride.errors.any? %>
-        <div class="alert alert-danger">
-          <h4><%= pluralize(@ride.errors.count, "error") %> prohibited this ride from being saved:</h4>
-          <ul>
-            <% @ride.errors.full_messages.each do |message| %>
-              <li><%= message %></li>
-            <% end %>
-          </ul>
-        </div>
-      <% end %>
 
-      <!-- Display success notice -->
-      <% if flash[:notice].present? %>
-        <div class="alert alert-success">
-          <%= flash[:notice] %>
-        </div>
-      <% end %>
+     <!-- Display error messages -->
+     <% if @ride.errors.any? %>
+       <div class="alert alert-danger">
+         <h4><%= pluralize(@ride.errors.count, "error") %> prohibited this ride from being saved:</h4>
+         <ul>
+           <% @ride.errors.full_messages.each do |message| %>
+             <li><%= message %></li>
+           <% end %>
+         </ul>
+       </div>
+     <% end %>
 
-      <%= form_with(model: @ride, local: true) do |f| %>
-        <div class="row">
-          <!-- Left Column (Ride Details) -->
-          <div class="col-md-6 border-end">
-            <h5 class="fw-bold text-success">Ride Details</h5>
+
+     <!-- Display success notice -->
+     <% if flash[:notice].present? %>
+       <div class="alert alert-success">
+         <%= flash[:notice] %>
+       </div>
+     <% end %>
+
+
+     <%= form_with(model: @ride, local: true) do |f| %>
+       <div class="row">
+         <!-- Left Column (Ride Details) -->
+         <div class="col-md-6 border-end">
+           <h5 class="fw-bold text-success">Ride Details</h5>
+
+
+           <div class="mb-3">
+             <%= f.label :date, "Date" %> <span class="text-danger">*</span>
+             <%= f.date_field :date, class: "form-control", required: true %>
+           </div>
+
+           <div class="mb-3">
+             <%= f.label :driver_id, "Driver" %>
+             <%= f.select :driver_id,
+                          options_from_collection_for_select(@drivers, :id, :name, @ride.driver_id),
+                          { prompt: "Select a Driver" },
+                          { class: "form-select", required: true  }%>
+           </div>
+
+
+           <div class="mb-3">
+             <%= f.label :van, "Van" %>
+             <%= f.number_field :van, class: "form-control" %>
+           </div>
+
+
+           <div class="mb-3">
+             <%= f.label :notes, "Notes" %>
+             <%= f.text_area :notes, class: "form-control", rows: 3 %>
+           </div>
+
+
+           <div class="mb-3">
+             <%= f.label :emailed_driver, "Emailed Driver?", class: "form-label" %>
+             <%= f.select :emailed_driver,
+                          [["Yes", true], ["No", false]],
+                          {},
+                          class: "form-select", required: true %>
+           </div>
+         </div>
+
+
+         <!-- Right Column (Passenger + Addresses) -->
+         <div class="col-md-6">
+           <h5 class="fw-bold text-success">Passenger Details</h5>
+
+           <div class="mb-3">
+             <%= f.label :passenger_name, "Passenger" %>
+             <%= f.text_field :passenger_name, class: "form-control"  %>
+             <%= link_to 'New Passenger', new_passenger_path, class: "btn btn-success mt-3" %>
+           </div>
+
+           <%= f.hidden_field :passenger_id, class: "form-control"  %>
+          
+           <div class="mb-3">
+             <%= f.label :passenger_phone, "Phone Number:" %>
+             <%= f.text_field :passenger_phone,
+                  class: "form-control bg-secondary text-white opacity-50",
+                  style: "cursor: not-allowed",
+                  readonly: true %>
+           </div>
+
+           <div class="mb-3">
+            <%= f.label :wheelchair, "Wheelchair" %>
+            <%= f.text_field :wheelchair,
+                  value: @ride.wheelchair ? "Yes" : "",
+                  class: "form-control bg-secondary text-white opacity-50",
+                  style: "cursor: not-allowed",
+                  readonly: true %>
+           </div>
 
             <div class="mb-3">
-              <%= f.label :date, "Date" %> <span class="text-danger">*</span>
-              <%= f.date_field :date, class: "form-control", required: true %>
-            </div>
-
-            <div class="mb-3">
-              <%= f.label :driver_id, "Driver" %>
-              <%= f.select :driver_id,
-                           options_from_collection_for_select(@drivers, :id, :name, @ride.driver_id),
-                           { prompt: "Select a Driver" },
-                           { class: "form-select", required: true  }%>
-            </div>
-
-            <div class="mb-3">
-              <%= f.label :van, "Van" %>
-              <%= f.number_field :van, class: "form-control" %>
-            </div>
-
-            <div class="mb-3">
-              <%= f.label :notes, "Notes" %>
-              <%= f.text_area :notes, class: "form-control", rows: 3 %>
-            </div>
-
-            <div class="mb-3">
-              <%= f.label :emailed_driver, "Emailed Driver?", class: "form-label" %>
-              <%= f.select :emailed_driver,
-                           [["Yes", true], ["No", false]],
-                           {},
-                           class: "form-select", required: true %>
-            </div>
-          </div>
-
-          <!-- Right Column (Passenger + Addresses) -->
-          <div class="col-md-6">
-            <h5 class="fw-bold text-success">Passenger Details</h5>
-
-            <!-- If you want to allow picking or associating a passenger, you can add a dropdown or fields here. 
-                 For now, we keep them read-only or placeholder to mimic the structure. -->
-            <div class="mb-3">
-              <%= f.label :passenger_name, "Passenger" %>
-              <%= f.text_field :passenger_name, class: "form-control"  %> 
-              <%= link_to 'New Passenger', new_passenger_path, class: "btn btn-success mt-3" %>
-            </div>
-
-            <%= f.hidden_field :passenger_id, class: "form-control"  %> 
-
-            <div class="mb-3">
-              <%= f.label :passenger_phone, "Phone Number:" %>
-              <%= f.text_field :passenger_phone, class: "form-control", readonly: true  %> 
+              <%= f.label :low_income, "Low Income" %>
+               <%= f.text_field :low_income,
+                  value: @ride.low_income ? "Yes" : "",
+                  class: "form-control bg-secondary text-white opacity-50",
+                  style: "cursor: not-allowed",
+                  readonly: true %>
             </div>
             <div class="mb-3">
-              <%= f.label :passenger_notes, "Notes about Passenger:" %>
-              <%= f.text_field :passenger_notes, class: "form-control", readonly: true  %> 
+              <%= f.label :disabled, "Disabled" %>
+              <%= f.text_field :disabled,
+                  value: @ride.disabled ? "Yes" : "",
+                  class: "form-control bg-secondary text-white opacity-50",
+                  style: "cursor: not-allowed",
+                  readonly: true %>
+            </div>
+            <div class="mb-3">
+            <%= f.label :need_caregiver, "Needs Caregiver" %>
+            <%= f.text_field :need_caregiver,
+                  value: @ride.need_caregiver ? "Yes" : "",
+                  class: "form-control bg-secondary text-white opacity-50",
+                  style: "cursor: not-allowed",
+                  readonly: true %>
             </div>
 
+           <div class="mb-3">
+             <%= f.label :passenger_notes, "Notes about Passenger:" %>
+              <%= f.text_field :passenger_notes,
+                  class: "form-control bg-secondary text-white opacity-50",
+                  style: "cursor: not-allowed",
+                  readonly: true %>
+           </div>
 
-            <!-- New Address Container with Justify Content Row -->
-            <div class="d-flex justify-content-between">
-              <!-- Origin Address -->
+           <div class="mb-3">
+            <%= f.label :destination_type, "Destination Type:" %>
+            <%= f.text_field :destination_type, class: "form-control", rows: 3 %>
+           </div>
+
+           <!-- New Address Container with Justify Content Row -->
+           <div class="row g-4" id="address-grid">
+             <!-- Origin Address -->
               <div class="col-md-5">
-                <h5 class="fw-bold text-success text-center">Origin Address</h5>
-                <%= f.fields_for :start_address do |start_f| %>
-                  <div class="mb-3">
-                    <%= start_f.label :street, "Street", class: "form-label" %>
-                    <span class="text-danger">*</span>
-                    <%= start_f.text_field :street,
-                                           value: @ride.start_address&.street,
-                                           class: "form-control",
-                                           required: true,
-                                           autocomplete: "ride-address" %>
-                  </div>
+                <h5 class="fw-bold text-success text-center">Origin</h5>
+                    <div class="mb-3">
+                        <label class="form-label" for="ride_start_address_attributes_street">Street</label>
+                        <span class="text-danger">*</span>
+                        <input type="text"
+                            name="ride[addresses_attributes][][street]"
+                            class="form-control"
+                            id="ride_start_address_attributes_street"
+                            required
+                            autocomplete="ride-address">
+                    </div>
 
-                  <div class="mb-3">
-                    <%= start_f.label :city, "City", class: "form-label" %>
-                    <span class="text-danger">*</span>
-                    <%= start_f.text_field :city,
-                                           value: @ride.start_address&.city,
-                                           class: "form-control",
-                                           required: true,
-                                           autocomplete: "ride-address" %>
-                  </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="ride_start_address_attributes_city">City</label>
+                        <span class="text-danger">*</span>
+                        <input type="text"
+                            name="ride[addresses_attributes][][city]"
+                            class="form-control"
+                            id="ride_start_address_attributes_city"
+                            required
+                            autocomplete="ride-city">
+                    </div>
 
-                  <div class="mb-3">
-                    <%= start_f.label :state, "State", class: "form-label" %>
-                    <span class="text-danger">*</span>
-                    <%= start_f.text_field :state,
-                                           value: @ride.start_address&.state,
-                                           class: "form-control",
-                                           required: true,
-                                           autocomplete: "ride-address" %>
-                  </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="ride_start_address_attributes_state">State</label>
+                        <span class="text-danger">*</span>
+                        <input type="text"
+                            name="ride[addresses_attributes][][state]"
+                            class="form-control"
+                            id="ride_start_address_attributes_state"
+                            required
+                            autocomplete="ride-state">
+                    </div>
 
-                  <div class="mb-3">
-                    <%= start_f.label :zip, "Zip", class: "form-label" %>
-                    <span class="text-danger">*</span>
-                    <%= start_f.text_field :zip,
-                                           value: @ride.start_address&.zip,
-                                           class: "form-control",
-                                           required: true,
-                                           autocomplete: "ride-address" %>
-                  </div>
-                <% end %>
-              </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="ride_start_address_attributes_zip">Zip</label>
+                        <span class="text-danger">*</span>
+                        <input type="text"
+                            name="ride[addresses_attributes][][zip]"
+                            class="form-control"
+                            id="ride_start_address_attributes_zip"
+                            required
+                            autocomplete="ride-zip">
+                    </div>
 
-              <!-- Spacer -->
-              <div class="col-md-1"></div>
+                </div>
 
-              <!-- Destination Address -->
-              <div class="col-md-5">
-                <h5 class="fw-bold text-success text-center">Destination Address</h5>
-                <%= f.fields_for :dest_address do |dest_f| %>
-                  <div class="mb-3">
-                    <%= dest_f.label :street, "Street", class: "form-label" %>
-                    <span class="text-danger">*</span>
-                    <%= dest_f.text_field :street,
-                                           value: @ride.dest_address&.street,
-                                           class: "form-control",
-                                           required: true,
-                                           autocomplete: "ride-address" %>
-                  </div>
+             <!-- Spacer -->
+             <div class="col-md-1" id="col-space"></div>
 
-                  <div class="mb-3">
-                    <%= dest_f.label :city, "City", class: "form-label" %>
-                    <span class="text-danger">*</span>
-                    <%= dest_f.text_field :city,
-                                           value: @ride.dest_address&.city,
-                                           class: "form-control",
-                                           required: true,
-                                           autocomplete: "ride-address" %>
-                  </div>
+             <!-- Destination Address -->
+              <%= render partial: "stop_fields", locals: {index: 1, address: nil} %>                 
+             </div>
 
-                  <div class="mb-3">
-                    <%= dest_f.label :state, "State", class: "form-label" %>
-                    <span class="text-danger">*</span>
-                    <%= dest_f.text_field :state,
-                                           value: @ride.dest_address&.state,
-                                           class: "form-control",
-                                           required: true,
-                                           autocomplete: "ride-address" %>
-                  </div>
+             <div class="text-center mt-4">
+              <div class="mt-3">
+                <button type="button" class="btn btn-success mt-3" id="add-stop-button">Add Stop</button>
+                <button type="button" class="btn btn-danger mt-3" id="delete-stop-button">Delete Stop</button>
+             </div>
+           </div>
+           </div>
 
-                  <div class="mb-3">
-                    <%= dest_f.label :zip, "Zip", class: "form-label" %>
-                    <span class="text-danger">*</span>
-                    <%= dest_f.text_field :zip,
-                                           value: @ride.dest_address&.zip,
-                                           class: "form-control",
-                                           required: true,
-                                           autocomplete: "ride-address" %>
-                  </div>
-                <% end %>
-              </div>
-            </div>
 
-            <div class="mb-3">
-              <%= f.label :notes_date_reserved, "Notes / Date Reserved" %>
-              <%= f.text_area :notes_date_reserved, class: "form-control", rows: 3 %>
-            </div>
-          </div>
-        </div>
+           <!-- Hidden Template for Additional Destination -->
+          <template id="destination-template">
+            <%= render partial: "stop_fields", locals: {index: "__INDEX__", address: nil} %>
+          </template>
 
-        <!-- Action Buttons -->
-        <div class="text-center mt-4">
-          <%= f.submit "Create Ride", class: "btn btn-success" %>
-          <%= link_to "Back to Rides", rides_path, class: "btn btn-secondary" %>
-        </div>
-      <% end %>
-    </div>
-  </div>
+           <div class="mb-3">
+             <%= f.label :notes_date_reserved, "Notes / Date Reserved" %>
+             <%= f.text_area :notes_date_reserved, class: "form-control", rows: 3 %>
+         </div>
+       </div>
+
+
+       <!-- Action Buttons -->
+       <div class="text-center mt-4">
+         <%= f.submit "Create Ride", class: "btn btn-success" %>
+         <%= link_to "Back to Rides", rides_path, class: "btn btn-secondary" %>
+       </div>
+     <% end %>
+   </div>
+ </div>
+

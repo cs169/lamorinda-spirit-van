@@ -4,13 +4,45 @@ require "rails_helper"
 
 RSpec.describe Passenger, type: :model do
   before(:each) do
-    @passenger1 = FactoryBot.create(:passenger, hispanic: true)
-    @passenger2 = FactoryBot.create(:passenger)
+    @passenger1 = FactoryBot.create(
+      :passenger,
+      hispanic: true,
+      wheelchair: true,
+      low_income: false,
+      disabled: true,
+      need_caregiver: false
+    )
+    @passenger2 = FactoryBot.create(
+      :passenger,
+      hispanic: false,
+      wheelchair: false,
+      low_income: true,
+      disabled: false,
+      need_caregiver: true
+    )
   end
 
   describe "Hispanic" do
     it "is Hispanic" do
       expect(@passenger1.hispanic?).to eq(true)
+      expect(@passenger2.hispanic?).to eq(false)
+    end
+  end
+
+  describe "Boolean Attributes" do
+    it "checks wheelchair, disabled, and caregiver needs" do
+      expect(@passenger1.wheelchair).to eq(true)
+      expect(@passenger1.disabled).to eq(true)
+      expect(@passenger1.need_caregiver).to eq(false)
+
+      expect(@passenger2.wheelchair).to eq(false)
+      expect(@passenger2.disabled).to eq(false)
+      expect(@passenger2.need_caregiver).to eq(true)
+    end
+
+    it "checks low_income field" do
+      expect(@passenger1.low_income).to eq(false)
+      expect(@passenger2.low_income).to eq(true)
     end
   end
 
