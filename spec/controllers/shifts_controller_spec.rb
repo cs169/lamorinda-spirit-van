@@ -213,9 +213,9 @@ RSpec.describe ShiftsController, type: :controller do
       FactoryBot.create(:shift, date: "2025-05-23")
       FactoryBot.create(:shift, date: "2025-05-21")
 
-      get :shifts_for_day, params: {date: "2025-05-22"}
+      get :shifts_for_day, params: { date: "2025-05-22" }
 
-      expected_list = [shift1, shift2].map {|shift| { "text" => "#{shift.shift_type} shift with driver #{shift.driver.name}", "value" => shift.id }}
+      expected_list = [shift1, shift2].map { |shift| { "text" => "#{shift.shift_type} shift with driver #{shift.driver.name}", "value" => shift.id } }
 
       expect(JSON.parse(response.body)).to include(*expected_list)
     end
