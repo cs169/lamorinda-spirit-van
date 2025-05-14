@@ -5,7 +5,7 @@
     <div class="button-group">
       <%= link_to "Last Day", today_driver_path(date: @current_date - 1.day), class: "btn btn-secondary" %>
       <%= link_to "Back to Today", today_driver_path(date: Time.zone.today), class: "btn btn-primary" %>
-      <%= link_to "Next day", today_driver_path(date: @current_date + 1.day), class: "btn btn-secondary" %>
+      <%= link_to "Next Day", today_driver_path(date: @current_date + 1.day), class: "btn btn-secondary" %>
       <button onclick="window.print()" class="btn btn-primary" id="btn-print">Print</button>
     </div>
   </form>
@@ -20,6 +20,10 @@
             <th>Van</th>
             <th>Notes</th>
             <th>Hours</th>
+            <th>Passenger</th>
+            <th>Wheelchair</th>
+            <th>Disabled</th>
+            <th>Needs Caregiver</th>
             <th>Fee</th>
             <th>Info</th>
             <th>Feedback</th>
@@ -31,9 +35,17 @@
               <td><%= ride.shift.van %></td>
               <td><%= ride.notes %></td>
               <td><%= ride.hours %></td>
+              <td><%= ride.passenger.name %></td>
+              <td><%= ride.wheelchair ? "Yes" : "" %></td>
+              <td><%= ride.disabled ? "Yes" : "" %></td>
+              <td><%= ride.need_caregiver ? "Yes" : "" %></td>
               <td><%= number_to_currency(ride.amount_paid) %></td>
               <td><%= link_to "Info", ride_path(ride.id), class: "btn btn-primary" %></td>
-              <td><%= link_to "Feedback", edit_feedback_path(ride.feedback), class: "btn btn-primary" %></td>
+              <% if ride.feedback %>
+                <td><%= link_to "Feedback", edit_feedback_path(ride.feedback), class: "btn btn-primary" %></td>
+              <% else %>
+                <td>No Feedback</td>
+              <% end %>
             </tr>
           <% end %>
         </tbody>
@@ -43,11 +55,26 @@
       <div class="rides-list">
         <% @rides.each do |ride| %>
           <div class="ride-block">
-            <p><strong>Van:</strong> <%= ride.shift.van %></p>
             <p><strong>Notes:</strong> <%= ride.notes %></p>
             <p><strong>Hours:</strong> <%= ride.hours %></p>
-            <p><strong>Fee:</strong> <%= number_to_currency(ride.amount_paid) %></p>
+            <p><strong>Passenger:</strong> <%= ride.passenger.name %></p>
+
+            <% if ride.wheelchair %>
+              <p><strong>Wheelchair:</strong> Yes</p>
+            <% end %>
+            <% if ride.disabled %>
+              <p><strong>Disabled:</strong> Yes</p>
+            <% end %>
+            <% if ride.need_caregiver %>
+              <p><strong>Needs Caregiver:</strong> Yes</p>
+            <% end %>
+
+            <p><strong>Start Address:</strong> <%= ride.start_address.full_address || "N/A" %></p>
+            <p><strong>Destination Address:</strong> <%= ride.dest_address.full_address || "N/A" %></p>
             <%= link_to "Info", ride_path(ride.id), class: "btn btn-primary" %>
+            <% if ride.feedback %>
+              <%= link_to "Feedback", edit_feedback_path(ride.feedback), class: "btn btn-primary" %>
+            <% end %>
           </div>
         <% end %>
       </div>
@@ -60,15 +87,19 @@
   <% if shift_today %>
     <div class="shift-notes">
       <h3>Timeline & Notes</h3>
-      <p><%= shift_today.notes.presence || "No info available for this shift." %></p>
+      <%= simple_format(shift_today.notes.presence || "No info available for this shift.") %>
     </div>
   <% else %>
     <p>No shift found for this driver on <%= @current_date.strftime("%m/%d/%Y") %>.</p>
   <% end %>
   
-  <div id="btn-shift">
-    <%= link_to "View Other Drivers", drivers_path(dont_jump: true), class: "btn btn-primary" %>
-    <%= link_to "View All Shifts", shifts_path, class: "btn btn-primary" %>
+  <div class="btn-shift" id="btn-shift">
+    <%# Pass the current page's full URL to the drivers index via the `return_to_drivers_today_from_drivers_index` parameter %>
+    <%= link_to "View Other Drivers", drivers_path(dont_jump: true, return_to_drivers_today_from_drivers_index: request.fullpath), class: "btn btn-primary" %>
+    
+    <%# Pass the current page's full URL to the shifts index via the `return_to` parameter %>
+    <%= link_to "View All Shifts", shifts_path(return_to_drivers_today_from_shifts_index: request.fullpath), class: "btn btn-primary" %>
+    
     <% if @shift %>
       <%= link_to "Shift Feedback", feedback_shift_path(@shift.id), class: "btn btn-primary" %>
     <% end %> 

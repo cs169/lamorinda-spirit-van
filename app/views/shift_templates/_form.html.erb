@@ -1,0 +1,40 @@
+<%= form_with(model: shift_template) do |form| %>
+  <% if shift_template.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(shift_template.errors.count, "error") %> prohibited this shift_template from being saved:</h2>
+
+      <ul>
+        <% shift_template.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :shift_type, style: "display: block" %>
+    <%= form.text_field :shift_type, class: "form-control" %>
+  </div>
+
+  <div>
+    <%= form.label :day_of_week, style: "display: block" %>
+    <%= form.select :day_of_week, (0..6).map {|i| [t('date.day_names')[i], i]},  #weekday_options_for_select(index_as_value: true),
+        { prompt: "Select a Day" },
+        { class: "form-select", required: true  } %>
+  </div>
+
+  <div>
+    <%= form.label :driver_id, style: "display: block" %>
+    <%= form.select :driver_id, options_from_collection_for_select(@drivers, :id, :name),
+        { prompt: "Select a Driver" },
+        { class: "form-select", required: true } %>
+  </div>
+
+  <div class="text-left mt-4">
+    <%= form.submit class: "form-control", class: "btn btn-success" %>
+    <%= link_to "Back to shifts", request.referer || shifts_path, class: "btn btn-secondary" %>
+    <%= link_to 'Delete', shift_template,
+                  data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' },
+                  class: "btn btn-danger" %>
+  </div>
+<% end %>

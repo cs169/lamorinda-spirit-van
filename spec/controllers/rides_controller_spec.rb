@@ -12,7 +12,7 @@ RSpec.describe RidesController, type: :controller do
 
      @shift1 = FactoryBot.create(:shift, driver: @driver1)
      @shift2 = FactoryBot.create(:shift, driver: @driver2)
-     @shift_5_days_ago = FactoryBot.create(:shift, date: Date.today - 5.days)
+     @shift_5_days_ago = FactoryBot.create(:shift, date: Time.zone.today - 5.days)
 
 
      @address1 = FactoryBot.create(:address)

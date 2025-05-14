@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Ride < ApplicationRecord
-  has_one :feedback
+  has_one :feedback, dependent: :destroy
   belongs_to :passenger, optional: true
   belongs_to :shift
   has_one :driver, through: :shift
@@ -49,7 +49,7 @@ class Ride < ApplicationRecord
   #     rides = rides.where("date >= ?", Date.parse(filter_params[:start_date]))
   #   end
 
-  #   date_end = filter_params[:end_date].present? ? Date.parse(filter_params[:end_date]) : Date.today
+  #   date_end = filter_params[:end_date].present? ? Date.parse(filter_params[:end_date]) : Time.zone.today
   #   rides = rides.where("date <= ?", date_end) if date_end
 
   #   # Handle simple presence filter

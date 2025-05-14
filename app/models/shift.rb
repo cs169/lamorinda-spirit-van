@@ -19,4 +19,32 @@ class Shift < ApplicationRecord
     shifts = shifts_by_date(shifts_by_driver(Shift.all, driver_id), date)
     shifts.first
   end
+
+  def self.fill_month(templates, month_date)
+    current_shifts = shifts_for_month(month_date)
+
+    batch = []
+    (month_date.beginning_of_month..month_date.end_of_month).each do |date|
+      templates.where(day_of_week: date.wday).each do |template|
+        new_shift_attributes = { driver_id: template.driver_id, shift_type: template.shift_type, shift_date: date }
+
+        unless current_shifts.exists?(new_shift_attributes)
+          batch.push Shift.new(new_shift_attributes)
+        end
+      end
+    end
+
+    Shift.transaction { batch.each { |shift| shift.save } }
+
+    batch.map { |shift| shift.errors.full_messages }.flatten
+  end
+
+  def self.clear_month(month_date)
+    Shift.destroy shifts_for_month(month_date).map(&:id)
+  end
+
+  private
+  def self.shifts_for_month(month_date)
+    Shift.where("shift_date >= ? AND shift_date <= ?", month_date.beginning_of_month, month_date.end_of_month)
+  end
 end

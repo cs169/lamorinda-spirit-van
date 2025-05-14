@@ -138,11 +138,18 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_27_231410) do
     t.boolean "low_income", default: false, null: false
     t.boolean "disabled", default: false, null: false
     t.boolean "need_caregiver", default: false, null: false
-    t.integer "next_ride_id"
     t.integer "shift_id"
-    t.index ["next_ride_id"], name: "index_rides_on_next_ride_id"
     t.index ["passenger_id"], name: "index_rides_on_passenger_id"
     t.index ["shift_id"], name: "index_rides_on_shift_id"
+  end
+
+  create_table "shift_templates", force: :cascade do |t|
+    t.string "shift_type"
+    t.integer "day_of_week"
+    t.integer "driver_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["driver_id"], name: "index_shift_templates_on_driver_id"
   end
 
   create_table "shifts", force: :cascade do |t|
@@ -177,7 +184,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_27_231410) do
   add_foreign_key "feedbacks", "rides"
   add_foreign_key "passengers", "addresses"
   add_foreign_key "rides", "passengers"
-  add_foreign_key "rides", "rides", column: "next_ride_id"
   add_foreign_key "rides", "shifts"
+  add_foreign_key "shift_templates", "drivers"
   add_foreign_key "shifts", "drivers"
 end
