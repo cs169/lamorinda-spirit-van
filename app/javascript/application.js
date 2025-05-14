@@ -3,4 +3,5 @@ import "@hotwired/turbo-rails"
 import "controllers"
 import "datatables"
 import "autocomplete"
+import "new_ride_shift_selector"
 

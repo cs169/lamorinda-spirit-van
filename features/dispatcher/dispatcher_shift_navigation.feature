@@ -11,7 +11,7 @@ Feature: Dispatcher Shift Navigation
       | name       |
       | John Smith |
     And the following shift exists:
-      | driver     | shift_date | shift_type |
+      | driver     | date | shift_type |
       | John Smith | Time.zone.today | am |
     And I am on the shifts calendar page
 

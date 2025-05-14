@@ -3,7 +3,8 @@
 class Ride < ApplicationRecord
   has_one :feedback, dependent: :destroy
   belongs_to :passenger, optional: true
-  belongs_to :driver
+  belongs_to :shift
+  has_one :driver, through: :shift
   belongs_to :start_address, class_name: "Address", foreign_key: :start_address_id
   belongs_to :dest_address, class_name: "Address", foreign_key: :dest_address_id
 
@@ -11,7 +12,7 @@ class Ride < ApplicationRecord
   accepts_nested_attributes_for :dest_address
 
   def emailed_driver?
-    self.emailed_driver == "true"
+    self.shift.emailed_driver == "true"
   end
 
   # # Filtering logic for rides table

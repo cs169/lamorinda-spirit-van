@@ -41,8 +41,8 @@ class DriversController < ApplicationController
                       Time.zone.today
                     end
 
-    @rides = @driver.rides.where(date: @current_date)
     @shift = @driver.shifts.where(shift_date: @current_date).first
+    @rides = @driver.rides.where(shift: @shift)
 
     # Clear return_to_driver parameter after redirect from drivers index page to /drivers/id/today?date=XXX page
     clear_return_to(:return_to_drivers_today_from_drivers_index)

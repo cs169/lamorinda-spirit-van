@@ -2,8 +2,9 @@
 
 FactoryBot.define do
   factory :shift do
-    shift_date { DateTime.now }
+    date { DateTime.now }
     shift_type { "am" }
+    emailed_driver { false }
     association :driver
   end
 end

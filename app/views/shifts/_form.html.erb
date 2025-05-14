@@ -12,10 +12,8 @@
   <% end %>
 
   <div>
-    <%= form.label :shift_date, style: "display: block" %>
-    <%# Rails will automatically generate shift_date filed id as "shift_shift_date" %>
-    <%# Unless we rename the model field later %>
-    <%= form.date_field :shift_date, required: true, :value => params[:date] || shift.shift_date %>
+    <%= form.label :date, style: "display: block" %>
+    <%= form.date_field :date, required: true, :value => params[:date] || shift.date %>
   </div>
 
   <div>
