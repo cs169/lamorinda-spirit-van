@@ -129,4 +129,20 @@ RSpec.describe ShiftsController, type: :controller do
       expect(response).to redirect_to(shifts_path)
     end
   end
+
+  describe "GET #shifts_for_day" do
+    render_views
+    it "returns a json object with the list of shift descriptions and id's" do
+      shift1 = FactoryBot.create(:shift, shift_type: "pm", date: "2025-05-22")
+      shift2 = FactoryBot.create(:shift, shift_type: "am", date: "2025-05-22")
+      FactoryBot.create(:shift, date: "2025-05-23")
+      FactoryBot.create(:shift, date: "2025-05-21")
+
+      get :shifts_for_day, params: {date: "2025-05-22"}
+
+      expected_list = [shift1, shift2].map {|shift| { "text" => "#{shift.shift_type} shift with driver #{shift.driver.name}", "value" => shift.id }}
+
+      expect(JSON.parse(response.body)).to include(*expected_list)
+    end
+  end
 end
