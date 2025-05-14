@@ -27,61 +27,27 @@ const initiateCheckboxes = (table) => {
   };
   
   // Generates search bars for searching of each column of datatables
-  const initiateSearchbars = (table) => {
+  const initiateSearchbars = table => {
     table.columns('.text-filter').every(function () {
       const column = this;
-    
-      // Create search input element and append it to the table
+      const $footerCell = $(column.footer()).empty();
       $('<input type="text"/>')
-        .attr('placeholder', `Search ${column.header().textContent.trim()}...`)
-        .appendTo(column.footer())
+        .attr('placeholder', `${column.header().textContent.trim()}...`)
+        .css({
+          'width':        '100%',
+          'box-sizing':   'border-box',
+          'margin':       '0',
+          'padding':      '2px 4px',
+          'font-size':    '0.8rem'
+        })
+        .appendTo($footerCell)
         .on('keyup change clear', function () {
           if (column.search() !== this.value) {
             column.search(this.value).draw();
           }
         });
     });
-  }
-
-  // Updates footer with relevant stats
-  const updateFooter = (index, dataTable, footerTH) => {
-    const footerClass = footerTH.attr('class');
-    const parseAmount = val => parseFloat(val.replace(/[\$,]/g, '')) || 0;
-
-    const filteredData = dataTable
-      .cells(null, index, { search: 'applied' })
-      .render('display')
-      .toArray()
-      .filter(val => val && val.trim() !== '');
-
-    if (footerClass.includes('stat-total')) {
-        const total = filteredData.reduce((sum, val) => sum + parseAmount(val), 0);
-        footerTH.html(`${total.toFixed(2)}`);
-
-    } else if (footerClass.includes('stat-total-money')) {
-        const total = filteredData.reduce((sum, val) => sum + parseAmount(val), 0);
-        footerTH.html(`$${total.toFixed(2)}`);
-
-    } else if (footerClass.includes('stat-percentage')) {
-        const cityCounts = {};
-        const total = filteredData.length;
-
-        filteredData.forEach(val => {
-            const cityMatch = val.match(/,\s*(\w+)\s*,/);
-            const city = cityMatch ? cityMatch[1] : "Unknown";
-            cityCounts[city] = (cityCounts[city] || 0) + 1;
-        });
-
-        const percentages = Object.entries(cityCounts)
-            .map(([city, count]) => `${city}: ${(count / total * 100).toFixed(1)}%`)
-            .join("<br>");
-
-        footerTH.html(percentages);
-
-    } else if (footerClass.includes('stat-count')) {
-        footerTH.html(`${filteredData.length} entries`);
-    }
-  } 
+  };
   
   // Displays relevant data for rides table needed for forms
   const ridesRelevantStats = function() {
@@ -121,6 +87,9 @@ const initiateCheckboxes = (table) => {
           $(table.selector).DataTable().destroy();
         }
         const newTable = $(table.selector).DataTable({
+          colReorder: true,    
+          stateSave: true,    
+          autoWidth: false,
           paging: true,
           searching: true,
           ordering: true,
