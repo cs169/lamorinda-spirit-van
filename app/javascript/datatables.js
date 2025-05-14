@@ -27,21 +27,27 @@ const initiateCheckboxes = (table) => {
   };
   
   // Generates search bars for searching of each column of datatables
-  const initiateSearchbars = (table) => {
+  const initiateSearchbars = table => {
     table.columns('.text-filter').every(function () {
       const column = this;
-    
-      // Create search input element and append it to the table
+      const $footerCell = $(column.footer()).empty();
       $('<input type="text"/>')
-        .attr('placeholder', `Search ${column.header().textContent.trim()}...`)
-        .appendTo(column.footer())
+        .attr('placeholder', `${column.header().textContent.trim()}...`)
+        .css({
+          'width':        '100%',
+          'box-sizing':   'border-box',
+          'margin':       '0',
+          'padding':      '2px 4px',
+          'font-size':    '0.8rem'
+        })
+        .appendTo($footerCell)
         .on('keyup change clear', function () {
           if (column.search() !== this.value) {
             column.search(this.value).draw();
           }
         });
     });
-  }
+  };
   
   // Creates the Datatables
   const initiateDatatables = () => {
@@ -57,6 +63,9 @@ const initiateCheckboxes = (table) => {
           $(table.selector).DataTable().destroy();
         }
         const newTable = $(table.selector).DataTable({
+          colReorder: true,    
+          stateSave: true,    
+          autoWidth: false,
           paging: true,
           searching: true,
           ordering: true,
