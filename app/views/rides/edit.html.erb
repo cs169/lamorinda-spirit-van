@@ -27,7 +27,7 @@
           </div>
 
           <div class="mb-3">
-            <%= f.label :driver_id, "Driver" %>
+            <%= f.label :driver_id, "Driver" %> <span class="text-danger">*</span>
             <%= f.select :driver_id,
                           options_from_collection_for_select(@drivers, :id, :name, @ride.driver_id),
                           { prompt: "Select a Driver" },
@@ -80,7 +80,7 @@
           </div>
 
           <div class="mb-3">
-            <%= f.label :emailed_driver, "Emailed Driver?", class: "form-label" %>
+            <%= f.label :emailed_driver, "Emailed Driver?", class: "form-label" %> <span class="text-danger">*</span>
             <%= f.select :emailed_driver,
                           [["Yes", true], ["No", false]],
                           {},
@@ -101,10 +101,10 @@
           </h5>
 
           <%= f.hidden_field :passenger_id, class: "form-control" %>
-          <%= f.hidden_field :wheelchair, class: "form-control", value: @ride.wheelchair ? "Yes" : "No" %>
-          <%= f.hidden_field :low_income, class: "form-control", value: @ride.low_income ? "Yes" : "No" %>
-          <%= f.hidden_field :disabled, class: "form-control", value: @ride.disabled ? "Yes" : "No" %>
-          <%= f.hidden_field :need_caregiver, class: "form-control", value: @ride.need_caregiver ? "Yes" : "No" %>
+          <%= f.hidden_field :wheelchair, value: @ride.wheelchair ? "Yes" : "No" %>
+          <%= f.hidden_field :low_income, value: @ride.low_income ? "Yes" : "No" %>
+          <%= f.hidden_field :disabled, value: @ride.disabled ? "Yes" : "No" %>
+          <%= f.hidden_field :need_caregiver, value: @ride.need_caregiver ? "Yes" : "No" %>
 
           <div class="mb-3">
             <%= f.label :passenger_name, "Passenger Name" %>
@@ -302,7 +302,8 @@
         <!-- Action Buttons -->
         <div class="text-center mt-4">
           <%= f.submit "Update", class: "btn btn-primary" %>
-          <%= link_to "Back", request.referer || root_path, class: "btn btn-secondary" %>
+          <%= link_to "All Rides", rides_path, class: "btn btn-secondary" %>
+          <%= link_to "All Shifts", shifts_path, class: "btn btn-secondary" %>
         </div>
         <% end %>
       </div>

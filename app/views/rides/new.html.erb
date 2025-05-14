@@ -42,7 +42,7 @@
 
 
            <div class="mb-3">
-             <%= f.label :driver_id, "Driver" %>
+             <%= f.label :driver_id, "Driver" %> <span class="text-danger">*</span>
              <%= f.select :driver_id,
                           options_from_collection_for_select(@drivers, :id, :name, @ride.driver_id),
                           { prompt: "Select a Driver" },
@@ -63,7 +63,7 @@
 
 
            <div class="mb-3">
-             <%= f.label :emailed_driver, "Emailed Driver?", class: "form-label" %>
+             <%= f.label :emailed_driver, "Emailed Driver?", class: "form-label" %> <span class="text-danger">*</span>
              <%= f.select :emailed_driver,
                           [["Yes", "true"], ["No", "false"]],
                           {},
@@ -77,8 +77,8 @@
            <h5 class="fw-bold text-success">Passenger Details</h5>
 
            <div class="mb-3">
-             <%= f.label :passenger_name, "Passenger" %>
-             <%= f.text_field :passenger_name, class: "form-control"  %>
+             <%= f.label :passenger_name, "Passenger" %> <span class="text-danger">*</span>
+             <%= f.text_field :passenger_name, class: "form-control", required: true %>
              <%= link_to 'New Passenger', new_passenger_path, class: "btn btn-success mt-3" %>
            </div>
 

@@ -53,6 +53,12 @@ class RidesController < ApplicationController
 
     # Mapping data for autocomplete
     gon.addresses = Address.all.map { |a| { name: a.name, street: a.street, city: a.city, phone: a.phone } }
+
+    # Accessibility info is retrieved from the passenger
+    @ride.wheelchair      = @ride.passenger&.wheelchair
+    @ride.low_income      = @ride.passenger&.low_income
+    @ride.disabled        = @ride.passenger&.disabled
+    @ride.need_caregiver  = @ride.passenger&.need_caregiver
   end
 
   def update
