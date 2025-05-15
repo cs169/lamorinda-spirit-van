@@ -16,7 +16,6 @@ FactoryBot.define do
     notes { "Default Note" }
     hours { 1.0 }
     amount_paid { 0 }
-    confirmed_with_passenger { "No" }
     emailed_driver { 0 }
   end
 end
