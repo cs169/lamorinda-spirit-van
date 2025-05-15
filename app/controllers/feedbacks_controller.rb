@@ -19,7 +19,7 @@ class FeedbacksController < ApplicationController
 
   # GET /feedbacks/1/edit
   def edit
-    @current_date = @feedback.ride.date
+    @current_date = @feedback.ride.date_and_time
     @passenger = @feedback.ride.passenger.name
   end
 
@@ -43,7 +43,7 @@ class FeedbacksController < ApplicationController
     if @feedback.update(feedback_params)
       driver = @feedback.ride.driver
       if driver.present?
-        redirect_to today_driver_path(driver.id, date: @feedback.ride.date), status: :see_other
+        redirect_to today_driver_path(driver.id, date: @feedback.ride.date_and_time.to_date), status: :see_other
       else
         redirect_to root_path, status: :see_other
       end

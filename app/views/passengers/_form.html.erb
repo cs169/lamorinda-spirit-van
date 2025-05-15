@@ -93,24 +93,6 @@
                                         class: "form-control", 
                                         required: true %>
             </div>
-
-            <div class="mb-3">
-              <%= address_form.label :state, "State", class: "form-label" %>
-              <span class="text-danger">*</span>
-              <%= address_form.text_field :state, 
-                                        value: @passenger.address&.state,
-                                        class: "form-control", 
-                                        required: true %>
-            </div>
-
-            <div class="mb-3">
-              <%= address_form.label :zip, "Zip", class: "form-label" %>
-              <span class="text-danger">*</span>
-              <%= address_form.text_field :zip, 
-                                        value: @passenger.address&.zip,
-                                        class: "form-control", 
-                                        required: true %>
-            </div>
           <% end %>
         </div>
       </div>
@@ -120,6 +102,7 @@
   <div class="row mt-4">
     <!-- BOTTOM ROW - 2 Cards -->
     <div class="col-md-6">
+
       <!-- ACCESSIBILITY SECTION -->
       <div class="card mb-4 h-100">
         <div class="card-header bg-info text-white py-3">
@@ -196,7 +179,7 @@
 
   <!-- Action Buttons -->
   <div class="d-flex justify-content-between mt-5">
-    <%= link_to 'Back', passengers_path, class: "btn btn-secondary" %>
+    <%= link_to "Back", request.referer || root_path, class: "btn btn-secondary" %>
 
     <%= form.submit @passenger.new_record? ? "Create Passenger" : "Update Passenger", 
                     class: @passenger.new_record? ? "btn btn-success" : "btn btn-primary" %>
