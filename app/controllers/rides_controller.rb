@@ -108,7 +108,6 @@ class RidesController < ApplicationController
       :van,
       :hours,
       :amount_paid,
-      :notes_date_reserved,
       :confirmed_with_passenger,
       :passenger_id,
       :driver_id,

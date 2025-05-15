@@ -21,7 +21,6 @@
         <li class="list-group-item"><strong>Passenger:</strong> <%= @ride.passenger&.name || "Passenger Not Assigned" %></li>
         <li class="list-group-item"><strong>Phone:</strong> <%= @ride.passenger&.phone || "Passenger Not Assigned" %></li>
         <li class="list-group-item"><strong>Alt Phone:</strong> <%= @ride.passenger&.alternative_phone || "Passenger Not Assigned" %></li>
-        <li class="list-group-item"><strong>Passenger Notes:</strong> <%= simple_format(@ride.passenger.notes) %></li>
       </ul>
     </div>
   </div>
@@ -47,16 +46,16 @@
         <li class="list-group-item"><strong>Low Income:</strong> <%= @ride.low_income ? "Yes" : "No" %></li>
         <li class="list-group-item"><strong>Disabled:</strong> <%= @ride.disabled ? "Yes" : "No" %></li>
         <li class="list-group-item"><strong>Needs Caregiver:</strong> <%= @ride.need_caregiver ? "Yes" : "No" %></li>
+        <li class="list-group-item"><strong>Accessibility Notes:</strong> <%= simple_format(@ride.passenger.notes) %></li>
       </ul>
     </div>
   </div>
 
   <div class="card mb-4">
     <div class="card-body">
-      <h5 class="card-title">Notes</h5>
+      <h5 class="card-title">Other</h5>
       <ul class="list-group list-group-flush">
         <li class="list-group-item"><strong>General Notes:</strong> <%= simple_format(@ride.notes) %></li>
-        <li class="list-group-item"><strong>Notes (Date Reserved):</strong> <%= simple_format(@ride.notes_date_reserved) %></li>
         <li class="list-group-item"><strong>Confirmed with Passenger:</strong> <%= simple_format(@ride.confirmed_with_passenger) %></li>
         <li class="list-group-item"><strong>Emailed Driver:</strong> <%= @ride.emailed_driver ? "Yes" : "No" %></li>
       </ul>

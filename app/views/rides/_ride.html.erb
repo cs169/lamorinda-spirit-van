@@ -23,7 +23,6 @@
               <th class="border-0 text-filter">Notes</th>
               <th class="border-0 text-filter">Hours</th>
               <th class="border-0 text-filter">Amount Paid</th>
-              <th class="border-0 text-filter">Date Reserved Notes</th>
               <th class="border-0 text-filter">Confirmed with Passenger</th>
               <th class="border-0 text-filter">Emailed Driver?</th>
             </tr>
@@ -75,7 +74,6 @@
                 <td><%= ride.notes || 'N/A' %></td>
                 <td><%= ride.hours || 0 %></td>
                 <td><%= number_to_currency(ride.amount_paid) || '$0.00' %></td>
-                <td><%= ride.notes_date_reserved || 'N/A' %></td>
                 <td>
                 <% if ride.confirmed_with_passenger.to_s.downcase == "yes" %>
                   <span class="badge bg-success">Yes</span>
@@ -96,31 +94,9 @@
           </tbody>
           <tfoot>
             <tr class="border-0">
-              <% 20.times do %>
+              <% 18.times do %>
                 <th class="border-0"></th>
               <% end %>
-            </tr>
-            <tr class="column-summary">
-              <th class='ignore'></th>
-              <th class='ignore'></th>
-              <th class="stat-count"></th>
-              <th class="stat-count"></th>
-              <th class="stat-count"></th>
-              <th class="stat-count"></th>
-              <th class="stat-count"></th>
-              <th class="stat-percentage"></th>
-              <th class="stat-percentage"></th>
-              <th class="stat-count"></th>
-              <th class="stat-count"></th>
-              <th class="stat-count"></th>
-              <th class="stat-count"></th>
-              <th class="stat-count"></th>
-              <th class="stat-count"></th>
-              <th class="stat-total"></th>
-              <th class="stat-total-money"></th>
-              <th class="stat-count"></th>
-              <th class="stat-count"></th>
-              <th class="stat-count"></th>
             </tr>
           </tfoot>
         </table>

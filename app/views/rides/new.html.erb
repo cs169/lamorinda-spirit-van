@@ -34,12 +34,10 @@
          <div class="col-md-6 border-end">
            <h5 class="fw-bold text-success">Ride Details</h5>
 
-
            <div class="mb-3">
              <%= f.label :date_and_time, "Date and Time" %> <span class="text-danger">*</span>
              <%= f.text_field :date_and_time, type: "datetime-local", value: f.object.date_and_time&.strftime("%Y-%m-%dT%H:%M"), class: "form-control", required: true %>
            </div>
-
 
            <div class="mb-3">
              <%= f.label :driver_id, "Driver" %> <span class="text-danger">*</span>
@@ -49,18 +47,23 @@
                           { class: "form-select", required: true  }%>
            </div>
 
-
            <div class="mb-3">
              <%= f.label :van, "Van" %>
              <%= f.number_field :van, class: "form-control" %>
            </div>
-
 
            <div class="mb-3">
              <%= f.label :notes, "Notes" %>
              <%= f.text_area :notes, class: "form-control", rows: 3 %>
            </div>
 
+           <div class="mb-3">
+             <%= f.label :confirmed_with_passenger, "Confirmed With Passenger?" %>
+             <%= f.select :confirmed_with_passenger,
+                          [["Yes"], ["No"]],
+                          {},
+                          class: "form-select" %>
+           </div>
 
            <div class="mb-3">
              <%= f.label :emailed_driver, "Emailed Driver?", class: "form-label" %> <span class="text-danger">*</span>
@@ -205,11 +208,6 @@
           <template id="destination-template">
             <%= render partial: "stop_fields", locals: {index: "__INDEX__", address: nil} %>
           </template>
-
-           <div class="mb-3">
-             <%= f.label :notes_date_reserved, "Notes / Date Reserved" %>
-             <%= f.text_area :notes_date_reserved, class: "form-control", rows: 3 %>
-         </div>
        </div>
 
 

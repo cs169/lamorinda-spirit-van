@@ -124,7 +124,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_07_202923) do
     t.integer "van"
     t.float "hours"
     t.decimal "amount_paid", precision: 10, scale: 2
-    t.text "notes_date_reserved"
     t.text "confirmed_with_passenger"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

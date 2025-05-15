@@ -80,6 +80,14 @@
           </div>
 
           <div class="mb-3">
+             <%= f.label :confirmed_with_passenger, "Confirmed With Passenger?" %>
+             <%= f.select :confirmed_with_passenger,
+                          [["Yes"], ["No"]],
+                          {},
+                          class: "form-select" %>
+          </div>
+
+          <div class="mb-3">
             <%= f.label :emailed_driver, "Emailed Driver?", class: "form-label" %> <span class="text-danger">*</span>
             <%= f.select :emailed_driver,
                           [["Yes", true], ["No", false]],
@@ -292,11 +300,6 @@
           <template id="destination-template">
             <%= render partial: "stop_fields", locals: { index: "__INDEX__", address: nil } %>
           </template>
-        </div>
-
-        <div class="mb-3">
-          <%= f.label :notes_date_reserved, "Notes / Date Reserved" %>
-          <%= f.text_area :notes_date_reserved, class: "form-control", rows: 3 %>
         </div>
 
         <!-- Action Buttons -->

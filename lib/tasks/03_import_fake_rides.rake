@@ -38,7 +38,6 @@ namespace :import do
         notes: row["Notes"],
         hours: row["Hours"].to_f,
         amount_paid: row["Amount Paid"].to_f,
-        notes_date_reserved: row["notes_date_reserved"],
         confirmed_with_passenger: row["Confirmed with passenger"],
         emailed_driver: row["emailed_driver"].to_i == 1,
       )
