@@ -34,9 +34,9 @@ RSpec.describe ShiftsController, type: :controller do
 
     context "when current user is a dispatcher or admin" do
       it "assigns rides for the shift date" do
-        ride1 = FactoryBot.create(:ride, date: @shift.shift_date)
-        ride2 = FactoryBot.create(:ride, date: @shift.shift_date)
-        ride3 = FactoryBot.create(:ride, date: @shift.shift_date + 1.day)
+        ride1 = FactoryBot.create(:ride, date_and_time: @shift.shift_date.to_datetime.change(hour: 9))
+        ride2 = FactoryBot.create(:ride, date_and_time: @shift.shift_date.to_datetime.change(hour: 13))
+        ride3 = FactoryBot.create(:ride, date_and_time: (@shift.shift_date + 1.day).to_datetime.change(hour: 9))
 
         get :show, params: { id: @shift.id }
 

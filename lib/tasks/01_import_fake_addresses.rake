@@ -21,10 +21,10 @@ namespace :import do
           puts "Row Data: #{row.to_h}"
           # Create a new Address record
           Address.create!(
+              name: row["name"],
               street: row["street"],
               city: row["city"],
-              state: row["state"],
-              zip: row["zip"]
+              phone: row["phone"],
             )
         end
   end

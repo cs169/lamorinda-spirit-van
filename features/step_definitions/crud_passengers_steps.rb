@@ -11,8 +11,6 @@ Given("the following passenger records exist:") do |table|
         address: FactoryBot.build(:address,
           street: row["Street"],
           city: row["City"],
-          state: row["State"],
-          zip: row["Zip"]
         )
       )
     end
@@ -23,8 +21,6 @@ When("I fill in all necessary information") do
   fill_in "Name", with: "New Passenger"
   fill_in "Street", with: "123 New St"
   fill_in "City", with: "Lafayette"
-  fill_in "State", with: "CA"
-  fill_in "Zip", with: "94549"
   fill_in "Birthday", with: "1950-01-01"
   fill_in "Race", with: 5
   select "Yes", from: "Hispanic?"
