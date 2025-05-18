@@ -16,13 +16,29 @@ document.addEventListener("turbo:load", function() {
       // edits the other fields upon selecting an autocomplete value
       $("#ride_passenger_name").on("autocompleteselect", function (event, ui) {
         const yesNo = (val) => (val ? "Yes" : "No");
-        document.getElementById("ride_passenger_phone").value = ui.item.phone;
+        
+        // Update hidden fields
+        document.getElementById("ride_passenger_id").value = ui.item.id;
         document.getElementById("ride_wheelchair").value = yesNo(ui.item.wheelchair);
         document.getElementById("ride_low_income").value = yesNo(ui.item.low_income);
         document.getElementById("ride_disabled").value = yesNo(ui.item.disabled);
         document.getElementById("ride_need_caregiver").value = yesNo(ui.item.need_caregiver);
-        document.getElementById("ride_passenger_notes").value = ui.item.notes;
-        document.getElementById("ride_passenger_id").value = ui.item.id;
+
+        // Update passenger overview card
+        document.querySelector('#name_display').value = ui.item.label || 'No passenger selected';
+        document.querySelector('#wheelchair_display').checked = ui.item.wheelchair;
+        document.querySelector('#disabled_display').checked = ui.item.disabled;
+        document.querySelector('#low_income_display').checked = ui.item.low_income;
+        document.querySelector('#need_caregiver_display').checked = ui.item.need_caregiver;
+        document.querySelector('.card-body textarea').value = ui.item.notes || 'No notes available';
+
+        // Show/hide new passenger badge based on ride count
+        const newPassengerBadge = document.getElementById('new_passenger_badge');
+        if (ui.item.ride_count <= 1) {
+          newPassengerBadge.style.display = 'block';
+        } else {
+          newPassengerBadge.style.display = 'none';
+        }
       });
     }
 

@@ -103,7 +103,7 @@
             <% if @ride.passenger && @ride.passenger.rides.count <= 1 %>
               <span class="badge bg-warning text-dark" data-bs-toggle="tooltip" data-bs-placement="top" 
                     title="This is a new passenger with no previous ride history">
-                New Passenger <i class="bi bi-exclamation-triangle"></i>
+                First Time Rider <i class="bi bi-exclamation-triangle"></i>
               </span>
             <% end %>
           </h5>
@@ -223,6 +223,15 @@
                 <textarea class="form-control bg-light" 
                           readonly
                           rows="2"><%= @ride.passenger&.notes || 'No notes available' %></textarea>
+              </div>
+
+              <!-- Passenger Phone -->
+              <div class="mt-3">
+                <label class="form-label">Phone Number:</label>
+                <input type="text" 
+                       class="form-control bg-light" 
+                       readonly
+                       value="<%= @ride.passenger&.phone || 'No phone available' %>">
               </div>
             </div>
           </div>
