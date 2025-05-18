@@ -114,93 +114,48 @@
              <div class="card-body">
                <!-- Selected Passenger Name -->
                <div class="mb-3">
-
                  <label class="form-label">Passenger:</label>
-                 <% if @ride.passenger&.name %>
-                   <input type="text" 
-                          class="form-control bg-light" 
-                          disabled
-                          id="name_display"
-                          value="<%= @ride.passenger.name %>">
-                 <% else %>
-                   <input type="text" 
-                          class="form-control bg-light" 
-                          disabled
-                          id="name_display"
-                          value="No passenger selected">
-                 <% end %>
+                 <input type="text" 
+                        class="form-control bg-light" 
+                        disabled
+                        id="name_display"
+                        value="No passenger selected">
                </div>
 
                <div class="row">
                  <div class="col-md-6">
                    <div class="form-check mb-2">
-                     <% if @ride.passenger&.wheelchair %>
-                       <input type="checkbox" 
-                              class="form-check-input bg-primary"
-                              checked
-                              disabled
-                              id="wheelchair_display">
-                       <label class="form-check-label fw-bold" for="wheelchair_display">Requires Wheelchair</label>
-                     <% else %>
-                       <input type="checkbox" 
-                              class="form-check-input bg-secondary opacity-50"
-                              disabled
-                              id="wheelchair_display">
-                       <label class="form-check-label" for="wheelchair_display">Requires Wheelchair</label>
-                     <% end %>
+                     <input type="checkbox" 
+                            class="form-check-input bg-secondary opacity-50"
+                            disabled
+                            id="wheelchair_display">
+                     <label class="form-check-label" for="wheelchair_display">Requires Wheelchair</label>
                    </div>
 
                    <div class="form-check mb-2">
-                     <% if @ride.passenger&.disabled %>
-                       <input type="checkbox" 
-                              class="form-check-input bg-primary"
-                              checked
-                              disabled
-                              id="disabled_display">
-                       <label class="form-check-label fw-bold" for="disabled_display">Has Disability</label>
-                     <% else %>
-                       <input type="checkbox" 
-                              class="form-check-input bg-secondary opacity-50"
-                              disabled
-                              id="disabled_display">
-                       <label class="form-check-label" for="disabled_display">Has Disability</label>
-                     <% end %>
+                     <input type="checkbox" 
+                            class="form-check-input bg-secondary opacity-50"
+                            disabled
+                            id="disabled_display">
+                     <label class="form-check-label" for="disabled_display">Has Disability</label>
                    </div>
                  </div>
 
                  <div class="col-md-6">
                    <div class="form-check mb-2">
-                     <% if @ride.passenger&.low_income %>
-                       <input type="checkbox" 
-                              class="form-check-input bg-primary"
-                              checked
-                              disabled
-                              id="low_income_display">
-                       <label class="form-check-label fw-bold" for="low_income_display">Low Income</label>
-                     <% else %>
-                       <input type="checkbox" 
-                              class="form-check-input bg-secondary opacity-50"
-                              disabled
-                              id="low_income_display">
-                       <label class="form-check-label" for="low_income_display">Low Income</label>
-                     <% end %>
+                     <input type="checkbox" 
+                            class="form-check-input bg-secondary opacity-50"
+                            disabled
+                            id="low_income_display">
+                     <label class="form-check-label" for="low_income_display">Low Income</label>
                    </div>
 
                    <div class="form-check mb-2">
-                     <% if @ride.passenger&.need_caregiver %>
-                       <input type="checkbox" 
-                              class="form-check-input bg-primary"
-                              checked
-                              disabled
-                              id="need_caregiver_display">
-                       <label class="form-check-label fw-bold" for="need_caregiver_display">Needs Caregiver</label>
-                     <% else %>
-                       <input type="checkbox" 
-                              class="form-check-input bg-secondary opacity-50"
-                              disabled
-                              id="need_caregiver_display">
-                       <label class="form-check-label" for="need_caregiver_display">Needs Caregiver</label>
-                     <% end %>
+                     <input type="checkbox" 
+                            class="form-check-input bg-secondary opacity-50"
+                            disabled
+                            id="need_caregiver_display">
+                     <label class="form-check-label" for="need_caregiver_display">Needs Caregiver</label>
                    </div>
                  </div>
                </div>
@@ -209,8 +164,9 @@
                <div class="mt-3">
                  <label class="form-label">Accessibility Notes:</label>
                  <textarea class="form-control bg-light" 
-                           readonly
-                           rows="2"><%= @ride.passenger&.notes || 'No notes available' %></textarea>
+                           disabled
+                           id="notes_display"
+                           rows="2">No notes available</textarea>
                </div>
 
                <!-- Passenger Phone -->
@@ -218,8 +174,9 @@
                  <label class="form-label">Phone Number:</label>
                  <input type="text" 
                         class="form-control bg-light" 
-                        readonly
-                        value="<%= @ride.passenger&.phone || 'No phone available' %>">
+                        disabled
+                        id="phone_display"
+                        value="No phone available">
                </div>
              </div>
            </div>
