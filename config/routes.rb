@@ -46,6 +46,9 @@ Rails.application.routes.draw do
     member do
       get "feedback"
     end
+    collection do
+      get "shifts_for_day" # for new ride shift selector javascript
+    end
   end
 
   resources :shift_templates, only: [:new, :create, :edit, :update, :destroy]

@@ -58,7 +58,7 @@ RSpec.describe ShiftsController, type: :controller do
     context "with valid parameters" do
       it "creates a new shift and redirects to the shift page" do
         expect {
-          post :create, params: { shift: { shift_date: Time.zone.today, shift_type: "evening", driver_id: @driver.id } }
+          post :create, params: { shift: { date: Time.zone.today, shift_type: "evening", driver_id: @driver.id } }
         }.to change(Shift, :count).by(1)
 
         expect(response).to redirect_to(shifts_path)
@@ -68,7 +68,7 @@ RSpec.describe ShiftsController, type: :controller do
     context "with empty shift_type" do
       it "does not create a shift and re-renders the new template" do
         expect {
-          post :create, params: { shift: { shift_date: Time.zone.today, shift_type: "", driver_id: @driver.id } }
+          post :create, params: { shift: { date: Time.zone.today, shift_type: "", driver_id: @driver.id } }
         }.not_to change(Shift, :count)
 
         expect(response).to have_http_status(:unprocessable_entity)
@@ -79,7 +79,7 @@ RSpec.describe ShiftsController, type: :controller do
     context "with missing driver_id" do
       it "does not create a shift and redirects to new_shift_path with an alert" do
         expect {
-          post :create, params: { shift: { shift_date: Time.zone.today, shift_type: "evening", driver_id: nil } }
+          post :create, params: { shift: { date: Time.zone.today, shift_type: "evening", driver_id: nil } }
         }.not_to change(Shift, :count)
 
         expect(response).to redirect_to(new_shift_path)
@@ -90,7 +90,7 @@ RSpec.describe ShiftsController, type: :controller do
     context "with invalid driver_id" do
       it "does not create a shift and redirects to new_shift_path with an alert" do
         expect {
-          post :create, params: { shift: { shift_date: Time.zone.today, shift_type: "evening", driver_id: 9999 } }
+          post :create, params: { shift: { date: Time.zone.today, shift_type: "evening", driver_id: 9999 } }
         }.not_to change(Shift, :count)
 
         expect(response).to redirect_to(new_shift_path)
@@ -173,7 +173,7 @@ RSpec.describe ShiftsController, type: :controller do
 
     context "when dispatcher fails to update shift" do
       it "re-renders the edit template with unprocessable_entity status" do
-        patch :update, params: { id: @shift.id, shift: { shift_date: nil } }
+        patch :update, params: { id: @shift.id, shift: { date: nil } }
 
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response).to render_template(:edit)
@@ -202,6 +202,22 @@ RSpec.describe ShiftsController, type: :controller do
       }.to change(Shift, :count).by(-1)
 
       expect(response).to redirect_to(shifts_path)
+    end
+  end
+
+  describe "GET #shifts_for_day" do
+    render_views
+    it "returns a json object with the list of shift descriptions and id's" do
+      shift1 = FactoryBot.create(:shift, shift_type: "pm", date: "2025-05-22")
+      shift2 = FactoryBot.create(:shift, shift_type: "am", date: "2025-05-22")
+      FactoryBot.create(:shift, date: "2025-05-23")
+      FactoryBot.create(:shift, date: "2025-05-21")
+
+      get :shifts_for_day, params: { date: "2025-05-22" }
+
+      expected_list = [shift1, shift2].map { |shift| { "text" => "#{shift.shift_type} shift with driver #{shift.driver.name}", "value" => shift.id } }
+
+      expect(JSON.parse(response.body)).to include(*expected_list)
     end
   end
 end
