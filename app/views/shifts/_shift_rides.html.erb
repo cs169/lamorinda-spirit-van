@@ -6,13 +6,14 @@
             <tr class="border-0">
               <th class="border-0"></th> <!-- Info Button -->
               <th class="border-0"></th> <!-- Delete Button -->
-              <th class="border-0 text-filter">Passenger Name</th>
-              <th class="border-0 text-filter">Origin</th>
-              <th class="border-0 text-filter">Destination</th>
-              <th class="border-0 text-filter">Notes</th>
-              <th class="border-0 text-filter">Date Reserved Notes</th>
-              <th class="border-0 text-filter">Confirmed with Passenger</th>
-              <th class="border-0 text-filter">Emailed Driver?</th>
+              <th class="border-0">Passenger Name</th>
+              <th class="border-0">Origin</th>
+              <th class="border-0">Destination</th>
+              <th class="border-0">Multiple Stop</th>
+              <th class="border-0">Notes</th>
+              <th class="border-0">Date Reserved Notes</th>
+              <th class="border-0">Confirmed with Passenger</th>
+              <th class="border-0">Emailed Driver?</th>
             </tr>
           </thead>
 
@@ -32,10 +33,16 @@
                 <td><%= ride.passenger&.name || 'N/A' %></td>
                 <td><%= ride.start_address&.full_address || 'N/A' %></td>
                 <td><%= ride.dest_address&.full_address || 'N/A' %></td>
+                <td>
+                  <% if ride.next_ride_id? %>
+                    <span class="badge bg-success">Yes</span>
+                  <% else %>
+                    <span class="badge bg-danger">No</span>
+                  <% end %>
+                </td>
                 <td><%= ride.notes || 'N/A' %></td>
                 <td><%= ride.notes_date_reserved || 'N/A' %></td>
                 <td><%= ride.confirmed_with_passenger ? 'Yes' : 'No' %></td>
-
                 <td>
                   <% if ride.emailed_driver? %>
                     <span class="badge bg-success">Yes</span>
@@ -46,16 +53,6 @@
               </tr>
             <% end %>
           </tbody>
-          <tfoot>
-            <tr class="border-0">
-              <th class="border-0"></th>
-              <th class="border-0"></th>
-              <th class="border-0"></th>
-              <th class="border-0"></th>
-              <th class="border-0"></th>
-              <th class="border-0"></th>
-            </tr>
-          </tfoot>
         </table>
       </div>
 

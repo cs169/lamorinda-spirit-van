@@ -8,15 +8,14 @@
               <th class="border-0"></th> <!-- Feedback Button -->
               <th class="border-0"></th> <!-- Info Button -->
               <th class="border-0"></th> <!-- Delete Button -->
-              <th class="border-0 text-filter">Date</th>
+              <th class="border-0 text-filter">Date and Time</th>
               <th class="border-0 text-filter">Driver</th>
               <th class="border-0 text-filter">Van</th>
               <th class="border-0 text-filter">Passenger Name</th>
+              <th class="border-0 text-filter">Multiple Stops</th>
               <th class="border-0 text-filter">Origin</th>
               <th class="border-0 text-filter">Destination</th>
-              <th class="border-0 text-filter">Address Name</th>
-              <th class="border-0 text-filter">Destination Type</th>
-              <th class="border-0 text-filter">Notes About Location</th>
+              <th class="border-0 text-filter">Ride Type</th>
               <th class="border-0 text-filter">Wheelchair</th>
               <th class="border-0 text-filter">Low Income</th>
               <th class="border-0 text-filter">Disabled</th>
@@ -55,11 +54,16 @@
                 <td><%= ride.driver&.name || 'N/A' %></td>
                 <td><%= ride.van || 'N/A' %></td>
                 <td><%= ride.passenger&.name || 'N/A' %></td>
+                <td>
+                  <% if ride.next_ride_id? %>
+                    <span class="badge bg-success">Yes</span>
+                  <% else %>
+                    <span class="badge bg-danger">No</span>
+                  <% end %>
+                </td>
                 <td><%= ride.start_address&.full_address || 'N/A' %></td>
                 <td><%= ride.dest_address&.full_address || 'N/A' %></td>
-                <td><%= ride.address_name %></td>
                 <td><%= ride.destination_type %></td>
-                <td><%= ride.notes_about_location %></td>
                 <% [:wheelchair, :low_income, :disabled, :need_caregiver].each do |field| %>
                 <td>
                   <span class="badge <%= ride.send(field) ? 'bg-success' : 'bg-danger' %>">
@@ -92,7 +96,7 @@
           </tbody>
           <tfoot>
             <tr class="border-0">
-              <% 21.times do %>
+              <% 20.times do %>
                 <th class="border-0"></th>
               <% end %>
             </tr>
@@ -103,10 +107,9 @@
               <th class="stat-count"></th>
               <th class="stat-count"></th>
               <th class="stat-count"></th>
+              <th class="stat-count"></th>
               <th class="stat-percentage"></th>
               <th class="stat-percentage"></th>
-              <th class="stat-count"></th>
-              <th class="stat-count"></th>
               <th class="stat-count"></th>
               <th class="stat-count"></th>
               <th class="stat-count"></th>

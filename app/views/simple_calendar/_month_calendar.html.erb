@@ -6,7 +6,7 @@
     <% extras = @return_to_drivers_today_from_shifts_index.present? ? { return_to_drivers_today_from_shifts_index: @return_to_drivers_today_from_shifts_index } : {} %>
 
     <nav class="calendar-nav-buttons">
-      <%= link_to t('simple_calendar.previous', default: 'Last Month'),
+      <%= link_to t('simple_calendar.previous', default: 'Prev. Month'),
                   shifts_path(start_date: start_date.prev_month.beginning_of_month, **extras),
                   class: "btn btn-outline-primary" %>
 

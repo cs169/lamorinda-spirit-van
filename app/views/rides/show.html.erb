@@ -3,7 +3,7 @@
 
   <div class="card mb-4">
     <div class="card-body">
-      <h5 class="card-title">Basic Info</h5>
+      <h5 class="card-title">Info</h5>
       <ul class="list-group list-group-flush">
         <li class="list-group-item"><strong>Date:</strong> <%= @ride.date.strftime("%B %d, %Y") %></li>
         <li class="list-group-item"><strong>Van Number:</strong> <%= @ride.van %></li>
@@ -15,10 +15,12 @@
 
   <div class="card mb-4">
     <div class="card-body">
-      <h5 class="card-title">People</h5>
+      <h5 class="card-title">Passenger</h5>
       <ul class="list-group list-group-flush">
-        <li class="list-group-item"><strong>Passenger:</strong> <%= @ride.passenger&.name || "Not Assigned" %></li>
-        <li class="list-group-item"><strong>Driver:</strong> <%= @ride.driver&.name || "Not Assigned" %></li>
+        <li class="list-group-item"><strong>Passenger:</strong> <%= @ride.passenger&.name || "Passenger Not Assigned" %></li>
+        <li class="list-group-item"><strong>Phone:</strong> <%= @ride.passenger&.phone || "Passenger Not Assigned" %></li>
+        <li class="list-group-item"><strong>Alt Phone:</strong> <%= @ride.passenger&.alternative_phone || "Passenger Not Assigned" %></li>
+        <li class="list-group-item"><strong>Driver:</strong> <%= @ride.driver&.name || "Passenger Not Assigned" %></li>
       </ul>
     </div>
   </div>
@@ -28,18 +30,20 @@
       <h5 class="card-title">Locations</h5>
       <ul class="list-group list-group-flush">
         <li class="list-group-item"><strong>Start Address:</strong> <%= @ride.start_address&.full_address || "N/A" %></li>
-        <li class="list-group-item"><strong>Destination Address:</strong> <%= @ride.dest_address&.full_address || "N/A" %></li>
-        <li class="list-group-item"><strong>Address Name:</strong> <%= @ride.address_name %></li>
-        <li class="list-group-item"><strong>Destination Type:</strong> <%= @ride.destination_type %></li>
+        <% @all_rides.each_with_index do |ride, index| %>
+          <li class="list-group-item"><strong>Stop <%= index + 1 %>:</strong> <%= ride.dest_address&.full_address || "N/A" %></li>
+        <% end %>
+        <li class="list-group-item"><strong>Ride Type:</strong> <%= @ride.destination_type %></li>
+        <li class="list-group-item"><strong>Notes About Location:</strong> <%= @ride.notes_about_location %></li>
       </ul>
     </div>
   </div>
 
   <div class="card mb-4">
     <div class="card-body">
-      <h5 class="card-title">Passenger Info</h5>
+      <h5 class="card-title">Accessibility</h5>
       <ul class="list-group list-group-flush">
-        <li class="list-group-item"><strong>Wheelchair Accessible:</strong> <%= @ride.wheelchair ? "Yes" : "No" %></li>
+        <li class="list-group-item"><strong>Wheelchair:</strong> <%= @ride.wheelchair ? "Yes" : "No" %></li>
         <li class="list-group-item"><strong>Low Income:</strong> <%= @ride.low_income ? "Yes" : "No" %></li>
         <li class="list-group-item"><strong>Disabled:</strong> <%= @ride.disabled ? "Yes" : "No" %></li>
         <li class="list-group-item"><strong>Needs Caregiver:</strong> <%= @ride.need_caregiver ? "Yes" : "No" %></li>
@@ -70,7 +74,7 @@
     <% end %>
     
     <div class="col-12 mb-2 col-md-auto">
-      <%= link_to "Back", today_driver_path(@ride.driver_id, date: @ride.date), class: "btn btn-outline-secondary w-100" %>
+      <%= link_to "Back", request.referer || root_path, class: "btn btn-outline-secondary w-100" %>
     </div>
   </div>
 </div>

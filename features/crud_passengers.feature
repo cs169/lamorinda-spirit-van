@@ -23,7 +23,7 @@ Feature: Manage Passengers
     @edit
     Scenario: Edit an existing passenger
         Given I am on the master passenger list
-        And I follow "Info" for "Jane Doe"
+        And I follow "Edit" for "Jane Doe"
         When I fill in "Name" with "Jane Changed Doe"
         And I press "Update Passenger"
         Then I should see "Passenger updated."

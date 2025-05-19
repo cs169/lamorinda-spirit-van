@@ -73,7 +73,7 @@ class PassengersController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def passenger_params
-    params.require(:passenger).permit(:name, :phone, :alternative_phone, :birthday, :race, :hispanic, :email, :notes, :date_registered, :audit,
+    params.require(:passenger).permit(:name, :phone, :alternative_phone, :birthday, :race, :hispanic, :wheelchair, :low_income, :disabled, :need_caregiver, :email, :notes, :date_registered, :audit,
                                       address_attributes: [:street, :city, :state, :zip])
   end
 end
