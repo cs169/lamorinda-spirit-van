@@ -13,14 +13,14 @@ Feature: Driver Ride and Shift Navigation
   
   Scenario: Navigating dates on the Today's Rides page
     Given I visit the Today's Rides page for that driver
-    Then I should see "Last Day" button
+    Then I should see "Prev. Day" button
     Then I should see "Back to Today" button
     Then I should see "Next Day" button
 
-    When I click on "Last Day" button
+    When I click on "Prev. Day" button
     Then I should see the rides for one day ago
 
-    When I click on "Last Day" button
+    When I click on "Prev. Day" button
     Then I should see the rides for two days ago
 
     When I click on "Next Day" button
@@ -34,7 +34,7 @@ Feature: Driver Ride and Shift Navigation
     Given I visit the Today's Rides page for that driver
     Then I should see "View Other Drivers" button
     
-    When I click on "Last Day" button
+    When I click on "Prev. Day" button
     Then I should see the rides for one day ago
 
     And I remember the current rides page URL
@@ -63,7 +63,7 @@ Feature: Driver Ride and Shift Navigation
     Given I visit the Today's Rides page for that driver
     Then I should see "View All Shifts" button
     
-    When I click on "Last Day" button
+    When I click on "Prev. Day" button
     Then I should see the rides for one day ago
 
     And I remember the current rides page URL
@@ -72,7 +72,7 @@ Feature: Driver Ride and Shift Navigation
     Then I should be on the shifts calendar page
     And I should see "Back" button
 
-    When I follow "Last Month"
+    When I follow "Prev. Month"
     Then I should see the previous month title
 
     When I click on "Back" button
@@ -103,10 +103,10 @@ Feature: Driver Ride and Shift Navigation
 
   Scenario: Driver can switch month
     Given I am on the shifts calendar page
-    Then I should see the "Last Month", "Jump to Today", and "Next Month" buttons
+    Then I should see the "Prev. Month", "Jump to Today", and "Next Month" buttons
     And I should see the current month title
 
-    When I follow "Last Month"
+    When I follow "Prev. Month"
     Then I should see the previous month title
 
     When I follow "Jump to Today"
