@@ -25,7 +25,7 @@
 
       <div class="navbar-user d-flex align-items-center">
         <span>Hello! <%= current_user.role %></span>
-        <%= link_to "Help", "https://docs.google.com/document/d/1Xt9CL3Qm39cJFG4vccKfZf1rtManONztd83Pe-0sFGY", target: "_blank", class: "btn btn-outline-light btn-sm ms-4" %>
+        <%= link_to "Help", "https://zhixialin.github.io/lamorinda-help-documentation/", target: "_blank", class: "btn btn-outline-light btn-sm ms-4" %>
         <%= button_to 'Sign Out', destroy_user_session_path, method: :delete, form: { data: { turbo: 'false' } }, class: "btn btn-outline-light btn-sm ms-4" %>
       </div>
     <% end %>
