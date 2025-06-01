@@ -2,8 +2,24 @@ title: Lamorinda-Help-Documentation
 description: This docs hosts Lamorinda application user guides
 theme: just-the-docs
 
-url: https://github.com/cs169
-baseurl: "/lamorinda-spirit-van/help-documentation"
+url: https://cs169.github.io
+baseurl: "/lamorinda-spirit-van"
+
+destination: ./_site
+
+exclude:
+  - .sass-cache/
+  - .jekyll-cache/
+  - gemfiles/
+  - Gemfile
+  - Gemfile.lock
+  - node_modules/
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - "*.gemspec"
+
 plugins:
   - jekyll-default-layout
 
