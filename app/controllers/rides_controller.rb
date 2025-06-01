@@ -18,7 +18,7 @@ class RidesController < ApplicationController
   # new (GET Request, displays form)
   def new
     session[:return_to] = request.referer
-    @ride = Ride.new(params.permit(:date, :driver_id))
+    @ride = Ride.new(params.permit(:date_and_time, :driver_id))
     @ride.build_start_address
     @ride.build_dest_address
 
@@ -26,8 +26,8 @@ class RidesController < ApplicationController
     @drivers = Driver.order(:name)
 
     # Mapping data for autocomplete
-    gon.passengers = Passenger.all.map { |p| { label: p.name, id: p.id, street: p.address&.street, city: p.address&.city, state: p.address&.state, zip: p.address&.zip,  phone: p.phone, wheelchair: p.wheelchair, low_income: p.low_income, disabled: p.disabled, need_caregiver: p.need_caregiver, notes: p.notes } }
-    gon.addresses = Address.all.map { |a| { label: a.street, zip: a.zip, city: a.city } }
+    gon.passengers = Passenger.all.map { |p| { label: p.name, id: p.id, phone: p.phone, wheelchair: p.wheelchair, low_income: p.low_income, disabled: p.disabled, need_caregiver: p.need_caregiver, notes: p.notes, ride_count: p.rides.count } }
+    gon.addresses = Address.all.map { |a| { name: a.name, street: a.street, city: a.city, phone: a.phone } }
   end
 
   def create
@@ -52,7 +52,13 @@ class RidesController < ApplicationController
     @drivers = Driver.order(:name)
 
     # Mapping data for autocomplete
-    gon.addresses = Address.all.map { |a| { label: a.street, zip: a.zip, city: a.city } }
+    gon.addresses = Address.all.map { |a| { name: a.name, street: a.street, city: a.city, phone: a.phone } }
+
+    # Accessibility info is retrieved from the passenger
+    @ride.wheelchair      = @ride.passenger&.wheelchair
+    @ride.low_income      = @ride.passenger&.low_income
+    @ride.disabled        = @ride.passenger&.disabled
+    @ride.need_caregiver  = @ride.passenger&.need_caregiver
   end
 
   def update
@@ -98,11 +104,10 @@ class RidesController < ApplicationController
 
   def ride_params
     params.require(:ride).permit(
-      :date,
+      :date_and_time,
       :van,
       :hours,
       :amount_paid,
-      :notes_date_reserved,
       :confirmed_with_passenger,
       :passenger_id,
       :driver_id,
@@ -114,8 +119,8 @@ class RidesController < ApplicationController
       :emailed_driver,
       :start_address_id,
       :dest_address_id,
-      :destination_type,
-      addresses_attributes: [:street, :city, :state, :zip],
+      :ride_type,
+      addresses_attributes: [:name, :street, :city, :phone],
     )
   end
 end

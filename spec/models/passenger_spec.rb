@@ -62,8 +62,6 @@ RSpec.describe Passenger, type: :model do
         new_attrs = {
           street: "456 Unique St",
           city: "Newville",
-          state: "CA",
-          zip: "99999"
         }
 
         expect {
@@ -77,15 +75,13 @@ RSpec.describe Passenger, type: :model do
 
     context "when updating a passenger with an already existing address record" do
       it "reuses existing address when updated with matching address fields" do
-        existing_address = create(:address, street: "123 Main St", city: "Orinda", state: "CA", zip: "94563")
+        existing_address = create(:address, street: "123 Main St", city: "Orinda")
         passenger = create(:passenger)
 
         expect {
           passenger.update(address_attributes: {
             street: "123 Main St",
             city: "Orinda",
-            state: "CA",
-            zip: "94563"
           })
         }.not_to change(Address, :count)
 
@@ -98,8 +94,6 @@ RSpec.describe Passenger, type: :model do
         address_attrs = {
           street: "789 Brand New Blvd",
           city: "Moraga",
-          state: "CA",
-          zip: "94556"
         }
 
         expect {
@@ -119,7 +113,7 @@ RSpec.describe Passenger, type: :model do
 
     context "when creating a passenger with an existing address" do
       it "reuses an existing address" do
-        existing_address = create(:address, street: "123 Shared St", city: "Orinda", state: "CA", zip: "94563")
+        existing_address = create(:address, street: "123 Shared St", city: "Orinda")
 
         passenger_attrs = {
           name: "Duplicate Address Tester",
@@ -132,8 +126,6 @@ RSpec.describe Passenger, type: :model do
           address_attributes: {
             street: "123 Shared St",
             city:   "Orinda",
-            state:  "CA",
-            zip:    "94563"
           }
         }
 
