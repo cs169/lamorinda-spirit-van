@@ -296,6 +296,9 @@
             <% @all_rides.each_with_index do |ride, index| %>
               <%= render partial: "stop_fields", locals: { address: ride.dest_address, index: index + 1 } %>
             <% end %>
+            
+            <!-- Spacer -->
+            <div class="col-md-1" id="col-space"></div>
           </div>
 
           <!-- Add/Delete Stop Buttons -->

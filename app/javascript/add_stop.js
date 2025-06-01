@@ -23,7 +23,8 @@ document.addEventListener("turbo:load", function () {
 
   deleteButton.addEventListener("click", function () {
     // Must remove the spacer and the stop (2 elements)
-    if (grid.children.length > 3) {
+    // 4 turned out to be the min number to prevent issues with rides new and edit (don't know why)
+    if (grid.children.length > 4) {
       grid.removeChild(grid.lastElementChild);
       grid.removeChild(grid.lastElementChild);
       index -= 1;
