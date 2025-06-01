@@ -49,35 +49,11 @@ const initiateCheckboxes = (table) => {
     });
   };
   
-  // Displays relevant data for rides table needed for forms
-  const ridesRelevantStats = function() {
-    const dataTable = this.api();
-    
-    dataTable.columns().every((index) => {
-        const footerTH = $(dataTable.table().footer()).find('tr.column-summary th').eq(index);
-        if (!footerTH.hasClass('ignore')) {
-            updateFooter(index, dataTable, footerTH);
-        }
-    });
-  }
-  
-  // Displays relevant data for passengers table needed for forms
-  const passengersRelevantData = function() {
-    const dataTable = this.api();
-    
-    dataTable.columns().every((index) => {
-        const footerTH = $(dataTable.table().footer()).find('tr.column-summary th').eq(index);
-        if (!footerTH.hasClass('ignore')) {
-            updateFooter(index, dataTable, footerTH);
-        }
-    });
-  }
-  
   // Creates the Datatables
   const initiateDatatables = () => {
     const tables = [
-      { selector: '#passengers-table', order: [[2, 'asc']], footerCallback: passengersRelevantData},
-      { selector: '#rides-table', order: [[2, 'desc']], footerCallback: ridesRelevantStats}
+      { selector: '#passengers-table', order: [[15, 'desc']], footerCallback: passengersRelevantData},
+      { selector: '#rides-table', order: [[3, 'desc']], footerCallback: ridesRelevantStats}
     ];
   
     tables.forEach(table => {
@@ -98,7 +74,6 @@ const initiateCheckboxes = (table) => {
           dom: "<'row'<'col-md-6'l><'col-md-6'>>" +
             "<'row'<'col-md-12'tr>>" +
             "<'row'<'col-md-6'i><'col-md-6'p>>",
-          // footerCallback: table.footerCallback,
         });
         initiateCheckboxes(newTable);
         initiateSearchbars(newTable);
