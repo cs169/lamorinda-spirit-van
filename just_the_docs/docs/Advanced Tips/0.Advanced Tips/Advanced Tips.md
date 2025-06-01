@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Instruction for All Users
+title: Advanced Tips
 nav_order: 400
 has_children: true
 ---
 
-## Instruction for All Users
+## Advanced Tips
 
 ---
 

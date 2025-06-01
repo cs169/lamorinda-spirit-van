@@ -1,6 +1,6 @@
 ---
 layout: default
-title: 6.Ride Feedback
+title: Ride Feedback
 parent: Instruction for Drivers
 permalink: /docs/For Drivers/Ride Feedback.html
 nav_order: 6

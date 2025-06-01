@@ -1,7 +1,7 @@
 ---
 layout: default
-title: 2.Advanced Date Navigation using the URL
-parent: Instruction for All Users
+title: Advanced Date Navigation using the URL
+parent: Advanced Tips
 permalink: /docs/For All Users/Advanced Date Navigation using the URL.html
 nav_order: 2
 ---

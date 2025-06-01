@@ -1,6 +1,6 @@
 ---
 layout: default
-title: 8.Other Information
+title: Other Information
 parent: Instruction for Drivers
 permalink: /docs/For Drivers/Other Information.html
 nav_order: 8

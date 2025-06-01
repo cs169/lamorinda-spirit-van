@@ -1,6 +1,6 @@
 ---
 layout: default
-title: 3.Resetting Passwords
+title: Resetting Passwords
 parent: Instruction for Drivers
 permalink: /docs/For Drivers/Resetting Passwords.html
 nav_order: 3

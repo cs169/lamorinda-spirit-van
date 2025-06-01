@@ -1,6 +1,6 @@
 ---
 layout: default
-title: 1.Signing up for a new account
+title: Signing up for a new account
 parent: Instruction for Drivers
 permalink: /docs/For Drivers/Signing up for a new account.html
 nav_order: 1

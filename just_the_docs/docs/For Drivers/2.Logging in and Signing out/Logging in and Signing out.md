@@ -1,6 +1,6 @@
 ---
 layout: default
-title: 2.Logging in and Signing out
+title: Logging in and Signing out
 parent: Instruction for Drivers
 permalink: /docs/For Drivers/Logging in and Signing out.html
 nav_order: 2

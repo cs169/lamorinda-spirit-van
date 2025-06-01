@@ -1,6 +1,6 @@
 ---
 layout: default
-title: 4.Introduction to Interface
+title: Introduction to Interface
 parent: Instruction for Drivers
 permalink: /docs/For Drivers/Introduction to Interface.html
 nav_order: 4

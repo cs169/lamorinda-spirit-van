@@ -1,7 +1,7 @@
 ---
 layout: default
-title: 1.Quick Homepage Access
-parent: Instruction for All Users
+title: Quick Homepage Access
+parent: Advanced Tips
 permalink: /docs/For All Users/Quick Homepage Access.html
 nav_order: 1
 ---

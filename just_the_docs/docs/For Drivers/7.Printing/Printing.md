@@ -1,6 +1,6 @@
 ---
 layout: default
-title: 7.Printing
+title: Printing
 parent: Instruction for Drivers
 permalink: /docs/For Drivers/Printing.html
 nav_order: 7
