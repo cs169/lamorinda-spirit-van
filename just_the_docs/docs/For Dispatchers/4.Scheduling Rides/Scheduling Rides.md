@@ -3,7 +3,7 @@ layout: default
 title: Scheduling Rides
 parent: Instruction for Dispatchers
 permalink: /docs/For Dispatchers/Scheduling Rides.html
-nav_order: 3
+nav_order: 4
 ---
 
 ## Scheduling Rides
