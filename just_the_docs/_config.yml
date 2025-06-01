@@ -2,8 +2,8 @@ title: Lamorinda-Help-Documentation
 description: This docs hosts Lamorinda application user guides
 theme: just-the-docs
 
-url: https://ZhixiaLin.github.io
-baseurl: "/Test/docs_site"
+url: https://github.com/cs169
+baseurl: "/lamorinda-spirit-van/help-documentation"
 plugins:
   - jekyll-default-layout
 
@@ -13,6 +13,6 @@ just_the_docs:
     structure: nested
 
 aux_links:
-  Github Repo: https://github.com/ZhixiaLin/Test
+  Github Repo: https://github.com/cs169/lamorinda-spirit-van/
 
 footer_content: "MIT Licensed | City of Lafayette, CA. All Rights Reserved. © 2025"
