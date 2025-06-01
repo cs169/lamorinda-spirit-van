@@ -2,7 +2,7 @@
 layout: default
 title: Quick Homepage Access
 parent: Advanced Tips
-permalink: /docs/For All Users/Quick Homepage Access.html
+permalink: /docs/Advanced Tips/Quick Homepage Access.html
 nav_order: 1
 ---
 
