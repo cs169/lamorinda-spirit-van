@@ -1,0 +1,18 @@
+title: Lamorinda-Help-Documentation
+description: This docs hosts Lamorinda application user guides
+theme: just-the-docs
+
+url: https://ZhixiaLin.github.io
+baseurl: "/Test/docs_site"
+plugins:
+  - jekyll-default-layout
+
+
+just_the_docs:
+  navigation:
+    structure: nested
+
+aux_links:
+  Github Repo: https://github.com/ZhixiaLin/Test
+
+footer_content: "MIT Licensed | City of Lafayette, CA. All Rights Reserved. © 2025"
