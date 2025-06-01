@@ -28,5 +28,3 @@ Please Note: When you first navigate to the "Today's Rides" page, the date=YYYY-
 A similar technique applies to the main Calendar interface for quick navigation. To jump to a specific month and year, simply modify the year and month numbers directly in the URL.
 
 <img src="2.Advanced Date Navigation using the URL/Advanced Date Navigation using the URL_4.png" alt="Advanced Date Navigation using the URL_4.png" width="100%" />
-
-![alt text](<Advanced Date Navigation using the URL_4.png>)
