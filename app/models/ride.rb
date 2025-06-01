@@ -13,10 +13,6 @@ class Ride < ApplicationRecord
   # accepts_nested_attributes_for :start_address
   # accepts_nested_attributes_for :dest_address
 
-  def emailed_driver?
-    self.emailed_driver == "true"
-  end
-
   def start_address_attributes=(attrs)
     normalized = normalize_address(attrs)
     self.start_address = Address.find_or_create_by!(normalized)
@@ -76,16 +72,20 @@ class Ride < ApplicationRecord
       ride_attrs[field] = (ride_attrs[field] == "Yes") if ride_attrs.key?(field)
     end
 
+    if ride_attrs.key?(:emailed_driver)
+      value = ride_attrs[:emailed_driver]
+      ride_attrs[:emailed_driver] = (value == true || value == "true")
+    end
     [ride_attrs, addresses]
   end
 
   private
   def normalize_address(attrs)
     {
+      name: attrs[:name].to_s.strip.presence,
       street: attrs[:street].to_s.strip.titleize,
       city: attrs[:city].to_s.strip.titleize,
-      state: attrs[:state].to_s.strip.upcase,
-      zip: attrs[:zip].to_s.strip
-    }
+      phone: attrs[:phone].to_s.strip.presence,
+    }.compact
   end
 end

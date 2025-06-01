@@ -52,8 +52,8 @@ const initiateCheckboxes = (table) => {
   // Creates the Datatables
   const initiateDatatables = () => {
     const tables = [
-      { selector: '#passengers-table', order: [[15, 'desc']], footerCallback: passengersRelevantData},
-      { selector: '#rides-table', order: [[3, 'desc']], footerCallback: ridesRelevantStats}
+      { selector: '#passengers-table', order: [[15, 'desc']]},
+      { selector: '#rides-table', order: [[3, 'desc']]}
     ];
   
     tables.forEach(table => {
