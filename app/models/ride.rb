@@ -76,7 +76,6 @@ class Ride < ApplicationRecord
       value = ride_attrs[:emailed_driver]
       ride_attrs[:emailed_driver] = (value == true || value == "true")
     end
-
     [ride_attrs, addresses]
   end
 

@@ -3,7 +3,7 @@
   <h2>Driver: <%= @driver.name %></h2>
   <form class="today-form">
     <div class="button-group">
-      <%= link_to "Previous Day", today_driver_path(date: @current_date - 1.day), class: "btn btn-secondary" %>
+      <%= link_to "Prev. Day", today_driver_path(date: @current_date - 1.day), class: "btn btn-secondary" %>
       <%= link_to "Back to Today", today_driver_path(date: Time.zone.today), class: "btn btn-primary" %>
       <%= link_to "Next Day", today_driver_path(date: @current_date + 1.day), class: "btn btn-secondary" %>
       <button onclick="window.print()" class="btn btn-primary" id="btn-print">Print</button>

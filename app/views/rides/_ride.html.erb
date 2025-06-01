@@ -53,7 +53,7 @@
                 <td><%= ride.driver&.name || 'N/A' %></td>
                 <td><%= ride.van || 'N/A' %></td>
                 <td><%= ride.passenger&.name || 'N/A' %></td>
-                 <td>
+                <td>
                   <% if ride.next_ride_id? %>
                     <span class="badge bg-success">Yes</span>
                   <% else %>
@@ -63,6 +63,7 @@
                 <td><%= ride.start_address&.full_address || 'N/A' %></td>
                 <td><%= ride.dest_address&.full_address || 'N/A' %></td>
                 <td><%= ride.ride_type %></td>
+
                 <% [:wheelchair, :low_income, :disabled, :need_caregiver].each do |field| %>
                 <td>
                   <span class="badge <%= ride.send(field) ? 'bg-success' : 'bg-danger' %>">
