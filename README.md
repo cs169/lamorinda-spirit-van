@@ -3,6 +3,8 @@
 
 [Heroku Deployment](https://sp25-01-lamorinda-47bdcb4ecf96.herokuapp.com)
 
+[Help Documentation](https://cs169.github.io/lamorinda-spirit-van)
+
 ## SP25 Badges
 [![All Specs](https://github.com/cs169/lamorinda-spirit-van/actions/workflows/ci.yml/badge.svg)](https://github.com/cs169/lamorinda-spirit-van/actions/workflows/ci.yml)
 [![Rubocop](https://github.com/cs169/lamorinda-spirit-van/actions/workflows/rubocop.yml/badge.svg)](https://github.com/cs169/lamorinda-spirit-van/actions/workflows/rubocop.yml)
