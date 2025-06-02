@@ -130,7 +130,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_07_202923) do
     t.integer "passenger_id"
     t.integer "driver_id"
     t.text "notes"
-    t.boolean "emailed_driver"
     t.integer "start_address_id"
     t.integer "dest_address_id"
     t.string "ride_type"
@@ -140,6 +139,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_07_202923) do
     t.boolean "need_caregiver", default: false, null: false
     t.integer "next_ride_id"
     t.datetime "date_and_time"
+    t.boolean "emailed_driver"
     t.index ["driver_id"], name: "index_rides_on_driver_id"
     t.index ["next_ride_id"], name: "index_rides_on_next_ride_id"
     t.index ["passenger_id"], name: "index_rides_on_passenger_id"
