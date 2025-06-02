@@ -25,7 +25,8 @@
 
       <div class="navbar-user d-flex align-items-center">
         <span>Hello! <%= current_user.role %></span>
-        <%= button_to 'Sign Out', destroy_user_session_path, method: :delete, form: { data: { turbo: 'false' } }, class: "btn btn-outline-light btn-sm ms-2" %>
+        <%= link_to "Help", "https://cs169.github.io/lamorinda-spirit-van/", target: "_blank", class: "btn btn-outline-light btn-sm ms-4" %>
+        <%= button_to 'Sign Out', destroy_user_session_path, method: :delete, form: { data: { turbo: 'false' } }, class: "btn btn-outline-light btn-sm ms-4" %>
       </div>
     <% end %>
 
