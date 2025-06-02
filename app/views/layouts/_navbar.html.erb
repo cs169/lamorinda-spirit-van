@@ -11,11 +11,11 @@
       <div class="navbar-links d-flex align-items-center gap-3 flex-wrap">
         <% if current_user.admin? %>
           <%= link_to "Admin", admin_users_path, class: "admin-link #{'active' if current_page?(admin_users_path)}" %>
-          <%= link_to "Reports", blazer_path, class: "blazer-link #{'active' if current_page?(blazer_path)}" %>
           <span class="vr" style="width:5px; height: 50px; background-color: #fff; opacity: 1;"></span>
         <% end %>
 
         <% if current_user.dispatcher? || current_user.admin? %>
+          <%= link_to "Reports", blazer_path, class: "blazer-link #{'active' if current_page?(blazer_path)}" %>
           <%= link_to "Passengers", passengers_path, class: "passengers-link #{'active' if current_page?(passengers_path)}" %>
           <%= link_to "Rides", rides_path, class: "rides-link #{'active' if current_page?(rides_path)}" %>
           <%= link_to "Calendar", shifts_path, class: "shifts-link #{'active' if current_page?(shifts_path)}" %>

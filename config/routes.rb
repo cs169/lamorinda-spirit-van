@@ -24,7 +24,7 @@ Rails.application.routes.draw do
   root "drivers#index"
 
   # blazer - data reporting
-  authenticate :user, ->(user) { user.admin? } do
+  authenticate :user, ->(user) { user.admin? || user.dispatcher? } do
     mount Blazer::Engine, at: "blazer", as: "blazer"
   end
 
