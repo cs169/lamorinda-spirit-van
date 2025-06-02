@@ -10,6 +10,7 @@ class UpdateRidesAndAddresses < ActiveRecord::Migration[7.2]
     remove_column :rides, :emailed_driver, :string
     add_column :rides, :emailed_driver, :boolean
 
+
     # === Addresses table changes ===
     add_column :addresses, :name, :string
     add_column :addresses, :phone, :string

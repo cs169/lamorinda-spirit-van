@@ -36,6 +36,11 @@ data_sources:
 # create audits
 audit: true
 
+timepicker_ranges:
+  - ["Today", 0, 0]
+  - ["Last 7 Days", 6, 0]
+  - ["Last 30 Days", 29, 0]
+
 # change the time zone
 # time_zone: "Pacific Time (US & Canada)"
 
