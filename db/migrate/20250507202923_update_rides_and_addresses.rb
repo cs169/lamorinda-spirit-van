@@ -7,7 +7,8 @@ class UpdateRidesAndAddresses < ActiveRecord::Migration[7.2]
     remove_column :rides, :notes_date_reserved, :text
     add_column :rides, :date_and_time, :datetime
     rename_column :rides, :destination_type, :ride_type
-    change_column(:rides, :emailed_driver, :boolean)
+    remove_column :rides, :emailed_driver, :string
+    add_column :rides, :emailed_driver, :boolean
 
     # === Addresses table changes ===
     add_column :addresses, :name, :string
