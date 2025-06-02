@@ -107,7 +107,7 @@ class ShiftsController < ApplicationController
     @shift.destroy!
 
     respond_to do |format|
-      format.html { redirect_to shifts_path, status: :see_other, notice: "Shift was successfully destroyed." }
+      format.html { redirect_to shifts_path, status: :see_other, notice: "Shift was successfully deleted." }
       format.json { head :no_content }
     end
   end
