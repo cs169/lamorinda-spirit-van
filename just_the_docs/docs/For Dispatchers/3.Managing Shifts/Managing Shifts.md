@@ -61,7 +61,8 @@ To modify an existing shift, delete it, or leave a note for the driver associate
 
 Click on the specific shift entry on the calendar (e.g., an "AM" shift). This will open the management options for that shift.
 
-<img src="3.Managing Shifts/Manage Shifts_7.png" alt="Manage Shifts_7.png" width="100%" />
+<img src="3.Managing Shifts/Manage Shifts_7.png" alt="Manage Shifts_7.png" width="100%" 
+style="border: 4px solid black;" />
 
 **Available Actions**
 
@@ -82,7 +83,8 @@ You can provide important details or instructions for the driver regarding this 
 
 This editor supports line breaks (press Enter for a new line). You can also adjust the editor's height by dragging the resize handle (often shown as diagonal lines) located in its bottom-right corner.
 
-<img src="3.Managing Shifts/Manage Shifts_8.png" alt="Manage Shifts_8.png" width="100%" />
+<img src="3.Managing Shifts/Manage Shifts_8.png" alt="Manage Shifts_8.png" width="100%" 
+style="border: 4px solid black;" />
 
 After entering your note, click "Save."
 The assigned driver will then be able to see the details you've provided when they view their schedule for that corresponding date.

@@ -45,7 +45,8 @@ This is where we expect most rides will be created from
 
 2. This will take you to the shift view page. Here, you can see the current rides for the shift, add new rides, and edit the text field with the timeline and notes that the driver will be able to see.
 
-    <img src="4.Scheduling Rides/Scheduling Rides_3.png" alt="Scheduling Rides_3.png" width="100%" />
+    <img src="4.Scheduling Rides/Scheduling Rides_3.png" alt="Scheduling Rides_3.png" width="100%" 
+    style="border: 4px solid black;" />
 
 **Some things to note about this page**
 
