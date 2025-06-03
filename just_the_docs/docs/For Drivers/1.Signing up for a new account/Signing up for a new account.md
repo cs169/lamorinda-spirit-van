@@ -7,7 +7,7 @@ nav_order: 1
 ---
 
 ## Signing up for a new account
-[Visual Guide Video Link](https://youtube.com/watch?v=nKR5lJjS9ys)
+[Video Walkthrough Link](https://youtube.com/watch?v=nKR5lJjS9ys)
 
 <div class="video-container">
   <iframe 
