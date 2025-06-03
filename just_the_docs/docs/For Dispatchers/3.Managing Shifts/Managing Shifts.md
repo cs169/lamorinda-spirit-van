@@ -7,13 +7,13 @@ nav_order: 3
 ---
 
 ## Managing Shifts
-<a href="https://youtu.be/yN6_1Dw91j8" target="_blank">Video Walkthrough Link</a>
+<a href="https://youtu.be/vegrG5kB6ms" target="_blank">Video Walkthrough Link</a>
 
 <div class="video-container">
   <iframe 
     width="560" 
     height="315" 
-    src="https://www.youtube.com/embed/yN6_1Dw91j8"
+    src="https://www.youtube.com/embed/vegrG5kB6ms"
     title="Manage Shifts"
     frameborder="0" 
     allow="encrypted-media; picture-in-picture; web-share" 
