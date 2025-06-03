@@ -7,7 +7,7 @@ nav_order: 1
 ---
 
 ## Signing up for a new account
-[Video Walkthrough Link](https://youtube.com/watch?v=nKR5lJjS9ys)
+<a href="https://youtube.com/watch?v=nKR5lJjS9ys" target="_blank">Video Walkthrough Link</a>
 
 <div class="video-container">
   <iframe 

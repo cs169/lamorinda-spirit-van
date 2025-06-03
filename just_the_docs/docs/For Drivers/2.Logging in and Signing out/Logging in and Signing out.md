@@ -8,7 +8,7 @@ nav_order: 2
 
 ## Logging in and Signing out
 
-[Visual Guide Video Link](https://youtube.com/watch?v=ShHnMeDyGH4)
+<a href="https://youtube.com/watch?v=ShHnMeDyGH4" target="_blank">Video Walkthrough Link</a>
 
 <div class="video-container">
   <iframe 

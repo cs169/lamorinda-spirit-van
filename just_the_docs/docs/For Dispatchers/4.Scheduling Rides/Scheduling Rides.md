@@ -7,7 +7,19 @@ nav_order: 4
 ---
 
 ## Scheduling Rides
+<a href="https://youtu.be/SV4cpSqEyj8" target="_blank">Video Walkthrough Link</a>
 
+<div class="video-container">
+  <iframe 
+    width="560" 
+    height="315" 
+    src="https://www.youtube.com/embed/SV4cpSqEyj8"
+    title="Scheduling Rides"
+    frameborder="0" 
+    allow="encrypted-media; picture-in-picture; web-share" 
+    allowfullscreen>
+  </iframe>
+</div>
 ---
 
 Adding a new ride to the database can be done either from the all rides table or from the shift you are scheduling a ride for. Both lead to the same ride creation page.

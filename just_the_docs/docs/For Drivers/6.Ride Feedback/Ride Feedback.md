@@ -8,7 +8,7 @@ nav_order: 6
 
 ## Ride Feedback
 
-[Visual Guide Video Link](https://youtube.com/watch?v=KZwazkQI3ys)
+<a href="https://youtube.com/watch?v=KZwazkQI3ys" target="_blank">Video Walkthrough Link</a>
 
 <div class="video-container">
   <iframe 
