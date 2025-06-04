@@ -8,7 +8,7 @@ nav_order: 5
 
 ## Shift Feedback
 
-[Visual Guide Video Link](https://youtube.com/watch?v=T-QDixZ1Eq4)
+<a href="https://youtube.com/watch?v=T-QDixZ1Eq4" target="_blank">Video Walkthrough Link</a>
 
 <div class="video-container">
   <iframe 

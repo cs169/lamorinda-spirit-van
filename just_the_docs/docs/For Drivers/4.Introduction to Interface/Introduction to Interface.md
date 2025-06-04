@@ -8,7 +8,7 @@ nav_order: 4
 
 ## Introduction to Interface
 
-[Visual Guide Video Link](https://youtube.com/watch?v=dccPXOGLomA)
+<a href="https://youtube.com/watch?v=dccPXOGLomA" target="_blank">Video Walkthrough Link</a>
 
 <div class="video-container">
   <iframe 

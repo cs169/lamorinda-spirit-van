@@ -7,12 +7,17 @@ nav_order: 2
 ---
 
 ## Passengers & Rides Tables
+<div>
+This video walkthrough couldn't be uploaded to YouTube, so we uploaded it to Google Drive for you to view:
+</div>
+<a href="https://drive.google.com/file/d/1YucUxpbFO1wvthJHe4povio4fabKcM9d/view?usp=drive_link" target="_blank">Video Walkthrough Link</a>
+
 
 ---
 
 Both the passenger and rides tabs are managed through datatables, which resembles an Excel table. The passengers table includes all the passengers in the system and is required for creating a ride, while the rides table includes all the previous ride’s data. Each row displays the fields for a particular passenger or ride as well as the two action buttons (Edit or Delete). 
 
-Here are the features that exist on the Passengers & Rides tab.
+Here are the features that exist on the Passengers & Rides tab:
 
 ---
 

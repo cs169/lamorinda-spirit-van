@@ -8,7 +8,7 @@ nav_order: 3
 
 ## Resetting Passwords
 
-[Visual Guide Video Link](https://youtube.com/watch?v=9AWkl_9OkoQ)
+<a href="https://youtube.com/watch?v=9AWkl_9OkoQ" target="_blank">Video Walkthrough Link</a>
 
 <div class="video-container">
   <iframe 

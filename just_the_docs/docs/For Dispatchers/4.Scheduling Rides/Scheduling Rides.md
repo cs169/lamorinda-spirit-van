@@ -7,7 +7,19 @@ nav_order: 4
 ---
 
 ## Scheduling Rides
+<a href="https://youtu.be/SV4cpSqEyj8" target="_blank">Video Walkthrough Link</a>
 
+<div class="video-container">
+  <iframe 
+    width="560" 
+    height="315" 
+    src="https://www.youtube.com/embed/SV4cpSqEyj8"
+    title="Scheduling Rides"
+    frameborder="0" 
+    allow="encrypted-media; picture-in-picture; web-share" 
+    allowfullscreen>
+  </iframe>
+</div>
 ---
 
 Adding a new ride to the database can be done either from the all rides table or from the shift you are scheduling a ride for. Both lead to the same ride creation page.
@@ -33,7 +45,8 @@ This is where we expect most rides will be created from
 
 2. This will take you to the shift view page. Here, you can see the current rides for the shift, add new rides, and edit the text field with the timeline and notes that the driver will be able to see.
 
-    <img src="4.Scheduling Rides/Scheduling Rides_3.png" alt="Scheduling Rides_3.png" width="100%" />
+    <img src="4.Scheduling Rides/Scheduling Rides_3.png" alt="Scheduling Rides_3.png" width="100%" 
+    style="border: 4px solid black;" />
 
 **Some things to note about this page**
 
