@@ -117,7 +117,7 @@ jobs:
       - name: Build Jekyll Docs
         run: |
           cd just_the_docs
-          bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
+          bundle exec jekyll build --source just_the_docs --baseurl "${{ steps.pages.outputs.base_path }}"
         env:
           JEKYLL_ENV: production
 
