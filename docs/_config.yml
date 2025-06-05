@@ -22,7 +22,7 @@ exclude:
 
 plugins:
   - jekyll-default-layout
-
+  - jekyll-remote-theme
 
 just_the_docs:
   navigation:
