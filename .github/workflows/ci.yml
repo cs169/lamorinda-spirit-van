@@ -102,6 +102,7 @@ jobs:
       id-token: write
       pages: write
       contents: read
+    environment: github-pages
     steps:
       - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
