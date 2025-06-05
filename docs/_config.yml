@@ -1,6 +1,6 @@
 title: Lamorinda-Help-Documentation
 description: This docs hosts Lamorinda application user guides
-theme: just-the-docs
+remote_theme: just-the-docs/just-the-docs
 
 url: https://cs169.github.io
 baseurl: "/lamorinda-spirit-van"
@@ -22,7 +22,7 @@ exclude:
 
 plugins:
   - jekyll-default-layout
-
+  - jekyll-remote-theme
 
 just_the_docs:
   navigation:
