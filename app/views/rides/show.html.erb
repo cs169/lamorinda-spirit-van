@@ -31,7 +31,7 @@
       <ul class="list-group list-group-flush">
         <li class="list-group-item"><strong>Start Address:</strong> <%= @ride.start_address ? [@ride.start_address.name, @ride.start_address.full_address, @ride.start_address.phone].compact.join(", ") : "N/A" %></li>
         <% @all_rides.each_with_index do |ride, index| %>
-          <li class="list-group-item"><strong>Stop <%= index + 1 %>:</strong> <%= @ride.dest_address ? [@ride.dest_address.name, @ride.dest_address.full_address, @ride.dest_address.phone].compact.join(", ") : "N/A" %></li>
+          <li class="list-group-item"><strong>Stop <%= index + 1 %>:</strong> <%= ride.dest_address ? [ride.dest_address.name, ride.dest_address.full_address, ride.dest_address.phone].compact.join(", ") : "N/A" %></li>
         <% end %>
         <li class="list-group-item"><strong>Ride Type:</strong> <%= @ride.ride_type %></li>
       </ul>
