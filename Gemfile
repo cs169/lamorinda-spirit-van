@@ -62,11 +62,13 @@ gem "blazer"
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
-# for Just the Docs
-gem "jekyll", "~> 4.4.1"
-gem "webrick"
-gem "just-the-docs", "0.10.1"
-gem "jekyll-default-layout"
+group :docs do
+  gem "jekyll", "~> 4.4.1"
+  gem "webrick"
+  gem "just-the-docs"
+  gem "jekyll-default-layout"
+  gem "jekyll-remote-theme"
+end
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

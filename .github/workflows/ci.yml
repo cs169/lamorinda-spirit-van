@@ -102,20 +102,28 @@ jobs:
       id-token: write
       pages: write
       contents: read
+    environment: github-pages
     steps:
       - uses: actions/checkout@v4
+  
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.4.1'
           bundler-cache: true
+          working-directory: docs
 
       - name: Setup GitHub Pages
         id: pages
         uses: actions/configure-pages@v5
 
+      - name: Install Jekyll dependencies
+        run: |
+          cd docs
+          bundle install
+
       - name: Build Jekyll Docs
         run: |
-          cd just_the_docs
+          cd docs
           bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
         env:
           JEKYLL_ENV: production
@@ -123,7 +131,7 @@ jobs:
       - name: Upload artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: just_the_docs/_site
+          path: docs/_site
 
       - name: Deploy to GitHub Pages
         id: deployment
