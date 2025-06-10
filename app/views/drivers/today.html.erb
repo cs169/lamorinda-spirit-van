@@ -17,10 +17,11 @@
       <table class="rides-table">
         <thead>
           <tr>
-            <th>Time</th>
+            <th>First p/up Time</th>
             <th>Van</th>
             <th>Notes</th>
             <th>Passenger</th>
+            <th>Multi Stop</th>
             <th>Wheelchair</th>
             <th>Disabled</th>
             <th>Needs Caregiver</th>
@@ -36,8 +37,15 @@
             <tr>
               <td><%= ride.date_and_time.strftime("%I:%M %p") %></td>
               <td><%= ride.van %></td>
-              <td><%= ride.notes %></td>
+              <td><%= ride.notes_to_driver %></td>
               <td><%= ride.passenger.name %></td>
+              <td>
+                <% if ride.next_ride_id? %>
+                  <span class="badge bg-success">Yes</span>
+                <% else %>
+                  <span class="badge bg-danger">No</span>
+                <% end %>
+              </td>
               <td><%= ride.wheelchair ? "Yes" : "No" %></td>
               <td><%= ride.disabled ? "Yes" : "No" %></td>
               <td><%= ride.need_caregiver ? "Yes" : "No" %></td>
@@ -59,7 +67,7 @@
       <div class="rides-list">
         <% @rides.each do |ride| %>
           <div class="ride-block">
-            <p><strong>Notes:</strong> <%= ride.notes %></p>
+            <p><strong>Notes:</strong> <%= ride.notes_to_driver %></p>
             <p><strong>Passenger:</strong> <%= ride.passenger.name %></p>
 
             <% if ride.wheelchair %>

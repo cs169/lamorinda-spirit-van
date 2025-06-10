@@ -35,11 +35,10 @@ namespace :import do
         low_income: row["low_income"].to_i == 1,
         disabled: row["disabled"].to_i == 1,
         need_caregiver: row["need_caregiver"].to_i == 1,
-        notes: row["Notes"],
+        notes_to_driver: row["notes_to_driver"],
         hours: row["Hours"].to_f,
         amount_paid: row["Amount Paid"].to_f,
-        confirmed_with_passenger: row["Confirmed with passenger"],
-        emailed_driver: row["emailed_driver"].to_i == 1,
+        status: row["Status"],
       )
     end
 

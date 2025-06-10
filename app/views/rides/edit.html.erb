@@ -75,24 +75,21 @@
           </div>
 
           <div class="mb-3">
+            <%= f.label :notes_to_driver, "Notes to Driver" %>
+            <%= f.text_area :notes_to_driver, class: "form-control", rows: 3 %>
+          </div>
+
+          <div class="mb-3">
             <%= f.label :notes, "Notes" %>
             <%= f.text_area :notes, class: "form-control", rows: 3 %>
           </div>
 
           <div class="mb-3">
-             <%= f.label :confirmed_with_passenger, "Confirmed With Passenger?" %>
-             <%= f.select :confirmed_with_passenger,
-                          [["Yes"], ["No"]],
+             <%= f.label :status, "Status" %> <span class="text-danger">*</span>
+             <%= f.select :status,
+                          [["Requested"], ['Pending'], ['Scheduled'], ['Confirmed'], ['Email sent'], ["Waitlisted"], ['Cancelled']],
                           {},
                           class: "form-select" %>
-          </div>
-
-          <div class="mb-3">
-            <%= f.label :emailed_driver, "Emailed Driver?", class: "form-label" %> <span class="text-danger">*</span>
-            <%= f.select :emailed_driver,
-                          [["Yes", true], ["No", false]],
-                          {},
-                          class: "form-select", required: true %>
           </div>
         </div>
 

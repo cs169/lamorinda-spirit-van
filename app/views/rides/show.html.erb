@@ -55,9 +55,8 @@
     <div class="card-body">
       <h5 class="card-title">Other</h5>
       <ul class="list-group list-group-flush">
-        <li class="list-group-item"><strong>General Notes:</strong> <%= simple_format(@ride.notes) %></li>
-        <li class="list-group-item"><strong>Confirmed with Passenger:</strong> <%= simple_format(@ride.confirmed_with_passenger) %></li>
-        <li class="list-group-item"><strong>Emailed Driver:</strong> <%= @ride.emailed_driver ? "Yes" : "No" %></li>
+        <li class="list-group-item"><strong>Notes:</strong> <%= simple_format(@ride.notes_to_driver) %></li>
+        <li class="list-group-item"><strong>Status:</strong> <%= simple_format(@ride.status) %></li>
       </ul>
     </div>
   </div>

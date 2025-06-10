@@ -1,51 +1,51 @@
-date_and_time,driver_id,Van,passenger_id,start_address_id,dest_address_id,ride_type,wheelchair,low_income,disabled,need_caregiver,Notes,Hours,Amount Paid,Confirmed with passenger,emailed_driver
-05/01/2025 08:15 AM ,1,6,14,8,38,Cafe Costa,0,0,0,0,60 min,2.5,10.86,Yes,0
-05/02/2025 12:00 PM,2,5,2,83,62,special events,1,1,0,1,"r/t, Wheelchair, 60 min",4.0,32.16,Yes,0
-05/02/2025 12:00 PM,5,3,12,50,93,errands & groceries,0,1,0,1,60 min,3.4,27.3,Yes,0
-05/04/2025 09:30 AM,3,7,42,46,88,social visits,0,0,1,0,60 min,1.0,13.98,No,0
-05/08/2025 07:00 AM,1,7,50,50,75,Cafe Costa,1,0,0,0,"r/t, $20",3.2,30.49,No,1
-05/06/2025 11:20 AM,5,8,26,78,97,medical,1,0,1,1,"r/t, Wheelchair",2.2,46.42,No,1
-05/07/2025 02:30 PM,6,5,1,99,93,errands & groceries,0,0,0,0,"Wheelchair, r/t, 60 min",2.8,24.26,Yes,1
-05/08/2025 07:00 AM,1,8,24,69,7,errands & groceries,1,0,0,0,"$20, r/t, Wheelchair",3.3,42.99,No,1
-05/09/2025 06:15 PM,3,3,48,55,68,special events,0,0,0,1,60 min,1.5,30.97,No,1
-05/08/2025 07:00 AM,6,6,1,90,24,Cafe Costa,1,0,1,0,"60 min, r/t, $20",3.2,42.96,No,1
-05/09/2025 06:15 PM,5,5,8,89,49,personal care,1,1,1,0,"$20, r/t",2.9,25.87,No,0
-05/04/2025 09:30 AM,6,8,6,66,38,personal care,0,0,0,0,Wheelchair,4.2,43.41,Yes,0
-05/08/2025 07:00 AM,1,6,6,80,94,social visits,1,1,1,1,60 min,2.7,36.48,No,1
-05/09/2025 06:15 PM,6,7,26,86,45,personal care,0,0,1,0,"$20, Wheelchair",1.9,15.7,No,1
-05/01/2025 08:15 AM,4,3,28,41,23,Cafe Costa,1,0,1,1,60 min,2.9,12.09,Yes,0
-05/04/2025 09:30 AM,2,5,30,91,91,medical,1,0,0,1,"$20, r/t, Wheelchair",3.8,33.35,No,0
-05/09/2025 06:15 PM,3,5,9,44,78,Cafe Costa,0,1,0,0,"$20, 60 min",1.2,21.43,No,1
-05/04/2025 09:30 AM,4,7,40,76,79,social visits,0,0,1,1,"r/t, Wheelchair",2.5,24.27,Yes,1
-05/09/2025 06:15 PM,6,7,36,43,31,personal care,1,0,0,1,"r/t, $20",1.8,26.37,No,0
-05/08/2025 07:00 AM,3,8,15,91,80,personal care,0,1,0,1,"r/t, $20",1.2,35.35,No,0
-05/04/2025 09:30 AM,6,8,16,94,22,special events,0,0,0,1,"Wheelchair, $20, 60 min",2.7,27.04,No,0
-05/09/2025 06:15 PM,3,5,1,100,2,personal care,0,0,1,0,"r/t, 60 min",1.1,39.7,No,1
-05/01/2025 08:15 AM,6,3,46,80,32,errands & groceries,0,0,1,0,60 min,1.2,48.3,No,0
-05/04/2025 09:30 AM,3,5,15,48,29,errands & groceries,0,1,1,1,r/t,2.5,45.75,Yes,1
-05/09/2025 06:15 PM,4,3,45,64,79,medical,0,1,1,1,"60 min, Wheelchair, r/t",2.9,25.26,Yes,0
-05/08/2025 07:00 AM,6,7,38,11,50,medical,0,1,1,1,Wheelchair,4.1,31.01,No,0
-05/09/2025 06:15 PM,4,7,1,6,50,errands & groceries,0,1,0,1,r/t,3.6,15.16,No,1
-05/04/2025 09:30 AM,2,5,23,31,14,personal care,0,0,0,0,"r/t, $20",2.8,23.1,No,1
-05/03/2025 03:45 PM,3,3,6,53,60,special events,0,1,0,0,$20 ,4.0,1.61,No,0
-05/09/2025 06:15 PM,6,8,15,70,93,personal care,0,1,0,1,"60 min, Wheelchair",3.8,39.69,No,0
-05/03/2025 03:45 PM,1,7,32,22,74,social visits,0,0,1,1,60 min,2.8,41.47,No,0
-05/04/2025 09:30 AM,3,7,15,45,51,personal care,1,0,0,0,"60 min, Wheelchair, r/t",3.5,31.91,No,1
-05/03/2025 03:45 PM,5,3,31,31,49,personal care,0,0,0,1,"60 min, Wheelchair",3.0,29.66,No,0
-05/09/2025 06:15 PM,6,8,31,60,52,special events,1,0,0,1,r/t,3.7,15.76,Yes,1
-05/05/2025 05:00 PM,3,5,2,40,29,personal care,1,0,1,1,"Wheelchair, 60 min",4.7,11.98,No,0
-05/03/2025 03:45 PM,4,5,34,77,16,special events,1,0,0,1,"Wheelchair, $20, r/t",2.5,27.93,Yes,0
-05/04/2025 09:30 AM,6,5,16,96,29,Cafe Costa,0,1,1,0,Wheelchair,4.6,15.21,No,1
-05/09/2025 06:15 PM,2,8,3,40,88,special events,1,0,0,1,"$20, 60 min",1.1,30.24,Yes,1
-05/05/2025 05:00 PM,1,5,44,47,74,errands & groceries,1,1,0,0,"$20, Wheelchair, 60 min",3.7,49.31,Yes,1
-05/08/2025 07:00 AM,4,6,1,91,66,medical,0,0,1,0,"$20, 60 min, r/t",4.6,23.14,Yes,0
-05/05/2025 05:00 PM,4,5,1,12,49,errands & groceries,1,0,1,1,"$20, Wheelchair",2.0,10.02,Yes,0
-05/03/2025 03:45 PM,1,7,6,11,75,social visits,1,0,1,0,"r/t, $20, 60 min",4.1,1.42,Yes,0
-05/09/2025 06:15 PM,4,6,10,11,33,Cafe Costa,1,1,1,0,"Wheelchair, $20, r/t",4.5,44.47,Yes,1
-05/01/2025 08:15 AM,4,3,27,7,59,Cafe Costa,1,0,0,1,"Wheelchair, r/t, 60 min",4.6,10.85,No,1
-05/04/2025 09:30 AM,2,3,13,45,30,Cafe Costa,1,1,1,1,r/t,2.1,49.9,Yes,1
-05/01/2025 08:15 AM,4,7,6,72,61,personal care,0,0,0,0,"$20, 60 min, Wheelchair",3.3,24.78,Yes,1
-05/08/2025 07:00 AM,2,7,1,64,28,social visits,1,1,0,1,"60 min, $20",5.0,43.42,No,1
-05/01/2025 08:15 AM,2,7,45,41,74,personal care,1,1,0,0,"$20, 60 min",4.8,47.51,Yes,0
-05/04/2025 09:30 AM,1,7,31,97,73,errands & groceries,0,1,1,0,"$20, Wheelchair, 60 min",1.8,21.88,No,1
-05/05/2025 05:00 PM,3,7,38,94,20,special events,1,1,0,0,60 min,4.2,23.44,No,1
+date_and_time,driver_id,Van,passenger_id,start_address_id,dest_address_id,ride_type,wheelchair,low_income,disabled,need_caregiver,notes_to_driver,Hours,Amount Paid, Status
+05/01/2025 08:15 AM ,1,6,14,8,38,Cafe Costa,0,0,0,0,60 min,2.5,10.86, Email sent
+05/02/2025 12:00 PM,2,5,2,83,62,special events,1,1,0,1,"r/t, Wheelchair, 60 min",4.0,32.16, Email sent
+05/02/2025 12:00 PM,5,3,12,50,93,errands & groceries,0,1,0,1,60 min,3.4,27.3, Email sent
+05/04/2025 09:30 AM,3,7,42,46,88,social visits,0,0,1,0,60 min,1.0,13.98, Email sent
+05/08/2025 07:00 AM,1,7,50,50,75,Cafe Costa,1,0,0,0,"r/t, $20",3.2,30.49, Email sent
+05/06/2025 11:20 AM,5,8,26,78,97,medical,1,0,1,1,"r/t, Wheelchair",2.2,46.42, Email sent
+05/07/2025 02:30 PM,6,5,1,99,93,errands & groceries,0,0,0,0,"Wheelchair, r/t, 60 min",2.8,24.26, Email sent
+05/08/2025 07:00 AM,1,8,24,69,7,errands & groceries,1,0,0,0,"$20, r/t, Wheelchair",3.3,42.99, Email sent
+05/09/2025 06:15 PM,3,3,48,55,68,special events,0,0,0,1,60 min,1.5,30.97, Email sent
+05/08/2025 07:00 AM,6,6,1,90,24,Cafe Costa,1,0,1,0,"60 min, r/t, $20",3.2,42.96, Email sent
+05/09/2025 06:15 PM,5,5,8,89,49,personal care,1,1,1,0,"$20, r/t",2.9,25.87, Email sent
+05/04/2025 09:30 AM,6,8,6,66,38,personal care,0,0,0,0,Wheelchair,4.2,43.41, Email sent
+05/08/2025 07:00 AM,1,6,6,80,94,social visits,1,1,1,1,60 min,2.7,36.48, Email sent
+05/09/2025 06:15 PM,6,7,26,86,45,personal care,0,0,1,0,"$20, Wheelchair",1.9,15.7, Email sent
+05/01/2025 08:15 AM,4,3,28,41,23,Cafe Costa,1,0,1,1,60 min,2.9,12.09, Email sent
+05/04/2025 09:30 AM,2,5,30,91,91,medical,1,0,0,1,"$20, r/t, Wheelchair",3.8,33.35, Email sent
+05/09/2025 06:15 PM,3,5,9,44,78,Cafe Costa,0,1,0,0,"$20, 60 min",1.2,21.43, Email sent
+05/04/2025 09:30 AM,4,7,40,76,79,social visits,0,0,1,1,"r/t, Wheelchair",2.5,24.27, Email sent
+05/09/2025 06:15 PM,6,7,36,43,31,personal care,1,0,0,1,"r/t, $20",1.8,26.37, Email sent
+05/08/2025 07:00 AM,3,8,15,91,80,personal care,0,1,0,1,"r/t, $20",1.2,35.35, Email sent
+05/04/2025 09:30 AM,6,8,16,94,22,special events,0,0,0,1,"Wheelchair, $20, 60 min",2.7,27.04, Email sent
+05/09/2025 06:15 PM,3,5,1,100,2,personal care,0,0,1,0,"r/t, 60 min",1.1,39.7, Email sent
+05/01/2025 08:15 AM,6,3,46,80,32,errands & groceries,0,0,1,0,60 min,1.2,48.3, Email sent
+05/04/2025 09:30 AM,3,5,15,48,29,errands & groceries,0,1,1,1,r/t,2.5,45.75, Email sent
+05/09/2025 06:15 PM,4,3,45,64,79,medical,0,1,1,1,"60 min, Wheelchair, r/t",2.9,25.26, Email sent
+05/08/2025 07:00 AM,6,7,38,11,50,medical,0,1,1,1,Wheelchair,4.1,31.01, Email sent
+05/09/2025 06:15 PM,4,7,1,6,50,errands & groceries,0,1,0,1,r/t,3.6,15.16, Email sent
+05/04/2025 09:30 AM,2,5,23,31,14,personal care,0,0,0,0,"r/t, $20",2.8,23.1, Email sent
+05/03/2025 03:45 PM,3,3,6,53,60,special events,0,1,0,0,$20 ,4.0,1.61, Email sent
+05/09/2025 06:15 PM,6,8,15,70,93,personal care,0,1,0,1,"60 min, Wheelchair",3.8,39.69, Email sent
+05/03/2025 03:45 PM,1,7,32,22,74,social visits,0,0,1,1,60 min,2.8,41.47, Email sent
+05/04/2025 09:30 AM,3,7,15,45,51,personal care,1,0,0,0,"60 min, Wheelchair, r/t",3.5,31.91, Email sent
+05/03/2025 03:45 PM,5,3,31,31,49,personal care,0,0,0,1,"60 min, Wheelchair",3.0,29.66, Email sent
+05/09/2025 06:15 PM,6,8,31,60,52,special events,1,0,0,1,r/t,3.7,15.76, Email sent
+05/05/2025 05:00 PM,3,5,2,40,29,personal care,1,0,1,1,"Wheelchair, 60 min",4.7,11.98, Email sent
+05/03/2025 03:45 PM,4,5,34,77,16,special events,1,0,0,1,"Wheelchair, $20, r/t",2.5,27.93, Email sent
+05/04/2025 09:30 AM,6,5,16,96,29,Cafe Costa,0,1,1,0,Wheelchair,4.6,15.21, Email sent
+05/09/2025 06:15 PM,2,8,3,40,88,special events,1,0,0,1,"$20, 60 min",1.1,30.24, Email sent
+05/05/2025 05:00 PM,1,5,44,47,74,errands & groceries,1,1,0,0,"$20, Wheelchair, 60 min",3.7,49.31, Email sent
+05/08/2025 07:00 AM,4,6,1,91,66,medical,0,0,1,0,"$20, 60 min, r/t",4.6,23.14, Email sent
+05/05/2025 05:00 PM,4,5,1,12,49,errands & groceries,1,0,1,1,"$20, Wheelchair",2.0,10.02, Email sent
+05/03/2025 03:45 PM,1,7,6,11,75,social visits,1,0,1,0,"r/t, $20, 60 min",4.1,1.42, Email sent
+05/09/2025 06:15 PM,4,6,10,11,33,Cafe Costa,1,1,1,0,"Wheelchair, $20, r/t",4.5,44.47, Email sent
+05/01/2025 08:15 AM,4,3,27,7,59,Cafe Costa,1,0,0,1,"Wheelchair, r/t, 60 min",4.6,10.85, Email sent
+05/04/2025 09:30 AM,2,3,13,45,30,Cafe Costa,1,1,1,1,r/t,2.1,49.9, Email sent
+05/01/2025 08:15 AM,4,7,6,72,61,personal care,0,0,0,0,"$20, 60 min, Wheelchair",3.3,24.78, Email sent
+05/08/2025 07:00 AM,2,7,1,64,28,social visits,1,1,0,1,"60 min, $20",5.0,43.42, Email sent
+05/01/2025 08:15 AM,2,7,45,41,74,personal care,1,1,0,0,"$20, 60 min",4.8,47.51, Email sent
+05/04/2025 09:30 AM,1,7,31,97,73,errands & groceries,0,1,1,0,"$20, Wheelchair, 60 min",1.8,21.88, Email sent
+05/05/2025 05:00 PM,3,7,38,94,20,special events,1,1,0,0,60 min,4.2,23.44, Email sent

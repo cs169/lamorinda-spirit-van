@@ -72,10 +72,6 @@ class Ride < ApplicationRecord
       ride_attrs[field] = (ride_attrs[field] == "Yes") if ride_attrs.key?(field)
     end
 
-    if ride_attrs.key?(:emailed_driver)
-      value = ride_attrs[:emailed_driver]
-      ride_attrs[:emailed_driver] = (value == true || value == "true")
-    end
     [ride_attrs, addresses]
   end
 
