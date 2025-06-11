@@ -10,13 +10,8 @@ class Address < ApplicationRecord
 
   def full_address
     name_part = name.present? ? "(#{name}) " : ""
-    "#{name_part}#{street}, #{city}, #{zip_code}"
+    zip_part = zip_code? ? ", (#{zip_code})" : ""
+    "#{name_part}#{street}, #{city}#{zip_part}"
   end
 
-  private
-  def normalize_fields
-    self.street = street.to_s.strip.titleize
-    self.city = city.to_s.strip.titleize
-    self.zip_code = zip_code.to_s.strip
-  end
 end

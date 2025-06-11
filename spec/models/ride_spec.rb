@@ -214,14 +214,14 @@ RSpec.describe Ride, type: :model do
       expect(rides.length).to eq(3)
       expect(success).to eq(true)
 
-      expect(rides[0].start_address.full_address).to eq("(Kaiser) 789 Broadway, San Francisco, ")
-      expect(rides[0].dest_address.full_address).to eq("(Kaiser) 1000 Dwight, Berkeley, ")
+      expect(rides[0].start_address.full_address).to eq("(Kaiser) 789 Broadway, San Francisco")
+      expect(rides[0].dest_address.full_address).to eq("(Kaiser) 1000 Dwight, Berkeley")
 
-      expect(rides[1].start_address.full_address).to eq("(Kaiser) 1000 Dwight, Berkeley, ")
-      expect(rides[1].dest_address.full_address).to eq("(Kaiser) 100 Bancroft, Berkeley, ")
+      expect(rides[1].start_address.full_address).to eq("(Kaiser) 1000 Dwight, Berkeley")
+      expect(rides[1].dest_address.full_address).to eq("(Kaiser) 100 Bancroft, Berkeley")
 
-      expect(rides[2].start_address.full_address).to eq("(Kaiser) 100 Bancroft, Berkeley, ")
-      expect(rides[2].dest_address.full_address).to eq("(Kaiser) 80 University, Berkeley, ")
+      expect(rides[2].start_address.full_address).to eq("(Kaiser) 100 Bancroft, Berkeley")
+      expect(rides[2].dest_address.full_address).to eq("(Kaiser) 80 University, Berkeley")
 
       expect(rides[0].next_ride).to eq(rides[1])
       expect(rides[1].previous_ride).to eq(rides[0])
