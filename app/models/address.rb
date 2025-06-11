@@ -5,7 +5,7 @@ class Address < ApplicationRecord
 
   # enforce uniqueness to prevent dupliciate addresses. This is model level validation
   # but it is not the only enforcement, just one of many
-  validates :street, :city, :zip_code, presence: true
+  validates :street, :city, presence: true
   validates :street, uniqueness: { scope: [:city, :zip_code] }
 
   def full_address
