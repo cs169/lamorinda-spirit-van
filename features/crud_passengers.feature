@@ -8,10 +8,10 @@ Feature: Manage Passengers
         Given a dispatcher is logged in
 
         Given the following passenger records exist:
-            | Name        | Street           | City        | Birthday   | Race | Hispanic? | Date Registered |
-            | Jane Doe    | 123 Main St      | Lafayette   | 1940-01-01 | 5    | true      | 2022-06-01      |
-            | John Smith  | 456 Oak Rd       | Orinda      | 1935-05-12 | 5    | false     | 2021-11-15      |
-            | Mary Brown  | 789 Pine Ave     | Moraga      | 1942-09-25 | 5    | true      | 2023-01-10      |
+            | Name        | Street           | City        | Birthday   | Race | Hispanic? | Date Registered | Zip   |
+            | Jane Doe    | 123 Main St      | Lafayette   | 1940-01-01 | 5    | true      | 2022-06-01      | 94595 |
+            | John Smith  | 456 Oak Rd       | Orinda      | 1935-05-12 | 5    | false     | 2021-11-15      | 94520 |
+            | Mary Brown  | 789 Pine Ave     | Moraga      | 1942-09-25 | 5    | true      | 2023-01-10      | 94560 |
     
     @create 
     Scenario: Create a new passenger

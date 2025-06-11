@@ -93,6 +93,15 @@
                                         class: "form-control", 
                                         required: true %>
             </div>
+
+            <div class="mb-3">
+              <%= address_form.label :zip_code, "Zip Code", class: "form-label" %>
+              <span class="text-danger">*</span>
+              <%= address_form.text_field :zip_code, 
+                                        value: @passenger.address&.zip_code,
+                                        class: "form-control", 
+                                        required: true %>
+            </div>
           <% end %>
         </div>
       </div>
@@ -165,6 +174,33 @@
           <div class="mb-3">
             <%= form.label :email, "Email", class: "form-label" %>
             <%= form.email_field :email, class: "form-control" %>
+          </div>
+
+          <!-- LMV Member -->
+          <div class="mb-3">
+            <%= form.label :lmv_member, "LMV Member?", class: "form-label" %>
+            <%= form.select :lmv_member, 
+                          [['Yes', true], ['No', false]], 
+                          {}, 
+                          class: "form-select" %>
+          </div>
+
+          <!-- Mail Updates -->
+          <div class="mb-3">
+            <%= form.label :mail_updates, "Mail Updates", class: "form-label" %>
+            <%= form.text_area :mail_updates, rows: 2, class: "form-control" %>
+          </div>
+
+          <!-- Requested Newsletter -->
+          <div class="mb-3">
+            <%= form.label :rqsted_newsletter, "Requested Newsletter", class: "form-label" %>
+            <%= form.select :rqsted_newsletter,
+                          [['Not Set', nil],
+                           ['Opt-In', 'Opt-In'],
+                           ['Neutral', 'Neutral'],
+                           ['Opt-Out', 'Opt-Out']],
+                          {},
+                          class: "form-select" %>
           </div>
 
           <!-- Audit -->
