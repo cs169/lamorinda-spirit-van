@@ -35,11 +35,10 @@ RSpec.describe RidesController, type: :controller do
           van: @ride1.van,
           hours: @ride1.hours,
           amount_paid: @ride1.amount_paid,
-          confirmed_with_passenger: @ride1.confirmed_with_passenger,
           passenger_id: @ride1.passenger_id,
           driver_id: @ride1.driver_id,
           notes: @ride1.notes,
-          emailed_driver: @ride1.emailed_driver,
+          notes_to_driver: @ride1.notes_to_driver,
           addresses_attributes: [
             {
               street: "123 Main St",

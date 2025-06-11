@@ -53,7 +53,7 @@ const initiateCheckboxes = (table) => {
   const initiateDatatables = () => {
     const tables = [
       { selector: '#passengers-table', order: [[15, 'desc']]},
-      { selector: '#rides-table', order: [[3, 'desc']]}
+      { selector: '#rides-table', order: [[3, 'asc']]}
     ];
   
     tables.forEach(table => {

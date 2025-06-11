@@ -20,11 +20,11 @@
               <th class="border-0 text-filter">Low Income</th>
               <th class="border-0 text-filter">Disabled</th>
               <th class="border-0 text-filter">Needs Caregiver</th>
+              <th class="border-0 text-filter">Notes to Driver</th>
               <th class="border-0 text-filter">Notes</th>
               <th class="border-0 text-filter">Hours</th>
               <th class="border-0 text-filter">Amount Paid</th>
-              <th class="border-0 text-filter">Confirmed with Passenger</th>
-              <th class="border-0 text-filter">Emailed Driver?</th>
+              <th class="border-0 text-filter">Status</th>
             </tr>
           </thead>
 
@@ -72,24 +72,11 @@
                 </td>
                 <% end %>
 
+                <td><%= ride.notes_to_driver || 'N/A' %></td>
                 <td><%= ride.notes || 'N/A' %></td>
                 <td><%= ride.hours || 0 %></td>
                 <td><%= number_to_currency(ride.amount_paid) || '$0.00' %></td>
-                <td>
-                <% if ride.confirmed_with_passenger.to_s.downcase == "yes" %>
-                  <span class="badge bg-success">Yes</span>
-                <% else %>
-                  <span class="badge bg-danger">No</span>
-                <% end %>
-                </td>
-
-                <td>
-                  <% if ride.emailed_driver? %>
-                    <span class="badge bg-success">Yes</span>
-                  <% else %>
-                    <span class="badge bg-danger">No</span>
-                  <% end %>
-                </td>
+                <td><%= ride.status || 'N/A' %></td>
               </tr>
             <% end %>
           </tbody>
