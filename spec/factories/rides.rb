@@ -13,9 +13,8 @@ FactoryBot.define do
     low_income { false }
     disabled { false }
     need_caregiver { false }
-    notes { "Default Note" }
+    notes_to_driver { "Default Note" }
     hours { 1.0 }
     amount_paid { 0 }
-    emailed_driver { 0 }
   end
 end

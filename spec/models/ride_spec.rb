@@ -14,13 +14,10 @@ RSpec.describe Ride, type: :model do
       :ride,
       driver: @driver1,
       date_and_time: Time.zone.today.yesterday.noon,
-      emailed_driver: 1,
-      confirmed_with_passenger: "Yes"
     )
     @ride2 = FactoryBot.create(
       :ride,
       driver: @driver2,
-      confirmed_with_passenger: "No"
     )
     @ride3 = FactoryBot.create(
       :ride,
@@ -34,15 +31,6 @@ RSpec.describe Ride, type: :model do
   describe "Validations" do
     it "is valid with all required attributes" do
       expect(@ride1).to be_valid
-    end
-
-    it "is certain fields valid" do
-      expect(@ride1.emailed_driver).to eq(true)
-    end
-
-    it "checks confirmed_with_passenger field" do
-      expect(@ride1.confirmed_with_passenger).to eq("Yes")
-      expect(@ride2.confirmed_with_passenger).to eq("No")
     end
 
     it "checks wheelchair and low_income fields" do
@@ -143,7 +131,7 @@ RSpec.describe Ride, type: :model do
         passenger_id: 1,
         driver_id: 1,
         notes: "Sample ride",
-        emailed_driver: 1,
+        notes_to_driver: "Sample ride",
         wheelchair: "Yes",
         low_income: "No",
         disabled: "Yes",
@@ -155,7 +143,7 @@ RSpec.describe Ride, type: :model do
       }
 
       input_params = ActionController::Parameters.new(raw_params).permit(
-        :date_and_time, :van, :hours, :passenger_id, :driver_id, :notes, :emailed_driver,
+        :date_and_time, :van, :hours, :passenger_id, :driver_id, :notes, :notes_to_driver,
         :wheelchair, :low_income, :disabled, :need_caregiver,
         addresses_attributes: [:name, :street, :city, :phone]
       )
@@ -178,8 +166,6 @@ RSpec.describe Ride, type: :model do
       {
         driver_id: 1,
         date_and_time: Time.zone.today.noon,
-        emailed_driver: 1,
-        confirmed_with_passenger: "Yes"
       }
     end
 
