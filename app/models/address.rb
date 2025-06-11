@@ -13,5 +13,4 @@ class Address < ApplicationRecord
     zip_part = zip_code? ? ", (#{zip_code})" : ""
     "#{name_part}#{street}, #{city}#{zip_part}"
   end
-
 end
