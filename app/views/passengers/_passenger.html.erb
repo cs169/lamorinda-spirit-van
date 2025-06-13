@@ -22,6 +22,9 @@
             <th class="border-0 text-filter">Email</th>
             <th class="border-0 text-filter">Date Registered</th>
             <th class="border-0 text-filter">Audit</th>
+            <th class="border-0 text-filter">LMV Member</th>
+            <th class="border-0 text-filter">Mail Updates</th>
+            <th class="border-0 text-filter">Requested Newsletter</th>
           </tr>
         </thead>
 
@@ -35,7 +38,7 @@
               <td><%= passenger.full_address %></td>
               <td><%= passenger.phone %></td>
               <td><%= passenger.alternative_phone %></td>
-              <td><%= passenger.birthday.to_date %></td>
+              <td><%= passenger.birthday&.to_date || "" %></td>
               <td><%= passenger.race %></td>
               <td>
                 <span class="badge <%= passenger.hispanic? ? 'bg-success' : 'bg-danger' %>">
@@ -53,17 +56,41 @@
                 <%= truncate(passenger.notes.presence,
                               length:   20,        # max chars
                               omission: '…',        # appends (omission) parameter at the end of the string
-                              separator: '')        # '' means “hard” char-count rather than words
+                              separator: '')        # '' means "hard" char-count rather than words
                 %>
               </td>
               <td><%= passenger.email %></td>
-              <td><%= passenger.date_registered.to_date %></td>
+              <td><%= passenger.date_registered&.to_date || "" %></td>
               <td title="<%= passenger.audit %>">
-              <%= truncate(passenger.audit.presence,
+                <%= truncate(passenger.audit.presence,
                               length:   20,        # max chars
                               omission: '…',        # appends (omission) parameter at the end of the string
-                              separator: '')        # '' means “hard” char-count rather than words
-              %>
+                              separator: '')        # '' means "hard" char-count rather than words
+                %>
+              </td>
+              <td>
+                <span class="badge <%= passenger.lmv_member? ? 'bg-success' : 'bg-danger' %>">
+                  <%= passenger.lmv_member? ? 'Yes' : 'No' %>
+                </span>
+              </td>
+              <td title="<%= passenger.mail_updates %>">
+                <%= truncate(passenger.mail_updates.presence,
+                              length:   20,
+                              omission: '…',
+                              separator: '')
+                %>
+              </td>
+              <td>
+                <% case passenger.rqsted_newsletter&.downcase %>
+                <% when 'opt-in' %>
+                  <span class="badge bg-success">Opt-In</span>
+                <% when 'neutral' %>
+                  <span class="badge bg-warning text-dark">Neutral</span>
+                <% when 'opt-out' %>
+                  <span class="badge bg-danger">Opt-Out</span>
+                <% else %>
+                  <span class="badge bg-secondary">Not Set</span>
+                <% end %>
               </td>
             </tr>
           <% end %>
@@ -71,7 +98,7 @@
 
         <tfoot>
           <tr class="border-0">
-            <% 17.times do %>
+            <% 20.times do %>
               <th class="border-0" id = "custom-search-bars"></th>
             <% end %>
           </tr>

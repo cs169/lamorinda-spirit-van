@@ -17,7 +17,7 @@ class Passenger < ApplicationRecord
     normalized[:street] = attrs[:street].to_s.strip.titleize if attrs[:street].present?
     normalized[:city]   = attrs[:city].to_s.strip.titleize   if attrs[:city].present?
     normalized[:state]  = attrs[:state].to_s.strip.upcase    if attrs[:state].present?
-    normalized[:zip]    = attrs[:zip].to_s.strip             if attrs[:zip].present?
+    normalized[:zip_code] = attrs[:zip_code].to_s.strip      if attrs[:zip_code].present?
 
     existing = Address.find_by(normalized)
     if existing
