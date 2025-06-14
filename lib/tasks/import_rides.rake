@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "csv"
-require_relative "../csv_encryption"
 
 def parse_address(destination_text)
   return nil if destination_text.blank?
@@ -48,33 +47,17 @@ namespace :import do
     "Anne" => "Anna Wah",
   }.freeze
 
-  desc "Import shifts and rides from encrypted CSV file"
+  desc "Import shifts and rides from CSV file"
   task rides_shifts: :environment do
     puts "Deleting existing shifts to prevent duplicates..."
     Shift.destroy_all
     puts "Deleting existing rides to prevent duplicates..."
     Ride.destroy_all
 
-    encrypted_file_path = Rails.root.join("db", "rides_jan.csv.enc")
-    fallback_file_path = Rails.root.join("db", "rides_jan.csv")
+    file_path = Rails.root.join("lib", "tasks", "rides_jan.csv")
 
-    # Try encrypted file first, fallback to unencrypted for development
-    file_path = nil
-    if File.exist?(encrypted_file_path)
-      puts "Using encrypted rides data file..."
-      begin
-        file_path = CsvEncryption.decrypt_to_tempfile(encrypted_file_path)
-        puts "Decrypted rides data to temporary file"
-      rescue => e
-        puts "ERROR: Failed to decrypt rides data: #{e.message}"
-        puts "Make sure CSV_ENCRYPTION_KEY environment variable is set correctly"
-        exit 1
-      end
-    elsif File.exist?(fallback_file_path)
-      puts "Using unencrypted rides data file (development mode)..."
-      file_path = fallback_file_path
-    else
-      puts "ERROR: Neither encrypted (#{encrypted_file_path}) nor unencrypted (#{fallback_file_path}) rides data file found"
+    unless File.exist?(file_path)
+      puts "ERROR: Rides data file not found: #{file_path}"
       exit 1
     end
 
@@ -391,11 +374,5 @@ namespace :import do
       puts "Import completed successfully with no errors!"
     end
     puts "=" * 50
-
-    # Clean up temporary file if we created one
-    if file_path != fallback_file_path && File.exist?(file_path)
-      File.delete(file_path)
-      puts "Cleaned up temporary decrypted file"
-    end
   end
 end
