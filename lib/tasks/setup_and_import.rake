@@ -15,8 +15,8 @@ namespace :setup do
       puts "🌱 Seeding database..."
       Rake::Task["db:seed"].invoke
 
-      puts "📥 Running import tasks..."
-      Rake::Task["import:all"].invoke
+      # puts "📥 Running import tasks..."
+      # Rake::Task["import:all"].invoke
 
       puts "✅ Full setup and import completed!"
     end
