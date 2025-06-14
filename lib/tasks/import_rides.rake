@@ -1,5 +1,7 @@
-require 'csv'
-require_relative '../csv_encryption'
+# frozen_string_literal: true
+
+require "csv"
+require_relative "../csv_encryption"
 
 def parse_address(destination_text)
   return nil if destination_text.blank?
@@ -17,7 +19,7 @@ def parse_address(destination_text)
   /x
 
   match = destination_text.strip.match(regex)
-  
+
   if match
     {
       name: match[:name]&.strip,
@@ -33,10 +35,10 @@ end
 def convert_passenger_name(csv_name)
   # Convert "Last, First" to "First Last"
   return nil if csv_name.blank?
-  
-  parts = csv_name.strip.split(',').map(&:strip)
+
+  parts = csv_name.strip.split(",").map(&:strip)
   return csv_name.strip if parts.length != 2
-  
+
   "#{parts[1]} #{parts[0]}"
 end
 
@@ -53,8 +55,8 @@ namespace :import do
     puts "Deleting existing rides to prevent duplicates..."
     Ride.destroy_all
 
-    encrypted_file_path = Rails.root.join('db', 'rides_jan.csv.enc')
-    fallback_file_path = Rails.root.join('db', 'rides_jan.csv')
+    encrypted_file_path = Rails.root.join("db", "rides_jan.csv.enc")
+    fallback_file_path = Rails.root.join("db", "rides_jan.csv")
 
     # Try encrypted file first, fallback to unencrypted for development
     file_path = nil
@@ -81,7 +83,7 @@ namespace :import do
     # First pass: Create addresses
     puts "Creating destination addresses..."
     CSV.foreach(file_path, headers: true, liberal_parsing: true) do |row|
-      destinations = row['Destination']&.split(/(?<=\d)\.\s*/) || []
+      destinations = row["Destination"]&.split(/(?<=\d)\.\s*/) || []
       destinations.each do |destination_text|
         address_parts = parse_address(destination_text)
         if address_parts
@@ -103,8 +105,8 @@ namespace :import do
     # Second pass: Create shifts
     puts "Creating shifts..."
     CSV.foreach(file_path, headers: true, liberal_parsing: true) do |row|
-      driver_entries = row['Driver']&.strip&.split(',')&.map(&:strip)&.reject(&:empty?) || []
-      van_entries = row['Van']&.strip&.split(/[\s,]+/)&.map(&:strip)&.reject(&:empty?) || []
+      driver_entries = row["Driver"]&.strip&.split(",")&.map(&:strip)&.reject(&:empty?) || []
+      van_entries = row["Van"]&.strip&.split(/[\s,]+/)&.map(&:strip)&.reject(&:empty?) || []
 
       next if driver_entries.empty?
 
@@ -118,21 +120,21 @@ namespace :import do
           shift_type = match[2].strip
         else
           driver_name_from_csv = driver_entry.strip
-          shift_type = 'general'
+          shift_type = "general"
         end
 
         next if driver_name_from_csv.blank?
 
         db_driver_name = DRIVER_NAME_MAPPING[driver_name_from_csv] || driver_name_from_csv
-        driver = Driver.find_by('name LIKE ?', "#{db_driver_name}%")
-        
+        driver = Driver.find_by("name LIKE ?", "#{db_driver_name}%")
+
         unless driver
           puts "Driver not found for name: '#{driver_name_from_csv}' (mapped to: '#{db_driver_name}'). Skipping shift."
           next
         end
-        
+
         van = van_entries[index]
-        shift_date = row['Date']
+        shift_date = row["Date"]
 
         shift = Shift.find_or_initialize_by(
           driver: driver,
@@ -142,7 +144,7 @@ namespace :import do
 
         if shift.new_record?
           shift.van = van.present? ? van.to_i : nil
-          shift.notes = row['Notes to Driver']
+          shift.notes = row["Notes to Driver"]
           begin
             shift.save!
           rescue => e
@@ -156,33 +158,33 @@ namespace :import do
     puts "Creating rides..."
     error_count = 0
     daily_ride_counters = {} # Track ride count per day for time calculation
-    
+
     CSV.foreach(file_path, headers: true, liberal_parsing: true) do |row|
       row_number = $.
       # Parse basic ride info
-      passenger_csv_name = row['Passenger Name']&.strip
-      ride_count = row['Ride Count']&.strip&.to_i || 1
-      driver_entries = row['Driver']&.strip&.split(',')&.map(&:strip)&.reject(&:empty?) || []
-      van_entries = row['Van']&.strip&.split(/[\s,]+/)&.map(&:strip)&.reject(&:empty?) || []
-      
+      passenger_csv_name = row["Passenger Name"]&.strip
+      ride_count = row["Ride Count"]&.strip&.to_i || 1
+      driver_entries = row["Driver"]&.strip&.split(",")&.map(&:strip)&.reject(&:empty?) || []
+      van_entries = row["Van"]&.strip&.split(/[\s,]+/)&.map(&:strip)&.reject(&:empty?) || []
+
       # Parse the date and prepare for time calculation
-      base_date = Date.parse(row['Date']) rescue nil
+      base_date = Date.parse(row["Date"]) rescue nil
       unless base_date
         puts "ERROR Row #{row_number}: Invalid date '#{row['Date']}'"
         error_count += 1
         next
       end
-      
+
       # Initialize daily counter if not exists
       daily_ride_counters[base_date] ||= 0
-      
+
       # Validate required fields
       if passenger_csv_name.blank?
         puts "ERROR Row #{row_number}: Missing passenger name"
         error_count += 1
         next
       end
-      
+
       if driver_entries.empty?
         puts "ERROR Row #{row_number}: Missing driver information for passenger '#{passenger_csv_name}'"
         error_count += 1
@@ -198,7 +200,7 @@ namespace :import do
       # Find passenger
       passenger_db_name = convert_passenger_name(passenger_csv_name)
       passenger = Passenger.find_by(name: passenger_db_name)
-      
+
       unless passenger
         puts "ERROR Row #{row_number}: Passenger not found for name '#{passenger_csv_name}' (converted to: '#{passenger_db_name}'). Please check passenger data."
         error_count += 1
@@ -212,15 +214,15 @@ namespace :import do
       end
 
       # Parse destinations
-      destination_texts = row['Destination']&.split(/(?<=\d)\.\s*/) || []
+      destination_texts = row["Destination"]&.split(/(?<=\d)\.\s*/) || []
       destination_addresses = []
-      
+
       if destination_texts.empty?
         puts "ERROR Row #{row_number}: No destinations found for passenger '#{passenger_csv_name}'"
         error_count += 1
         next
       end
-      
+
       destination_texts.each_with_index do |dest_text, idx|
         address_parts = parse_address(dest_text)
         if address_parts
@@ -252,10 +254,10 @@ namespace :import do
       driver_entries.each_with_index do |driver_entry, idx|
         match = driver_entry.match(/(.*?)\s*\((.*?)\)/)
         driver_name_from_csv = match ? match[1].strip : driver_entry.strip
-        
+
         db_driver_name = DRIVER_NAME_MAPPING[driver_name_from_csv] || driver_name_from_csv
-        driver = Driver.find_by('name LIKE ?', "#{db_driver_name}%")
-        
+        driver = Driver.find_by("name LIKE ?", "#{db_driver_name}%")
+
         if driver
           drivers << driver
         else
@@ -278,7 +280,7 @@ namespace :import do
 
       # Create rides based on ride_count
       rides_to_create = []
-      
+
       if ride_count == 1
         # Single one-way ride from home to first destination
         if destination_addresses.any?
@@ -306,7 +308,7 @@ namespace :import do
       else
         # Multiple destinations: chain them together
         current_location = passenger.address
-        
+
         destination_addresses.each_with_index do |dest_addr, idx|
           rides_to_create << {
             start_address: current_location,
@@ -316,7 +318,7 @@ namespace :import do
           }
           current_location = dest_addr
         end
-        
+
         # Add extra rides if ride_count > destinations + 1
         remaining_rides = ride_count - destination_addresses.length
         if remaining_rides > 0
@@ -328,7 +330,7 @@ namespace :import do
             van: van_entries.last&.to_i
           }
           remaining_rides -= 1
-          
+
           # Additional rides from last destination to home
           remaining_rides.times do
             rides_to_create << {
@@ -348,27 +350,25 @@ namespace :import do
       # Create the actual ride records with the same calculated time for all rides in this row
       created_rides = []
       rides_to_create.each_with_index do |ride_data, ride_idx|
-        begin
-          ride = Ride.create!(
-            passenger: passenger,
-            driver: ride_data[:driver],
-            start_address_id: ride_data[:start_address]&.id,
-            dest_address_id: ride_data[:dest_address]&.id,
-            van: ride_data[:van],
-            hours: row['Hours']&.strip&.to_f,
-            amount_paid: row['Amount Paid']&.strip&.to_d,
-            notes_to_driver: row['Notes to Driver']&.strip,
-            date_and_time: ride_time,
-            status: row['Status']&.strip,
-            ride_type: '', # Empty 
-            notes: '' # Empty 
-          )
-          created_rides << ride
-          puts "✓ Created ride #{ride_idx + 1}/#{rides_to_create.length} for #{passenger.name} at #{ride_time.strftime('%I:%M %p')}: #{ride_data[:start_address]&.street} -> #{ride_data[:dest_address]&.street}"
-        rescue => e
-          puts "ERROR Row #{row_number}: Failed to create ride #{ride_idx + 1} for #{passenger.name}: #{e.message}"
-          error_count += 1
-        end
+        ride = Ride.create!(
+          passenger: passenger,
+          driver: ride_data[:driver],
+          start_address_id: ride_data[:start_address]&.id,
+          dest_address_id: ride_data[:dest_address]&.id,
+          van: ride_data[:van],
+          hours: row["Hours"]&.strip&.to_f,
+          amount_paid: row["Amount Paid"]&.strip&.to_d,
+          notes_to_driver: row["Notes to Driver"]&.strip,
+          date_and_time: ride_time,
+          status: row["Status"]&.strip,
+          ride_type: "", # Empty
+          notes: "" # Empty
+        )
+        created_rides << ride
+        puts "✓ Created ride #{ride_idx + 1}/#{rides_to_create.length} for #{passenger.name} at #{ride_time.strftime('%I:%M %p')}: #{ride_data[:start_address]&.street} -> #{ride_data[:dest_address]&.street}"
+      rescue => e
+        puts "ERROR Row #{row_number}: Failed to create ride #{ride_idx + 1} for #{passenger.name}: #{e.message}"
+        error_count += 1
       end
 
       # Link rides with next_ride_id
@@ -384,18 +384,18 @@ namespace :import do
       end
     end
 
-    puts "\n" + "="*50
+    puts "\n" + "=" * 50
     if error_count > 0
       puts "Import completed with #{error_count} errors. Please review and fix the CSV data."
     else
       puts "Import completed successfully with no errors!"
     end
-    puts "="*50
-    
+    puts "=" * 50
+
     # Clean up temporary file if we created one
     if file_path != fallback_file_path && File.exist?(file_path)
       File.delete(file_path)
       puts "Cleaned up temporary decrypted file"
     end
   end
-end 
+end

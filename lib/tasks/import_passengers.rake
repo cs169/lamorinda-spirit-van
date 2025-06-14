@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "csv"
-require_relative '../csv_encryption'
+require_relative "../csv_encryption"
 
 namespace :import do
   desc "Import real passengers and their addresses from encrypted CSV"
@@ -91,7 +91,7 @@ namespace :import do
     end
 
     puts "Import complete!"
-    
+
     # Clean up temporary file if we created one
     if file_path != fallback_file_path && File.exist?(file_path)
       File.delete(file_path)
