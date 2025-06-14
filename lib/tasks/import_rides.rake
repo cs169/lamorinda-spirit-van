@@ -47,14 +47,42 @@ namespace :import do
     "Anne" => "Anna Wah",
   }.freeze
 
-  desc "Import shifts and rides from CSV file"
-  task rides_shifts: :environment do
-    puts "Deleting existing shifts to prevent duplicates..."
-    Shift.destroy_all
-    puts "Deleting existing rides to prevent duplicates..."
-    Ride.destroy_all
+  desc "Import shifts and rides from CSV file for a specific month"
+  task :rides_month, [:month] => :environment do |task, args|
+    # Validate month parameter
+    month = args[:month]
+    if month.blank?
+      puts "ERROR: Please specify a month. Usage: rake import:rides_month[january]"
+      exit 1
+    end
 
-    file_path = Rails.root.join("lib", "tasks", "rides_jan.csv")
+    # Define source identifier and file path
+    source = "#{month}_2024"
+    
+    # Try both full month name and abbreviated month name
+    full_month_file = Rails.root.join("lib", "tasks", "rides_#{month.downcase}.csv")
+    short_month_file = Rails.root.join("lib", "tasks", "rides_#{month.downcase[0..2]}.csv")
+    
+    file_path = if File.exist?(full_month_file)
+      full_month_file
+    elsif File.exist?(short_month_file)
+      short_month_file
+    else
+      full_month_file # Use full name in error message
+    end
+
+    puts "Importing #{month.titleize} 2024 data..."
+    puts "Source identifier: #{source}"
+    puts "File path: #{file_path}"
+
+    # Delete existing data for this month only
+    puts "Deleting existing shifts for #{source} to prevent duplicates..."
+    deleted_shifts = Shift.where(source: source).destroy_all
+    puts "Deleted #{deleted_shifts.count} existing shifts"
+    
+    puts "Deleting existing rides for #{source} to prevent duplicates..."
+    deleted_rides = Ride.where(source: source).destroy_all
+    puts "Deleted #{deleted_rides.count} existing rides"
 
     unless File.exist?(file_path)
       puts "ERROR: Rides data file not found: #{file_path}"
@@ -122,7 +150,8 @@ namespace :import do
         shift = Shift.find_or_initialize_by(
           driver: driver,
           shift_date: shift_date,
-          shift_type: shift_type
+          shift_type: shift_type,
+          source: source
         )
 
         if shift.new_record?
@@ -345,7 +374,8 @@ namespace :import do
           date_and_time: ride_time,
           status: row["Status"]&.strip,
           ride_type: "", # Empty
-          notes: "" # Empty
+          notes: "", # Empty
+          source: source
         )
         created_rides << ride
         puts "✓ Created ride #{ride_idx + 1}/#{rides_to_create.length} for #{passenger.name} at #{ride_time.strftime('%I:%M %p')}: #{ride_data[:start_address]&.street} -> #{ride_data[:dest_address]&.street}"
@@ -369,10 +399,51 @@ namespace :import do
 
     puts "\n" + "=" * 50
     if error_count > 0
-      puts "Import completed with #{error_count} errors. Please review and fix the CSV data."
+      puts "Import for #{month.titleize} 2024 completed with #{error_count} errors. Please review and fix the CSV data."
     else
-      puts "Import completed successfully with no errors!"
+      puts "Import for #{month.titleize} 2024 completed successfully with no errors!"
     end
+    
+    # Show summary statistics
+    total_rides = Ride.where(source: source).count
+    total_shifts = Shift.where(source: source).count
+    puts "Created #{total_rides} rides and #{total_shifts} shifts for #{source}"
     puts "=" * 50
+  end
+
+  desc "Show import status and usage examples"
+  task :status => :environment do
+    puts "\n" + "=" * 60
+    puts "IMPORT STATUS"
+    puts "=" * 60
+    
+    # Show what's been imported
+    sources = Ride.distinct.pluck(:source).compact.sort
+    if sources.any?
+      puts "Imported months:"
+      sources.each do |source|
+        ride_count = Ride.where(source: source).count
+        shift_count = Shift.where(source: source).count
+        puts "  #{source}: #{ride_count} rides, #{shift_count} shifts"
+      end
+    else
+      puts "No data imported yet."
+    end
+    
+    puts "\n" + "=" * 60
+    puts "USAGE EXAMPLES"
+    puts "=" * 60
+    puts "Import January data (looks for rides_january.csv or rides_jan.csv):"
+    puts "  rake import:rides_month[january]"
+    puts ""
+    puts "Import February data (looks for rides_february.csv or rides_feb.csv):"
+    puts "  rake import:rides_month[february]"
+    puts ""
+    puts "Re-import January (deletes only January data, keeps other months):"
+    puts "  rake import:rides_month[january]"
+    puts ""
+    puts "Show this status:"
+    puts "  rake import:status"
+    puts "=" * 60
   end
 end
