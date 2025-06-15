@@ -6,14 +6,18 @@ def parse_address(destination_text)
   return nil if destination_text.blank?
 
   # Strict regex for the format: (Name) Street, City, CA Zip_code
-  # Name and Zip are optional.
+  # Name, State and Zip are optional.
   regex = /
     ^
     (?:\((?<name>.*?)\)\s*)?
     (?<street>[^,]+),\s*
-    (?<city>[^,]+),\s*
-    (?<state>CA|California)\s*
-    (?<zip>\d{5})?
+    (?<city>[^,]+)
+    (?:
+      \s*,\s*
+      (?<state>CA|California)\s*
+      (?<zip>\d{5})?
+    )?
+    \s*
     $
   /x
 
