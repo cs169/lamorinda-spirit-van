@@ -107,7 +107,16 @@ namespace :import do
 
       # Split destinations by a period followed by whitespace.
       # This handles multiple addresses in the same field.
-      destinations = destinations_string.split(/\.\s+/)
+      destinations = destinations_string.scan(
+        /
+          (                           # Start capture group
+            (?:\([^)]+\)\s*)?         # Optional (Name)
+            [^\.]+?,\s*[^\.]+?        # Street, City
+            (?:,\s*CA(?:\s+\d{5})?)?  # Optional state and zip
+          )
+          (?=\.|\z)                   # Must be followed by period or end of string
+        /x
+      ).flatten
       destinations.each do |destination_text|
         address_parts = parse_address(destination_text)
         if address_parts
@@ -250,7 +259,16 @@ namespace :import do
 
       # Split destinations by a period followed by whitespace.
       # This handles multiple addresses in the same field.
-      destinations = destinations_string.split(/\.\s+/)
+      destinations = destinations_string.scan(
+        /
+          (                           # Start capture group
+            (?:\([^)]+\)\s*)?         # Optional (Name)
+            [^\.]+?,\s*[^\.]+?        # Street, City
+            (?:,\s*CA(?:\s+\d{5})?)?  # Optional state and zip
+          )
+          (?=\.|\z)                   # Must be followed by period or end of string
+        /x
+      ).flatten
 
       destinations.each_with_index do |dest_text, idx|
         address_parts = parse_address(dest_text)
