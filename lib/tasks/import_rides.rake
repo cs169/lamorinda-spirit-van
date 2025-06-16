@@ -17,6 +17,7 @@ def parse_address(destination_text)
       (?<state>CA|California)\s*
       (?<zip>\d{5})?
     )?
+    \.?
     \s*
     $
   /x
@@ -101,7 +102,12 @@ namespace :import do
     # First pass: Create addresses
     puts "Creating destination addresses..."
     CSV.foreach(file_path, headers: true, liberal_parsing: true) do |row|
-      destinations = row["Destination"]&.split(/(?<=\d)\.\s*/) || []
+      destinations_string = row["Destination"]&.strip
+      next if destinations_string.blank?
+
+      # Split destinations by a period followed by whitespace.
+      # This handles multiple addresses in the same field.
+      destinations = destinations_string.split(/\.\s+/)
       destinations.each do |destination_text|
         address_parts = parse_address(destination_text)
         if address_parts
@@ -233,16 +239,20 @@ namespace :import do
       end
 
       # Parse destinations
-      destination_texts = row["Destination"]&.split(/(?<=\d)\.\s*/) || []
+      destinations_string = row["Destination"]&.strip
       destination_addresses = []
 
-      if destination_texts.empty?
+      if destinations_string.blank?
         puts "ERROR Row #{row_number}: No destinations found for passenger '#{passenger_csv_name}'"
         error_count += 1
         next
       end
 
-      destination_texts.each_with_index do |dest_text, idx|
+      # Split destinations by a period followed by whitespace.
+      # This handles multiple addresses in the same field.
+      destinations = destinations_string.split(/\.\s+/)
+
+      destinations.each_with_index do |dest_text, idx|
         address_parts = parse_address(dest_text)
         if address_parts
           address = Address.find_by(
