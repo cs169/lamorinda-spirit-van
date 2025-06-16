@@ -47,7 +47,10 @@ end
 
 namespace :import do
   DRIVER_NAME_MAPPING = {
-    "John S" => "John Raskin",
+    "John S" => "John S.",
+    "John S." => "John S.",
+    "John R." => "John Raskin",
+    "John R" => "John Raskin",
     "Anne" => "Anna Wah",
   }.freeze
 
