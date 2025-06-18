@@ -24,6 +24,10 @@ document.addEventListener("turbo:load", function() {
         document.getElementById("ride_disabled").value = yesNo(ui.item.disabled);
         document.getElementById("ride_need_caregiver").value = yesNo(ui.item.need_caregiver);
 
+        // Autofills passenger's address into origin
+        document.getElementById("ride_start_address_attributes_street").value = ui.item.street;
+        document.getElementById("ride_start_address_attributes_city").value = ui.item.city;
+
         // Update passenger overview card
         document.querySelector('#name_display').value = ui.item.label || 'No passenger selected';
         
