@@ -4,7 +4,7 @@ require "csv"
 
 namespace :import do
   desc "Import drivers from lib/tasks/drivers.csv"
-  task :drivers => :environment do
+  task drivers: :environment do
     file_path = Rails.root.join("lib", "tasks", "drivers.csv")
     unless File.exist?(file_path)
       puts "ERROR: Driver data file not found: #{file_path}"
@@ -37,4 +37,4 @@ namespace :import do
 
     puts "Driver import complete."
   end
-end 
+end

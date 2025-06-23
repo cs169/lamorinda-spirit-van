@@ -66,11 +66,11 @@ namespace :import do
 
     # Define source identifier and file path
     source = "#{month}_2024"
-    
+
     # Try both full month name and abbreviated month name
     full_month_file = Rails.root.join("lib", "tasks", "rides_#{month.downcase}.csv")
     short_month_file = Rails.root.join("lib", "tasks", "rides_#{month.downcase[0..2]}.csv")
-    
+
     file_path = if File.exist?(full_month_file)
       full_month_file
     elsif File.exist?(short_month_file)
@@ -87,7 +87,7 @@ namespace :import do
     puts "Deleting existing shifts for #{source} to prevent duplicates..."
     deleted_shifts = Shift.where(source: source).destroy_all
     puts "Deleted #{deleted_shifts.count} existing shifts"
-    
+
     puts "Deleting existing rides for #{source} to prevent duplicates..."
     deleted_rides = Ride.where(source: source).destroy_all
     puts "Deleted #{deleted_rides.count} existing rides"
@@ -111,7 +111,7 @@ namespace :import do
         /
           (                           # Start capture group
             (?:\([^)]+\)\s*)?         # Optional (Name)
-            [^\.]+?,\s*[^\.]+?        # Street, City
+            [^.]+?,\s*[^.]+?        # Street, City
             (?:,\s*CA(?:\s+\d{5})?)?  # Optional state and zip
           )
           (?=\.|\z)                   # Must be followed by period or end of string
@@ -263,7 +263,7 @@ namespace :import do
         /
           (                           # Start capture group
             (?:\([^)]+\)\s*)?         # Optional (Name)
-            [^\.]+?,\s*[^\.]+?        # Street, City
+            [^.]+?,\s*[^.]+?        # Street, City
             (?:,\s*CA(?:\s+\d{5})?)?  # Optional state and zip
           )
           (?=\.|\z)                   # Must be followed by period or end of string
@@ -438,7 +438,7 @@ namespace :import do
     else
       puts "Import for #{month.titleize} 2024 completed successfully with no errors!"
     end
-    
+
     # Show summary statistics
     total_rides = Ride.where(source: source).count
     total_shifts = Shift.where(source: source).count
@@ -447,11 +447,11 @@ namespace :import do
   end
 
   desc "Show import status and usage examples"
-  task :status => :environment do
+  task status: :environment do
     puts "\n" + "=" * 60
     puts "IMPORT STATUS"
     puts "=" * 60
-    
+
     # Show what's been imported
     sources = Ride.distinct.pluck(:source).compact.sort
     if sources.any?
@@ -464,7 +464,7 @@ namespace :import do
     else
       puts "No data imported yet."
     end
-    
+
     puts "\n" + "=" * 60
     puts "USAGE EXAMPLES"
     puts "=" * 60
