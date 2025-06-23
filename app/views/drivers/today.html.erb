@@ -116,9 +116,9 @@
               <% end %>
             </p>
 
-            <p><strong>Start Address:</strong> <%= ride.start_address&.name || ride.start_address&.full_address || 'N/A' %></p>
+            <p><strong>Origin:</strong> <%= ride.start_address&.name || ride.start_address&.full_address || 'N/A' %></p>
             <p>
-              <strong>Destination Address:</strong> 
+              <strong>Destination(s):</strong> 
               <% if ride.next_ride_id? %>
                 <% addresses = [] %>
                 <% current_ride = ride %>

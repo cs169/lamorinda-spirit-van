@@ -409,8 +409,12 @@ namespace :import do
           date_and_time: ride_time,
           status: row["Status"]&.strip,
           ride_type: "", # Empty
-          notes: "", # Empty
-          source: source
+          notes: row["Notes/Date reserved"]&.strip.presence || row["Notes"]&.strip,
+          source: source,
+          wheelchair: passenger.wheelchair,
+          low_income: passenger.low_income,
+          disabled: passenger.disabled,
+          need_caregiver: passenger.need_caregiver
         )
         created_rides << ride
         puts "✓ Created ride #{ride_idx + 1}/#{rides_to_create.length} for #{passenger.name} at #{ride_time.strftime('%I:%M %p')}: #{ride_data[:start_address]&.street} -> #{ride_data[:dest_address]&.street}"
