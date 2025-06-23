@@ -11,7 +11,8 @@
               <th class="border-0 text-filter">Date and Time</th>
               <th class="border-0 text-filter">Driver</th>
               <th class="border-0 text-filter">Van</th>
-              <th class="border-0 text-filter">Passenger Name</th>
+              <th class="border-0 text-filter">Last Name</th>
+              <th class="border-0 text-filter">First Name</th>
               <th class="border-0 text-filter">Stops Info</th>
               <th class="border-0 text-filter">Origin</th>
               <th class="border-0 text-filter">Destination(s)</th>
@@ -52,7 +53,11 @@
                 <td data-sort="<%= ride.date_and_time.to_i %>"><%= ride.date_and_time.strftime("%B %d, %Y %I:%M %p") %></td>
                 <td><%= ride.driver&.name || 'N/A' %></td>
                 <td><%= ride.van || 'N/A' %></td>
-                <td><%= ride.passenger&.name || 'N/A' %></td>
+                <% full_name = ride.passenger&.name.to_s.strip %>
+                <% first_name = full_name.split(' ', 2)[0] %>
+                <% last_name = full_name.split(' ', 2)[1] %>
+                <td><%= last_name || 'N/A' %></td>
+                <td><%= first_name || 'N/A' %></td>
                 <td>
                   <% 
                     all_rides = ride.get_all_linked_rides
@@ -108,7 +113,7 @@
           </tbody>
           <tfoot>
             <tr class="border-0">
-              <% 20.times do %>
+              <% 21.times do %>
                 <th class="border-0"></th>
               <% end %>
             </tr>
