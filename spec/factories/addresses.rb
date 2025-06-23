@@ -6,5 +6,6 @@ FactoryBot.define do
     sequence(:street) { |n| "#{n}#{n}#{n} #{n.ordinalize} Street" }
     city { "Lafayette" }
     phone { "(321)422-3211" }
+    zip_code { "12345" }
   end
 end
