@@ -12,7 +12,7 @@
               <th class="border-0 text-filter">Driver</th>
               <th class="border-0 text-filter">Van</th>
               <th class="border-0 text-filter">Passenger Name</th>
-              <th class="border-0 text-filter">Multiple Stops</th>
+              <th class="border-0 text-filter">Ride Info</th>
               <th class="border-0 text-filter">Origin</th>
               <th class="border-0 text-filter">Destination(s)</th>
               <th class="border-0 text-filter">Ride Type</th>
@@ -54,10 +54,24 @@
                 <td><%= ride.van || 'N/A' %></td>
                 <td><%= ride.passenger&.name || 'N/A' %></td>
                 <td>
-                  <% if ride.next_ride_id? %>
-                    <span class="badge bg-success">Yes</span>
-                  <% else %>
-                    <span class="badge bg-danger">No</span>
+                  <% 
+                    all_rides = ride.get_all_linked_rides
+                    stop_count = all_rides.length
+                    first_start = all_rides.first&.start_address&.full_address
+                    last_dest = all_rides.last&.dest_address&.full_address
+                    is_round_trip = first_start == last_dest && first_start.present?
+                  %>
+                  
+                  <% if stop_count > 1 %>
+                    <span class="badge bg-info text-dark"><%= stop_count %> stops</span>
+                  <% end %>
+                  
+                  <% if is_round_trip %>
+                    <span class="badge bg-warning text-dark">Rt</span>
+                  <% end %>
+                  
+                  <% if stop_count == 1 && !is_round_trip %>
+                    <span class="badge bg-secondary">One-way</span>
                   <% end %>
                 </td>
                 <td><%= ride.start_address&.full_address || 'N/A' %></td>
