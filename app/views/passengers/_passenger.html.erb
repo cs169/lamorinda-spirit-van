@@ -38,7 +38,7 @@
               <td><%= passenger.full_address %></td>
               <td><%= passenger.phone %></td>
               <td><%= passenger.alternative_phone %></td>
-              <td><%= passenger.birthday&.to_date || "" %></td>
+              <td data-sort="<%= passenger.birthday&.to_i || 0 %>"><%= passenger.birthday&.to_date || "" %></td>
               <td><%= passenger.race %></td>
               <td>
                 <span class="badge <%= passenger.hispanic? ? 'bg-success' : 'bg-danger' %>">
@@ -60,7 +60,7 @@
                 %>
               </td>
               <td><%= passenger.email %></td>
-              <td><%= passenger.date_registered&.to_date || "" %></td>
+              <td data-sort="<%= passenger.date_registered&.to_i || 0 %>"><%= passenger.date_registered&.to_date || "" %></td>
               <td title="<%= passenger.audit %>">
                 <%= truncate(passenger.audit.presence,
                               length:   20,        # max chars

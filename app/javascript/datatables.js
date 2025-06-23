@@ -86,6 +86,23 @@ const initiateDatatables = () => {
         dom: "<'row'<'col-md-6'l><'col-md-6'p>>" +
           "<'row'<'col-md-12'tr>>" +
           "<'row'<'col-md-6'i><'col-md-6'>>",
+        columnDefs: [
+          {
+            targets: '_all',
+            render: function(data, type, row, meta) {
+              if (type === 'sort' || type === 'type') {
+                // Only apply custom sorting if the cell has a data-sort attribute
+                if (typeof data === 'string' && data.includes('data-sort=')) {
+                  const match = data.match(/data-sort="(\d+)"/);
+                  if (match) {
+                    return parseInt(match[1]) || 0;
+                  }
+                }
+              }
+              return data;
+            }
+          }
+        ]
       });
       initiateCheckboxes(newTable);
       initiateSearchbars(newTable);
