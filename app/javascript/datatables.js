@@ -83,9 +83,9 @@ const initiateDatatables = () => {
         ordering: true,
         pageLength: 10,
         order: table.order,
-        dom: "<'row'<'col-md-6'l><'col-md-6'>>" +
+        dom: "<'row'<'col-md-6'l><'col-md-6'p>>" +
           "<'row'<'col-md-12'tr>>" +
-          "<'row'<'col-md-6'i><'col-md-6'p>>",
+          "<'row'<'col-md-6'i><'col-md-6'>>",
       });
       initiateCheckboxes(newTable);
       initiateSearchbars(newTable);
