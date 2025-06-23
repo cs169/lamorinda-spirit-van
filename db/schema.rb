@@ -118,9 +118,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_12_094229) do
     t.boolean "low_income", default: false, null: false
     t.boolean "disabled", default: false, null: false
     t.boolean "need_caregiver", default: false, null: false
-    t.boolean "lmv_member", default: false
     t.text "mail_updates"
     t.string "rqsted_newsletter"
+    t.boolean "lmv_member"
     t.index ["address_id"], name: "index_passengers_on_address_id"
   end
 
