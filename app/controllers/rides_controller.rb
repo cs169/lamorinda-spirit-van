@@ -8,7 +8,8 @@ class RidesController < ApplicationController
   # "Give me all rides whose id is not someone else's next_ride_id
   # — i.e., they're not the continuation of another ride."
   def index
-    @rides = Ride.where.not(id: Ride.select(:next_ride_id).where.not(next_ride_id: nil))
+    @rides = Ride.includes(:feedback, :driver, :passenger, :start_address, :dest_address, :next_ride)
+                .where.not(id: Ride.select(:next_ride_id).where.not(next_ride_id: nil))
   end
 
   def show
@@ -25,8 +26,15 @@ class RidesController < ApplicationController
     # For driver dropdown list in creating / updating
     @drivers = Driver.order(:name)
 
-    # Mapping data for autocomplete
-    gon.passengers = Passenger.all.map { |p| { label: p.name, id: p.id, phone: p.phone, wheelchair: p.wheelchair, low_income: p.low_income, disabled: p.disabled, need_caregiver: p.need_caregiver, notes: p.notes, ride_count: p.rides.count, street: p.address.street, city: p.address.city } }
+    # Load all passengers with their associations at once
+    passengers_with_data = Passenger.includes(:address, :rides)
+    
+    gon.passengers = passengers_with_data.map { |p| { 
+      label: p.name, id: p.id, phone: p.phone, wheelchair: p.wheelchair, 
+      low_income: p.low_income, disabled: p.disabled, need_caregiver: p.need_caregiver, 
+      notes: p.notes, ride_count: p.rides.length, # Use .length instead of .count for loaded association
+      street: p.address&.street, city: p.address&.city 
+    } }
     gon.addresses = Address.all.map { |a| { name: a.name, street: a.street, city: a.city, phone: a.phone } }
   end
 
