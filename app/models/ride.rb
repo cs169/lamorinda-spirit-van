@@ -9,6 +9,8 @@ class Ride < ApplicationRecord
   belongs_to :next_ride, class_name: "Ride", optional: true
   has_one :previous_ride, class_name: "Ride", foreign_key: "next_ride_id", dependent: :destroy
 
+  after_create :create_initial_feedback
+
   # this causes problems -- duplicated addresses
   # accepts_nested_attributes_for :start_address
   # accepts_nested_attributes_for :dest_address
@@ -76,6 +78,10 @@ class Ride < ApplicationRecord
   end
 
   private
+  def create_initial_feedback
+    self.create_feedback!
+  end
+
   def normalize_address(attrs)
     {
       name: attrs[:name].to_s.strip.presence,
