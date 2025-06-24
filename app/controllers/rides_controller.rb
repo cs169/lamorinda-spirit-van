@@ -28,12 +28,12 @@ class RidesController < ApplicationController
 
     # Load all passengers with their associations at once
     passengers_with_data = Passenger.includes(:address, :rides)
-    
-    gon.passengers = passengers_with_data.map { |p| { 
-      label: p.name, id: p.id, phone: p.phone, wheelchair: p.wheelchair, 
-      low_income: p.low_income, disabled: p.disabled, need_caregiver: p.need_caregiver, 
+
+    gon.passengers = passengers_with_data.map { |p| {
+      label: p.name, id: p.id, phone: p.phone, wheelchair: p.wheelchair,
+      low_income: p.low_income, disabled: p.disabled, need_caregiver: p.need_caregiver,
       notes: p.notes, ride_count: p.rides.length, # Use .length instead of .count for loaded association
-      street: p.address&.street, city: p.address&.city 
+      street: p.address&.street, city: p.address&.city
     } }
     gon.addresses = Address.all.map { |a| { name: a.name, street: a.street, city: a.city, phone: a.phone } }
   end
