@@ -28,6 +28,14 @@ RSpec.describe Ride, type: :model do
     )
   end
 
+  describe "after_create" do
+    it "automatically creates a corresponding Feedback upon Ride creation" do
+      ride = FactoryBot.create(:ride, driver: @driver1)
+      expect(ride.feedback).not_to be_nil
+      expect(ride.feedback).to be_an_instance_of(Feedback)
+    end
+  end
+
   describe "Validations" do
     it "is valid with all required attributes" do
       expect(@ride1).to be_valid
@@ -242,7 +250,9 @@ RSpec.describe Ride, type: :model do
   end
 
   after(:each) do
-    Ride.delete_all
-    Driver.delete_all
+    Ride.destroy_all
+    Driver.destroy_all
+    Passenger.destroy_all
+    Address.destroy_all
   end
 end
