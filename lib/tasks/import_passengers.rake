@@ -8,11 +8,11 @@ namespace :import do
     require Rails.root.join("app", "models", "passenger")
     require Rails.root.join("app", "models", "address")
 
-    file_path = Rails.root.join("db", "REAL_passengers_data.csv")
+    file_path = Rails.root.join("lib", "tasks", "REAL_passengers_data.csv")
 
     unless File.exist?(file_path)
-      puts "CSV file not found at #{file_path}"
-      exit
+      puts "ERROR: Passenger data file not found: #{file_path}"
+      exit 1
     end
 
     puts "Importing real passengers and addresses from #{file_path}..."

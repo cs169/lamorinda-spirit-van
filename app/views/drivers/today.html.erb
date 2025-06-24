@@ -21,7 +21,7 @@
             <th>Van</th>
             <th>Notes</th>
             <th>Passenger</th>
-            <th>Multi Stop</th>
+            <th>Stops Info</th>
             <th>Wheelchair</th>
             <th>Disabled</th>
             <th>Needs Caregiver</th>
@@ -40,10 +40,24 @@
               <td><%= ride.notes_to_driver %></td>
               <td><%= ride.passenger.name %></td>
               <td>
-                <% if ride.next_ride_id? %>
-                  <span class="badge bg-success">Yes</span>
-                <% else %>
-                  <span class="badge bg-danger">No</span>
+                <% 
+                  all_rides = ride.get_all_linked_rides
+                  stop_count = all_rides.length
+                  first_start = all_rides.first&.start_address&.full_address
+                  last_dest = all_rides.last&.dest_address&.full_address
+                  is_round_trip = first_start == last_dest && first_start.present?
+                %>
+                
+                <% if stop_count > 1 %>
+                  <span class="badge bg-info text-dark"><%= stop_count %> stops</span>
+                <% end %>
+                
+                <% if is_round_trip %>
+                  <span class="badge bg-warning text-dark">Rt</span>
+                <% end %>
+                
+                <% if stop_count == 1 && !is_round_trip %>
+                  <span class="badge bg-secondary">One-way</span>
                 <% end %>
               </td>
               <td><%= ride.wheelchair ? "Yes" : "No" %></td>
@@ -79,9 +93,44 @@
             <% if ride.need_caregiver %>
               <p><strong>Needs Caregiver:</strong> Yes</p>
             <% end %>
+            
+            <p>
+              <% 
+                all_rides = ride.get_all_linked_rides
+                stop_count = all_rides.length
+                first_start = all_rides.first&.start_address&.full_address
+                last_dest = all_rides.last&.dest_address&.full_address
+                is_round_trip = first_start == last_dest && first_start.present?
+              %>
+              
+              <% if stop_count > 1 %>
+                <span class="badge bg-info text-dark"><%= stop_count %> stops</span>
+              <% end %>
+              
+              <% if is_round_trip %>
+                <span class="badge bg-warning text-dark">Rt</span>
+              <% end %>
+              
+              <% if stop_count == 1 && !is_round_trip %>
+                <span class="badge bg-secondary">One-way</span>
+              <% end %>
+            </p>
 
-            <p><strong>Start Address:</strong> <%= ride.start_address&.name || ride.start_address&.full_address || 'N/A' %></p>
-            <p><strong>Destination Address:</strong> <%= ride.dest_address&.name || ride.dest_address&.full_address || 'N/A' %></p>
+            <p><strong>Origin:</strong> <%= ride.start_address&.name || ride.start_address&.full_address || 'N/A' %></p>
+            <p>
+              <strong>Destination(s):</strong> 
+              <% if ride.next_ride_id? %>
+                <% addresses = [] %>
+                <% current_ride = ride %>
+                <% while current_ride do %>
+                  <% addresses << (current_ride.dest_address&.name || current_ride.dest_address&.address_no_zip || 'N/A') %>
+                  <% current_ride = current_ride.next_ride %>
+                <% end %>
+                <%= addresses.join(' → ') %>
+              <% else %>
+                <%= ride.dest_address&.name || ride.dest_address&.full_address || 'N/A' %>
+              <% end %>
+            </p>
             <%= link_to "Info", ride_path(ride.id), class: "btn btn-primary" %>
             <% if ride.feedback %>
               <%= link_to "Feedback", edit_feedback_path(ride.feedback), class: "btn btn-primary" %>

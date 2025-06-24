@@ -11,10 +11,11 @@
               <th class="border-0 text-filter">Date and Time</th>
               <th class="border-0 text-filter">Driver</th>
               <th class="border-0 text-filter">Van</th>
-              <th class="border-0 text-filter">Passenger Name</th>
-              <th class="border-0 text-filter">Multiple Stops</th>
+              <th class="border-0 text-filter">Last Name</th>
+              <th class="border-0 text-filter">First Name</th>
+              <th class="border-0 text-filter">Stops Info</th>
               <th class="border-0 text-filter">Origin</th>
-              <th class="border-0 text-filter">Destination</th>
+              <th class="border-0 text-filter">Destination(s)</th>
               <th class="border-0 text-filter">Ride Type</th>
               <th class="border-0 text-filter">Wheelchair</th>
               <th class="border-0 text-filter">Low Income</th>
@@ -49,19 +50,49 @@
                       class: "btn btn-sm btn-danger" %>
                 </td>
 
-                <td><%= ride.date_and_time.strftime("%B %d, %Y %I:%M %p") %></td>
+                <td data-sort="<%= ride.date_and_time.to_i %>"><%= ride.date_and_time.strftime("%B %d, %Y %I:%M %p") %></td>
                 <td><%= ride.driver&.name || 'N/A' %></td>
                 <td><%= ride.van || 'N/A' %></td>
-                <td><%= ride.passenger&.name || 'N/A' %></td>
+                <% full_name = ride.passenger&.name.to_s.strip %>
+                <% first_name = full_name.split(' ', 2)[0] %>
+                <% last_name = full_name.split(' ', 2)[1] %>
+                <td><%= last_name || 'N/A' %></td>
+                <td><%= first_name || 'N/A' %></td>
                 <td>
-                  <% if ride.next_ride_id? %>
-                    <span class="badge bg-success">Yes</span>
-                  <% else %>
-                    <span class="badge bg-danger">No</span>
+                  <% 
+                    all_rides = ride.get_all_linked_rides
+                    stop_count = all_rides.length
+                    first_start = all_rides.first&.start_address&.full_address
+                    last_dest = all_rides.last&.dest_address&.full_address
+                    is_round_trip = first_start == last_dest && first_start.present?
+                  %>
+                  
+                  <% if stop_count > 1 %>
+                    <span class="badge bg-info text-dark"><%= stop_count %> stops</span>
+                  <% end %>
+                  
+                  <% if is_round_trip %>
+                    <span class="badge bg-warning text-dark">Rt</span>
+                  <% end %>
+                  
+                  <% if stop_count == 1 && !is_round_trip %>
+                    <span class="badge bg-secondary">One-way</span>
                   <% end %>
                 </td>
                 <td><%= ride.start_address&.full_address || 'N/A' %></td>
-                <td><%= ride.dest_address&.full_address || 'N/A' %></td>
+                <td>
+                  <% if ride.next_ride_id? %>
+                    <% addresses = [] %>
+                    <% current_ride = ride %>
+                    <% while current_ride do %>
+                      <% addresses << (current_ride.dest_address&.address_no_zip || 'N/A') %>
+                      <% current_ride = current_ride.next_ride %>
+                    <% end %>
+                    <%= addresses.join(' → ') %>
+                  <% else %>
+                    <%= ride.dest_address&.full_address || 'N/A' %>
+                  <% end %>
+                </td>
                 <td><%= ride.ride_type %></td>
 
                 <% [:wheelchair, :low_income, :disabled, :need_caregiver].each do |field| %>
@@ -82,7 +113,7 @@
           </tbody>
           <tfoot>
             <tr class="border-0">
-              <% 20.times do %>
+              <% 21.times do %>
                 <th class="border-0"></th>
               <% end %>
             </tr>

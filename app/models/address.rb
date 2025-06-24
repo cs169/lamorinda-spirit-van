@@ -13,4 +13,9 @@ class Address < ApplicationRecord
     zip_part = zip_code? ? ", (#{zip_code})" : ""
     "#{name_part}#{street}, #{city}#{zip_part}"
   end
+
+  def address_no_zip
+    name_part = name.present? ? "(#{name}) " : ""
+    "#{name_part}#{street}, #{city}"
+  end
 end

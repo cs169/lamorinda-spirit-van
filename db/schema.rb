@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_06_11_094229) do
+ActiveRecord::Schema[7.2].define(version: 2025_06_12_094229) do
   create_table "addresses", force: :cascade do |t|
     t.string "street"
     t.string "city"
@@ -118,9 +118,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_11_094229) do
     t.boolean "low_income", default: false, null: false
     t.boolean "disabled", default: false, null: false
     t.boolean "need_caregiver", default: false, null: false
-    t.boolean "lmv_member", default: false
     t.text "mail_updates"
     t.string "rqsted_newsletter"
+    t.boolean "lmv_member"
     t.index ["address_id"], name: "index_passengers_on_address_id"
   end
 
@@ -144,9 +144,11 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_11_094229) do
     t.datetime "date_and_time"
     t.string "status"
     t.text "notes"
+    t.string "source"
     t.index ["driver_id"], name: "index_rides_on_driver_id"
     t.index ["next_ride_id"], name: "index_rides_on_next_ride_id"
     t.index ["passenger_id"], name: "index_rides_on_passenger_id"
+    t.index ["source"], name: "index_rides_on_source"
   end
 
   create_table "shift_templates", force: :cascade do |t|
@@ -170,7 +172,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_11_094229) do
     t.string "odometer_pre"
     t.string "odometer_post"
     t.text "notes"
+    t.string "source"
     t.index ["driver_id"], name: "index_shifts_on_driver_id"
+    t.index ["source"], name: "index_shifts_on_source"
   end
 
   create_table "users", force: :cascade do |t|
