@@ -41,7 +41,9 @@ class DriversController < ApplicationController
                       Time.zone.today
                     end
 
-    @rides = @driver.rides.where(date_and_time: @current_date.all_day).where.not(id: Ride.select(:next_ride_id).where.not(next_ride_id: nil))
+    @rides = @driver.rides.includes(:passenger, :feedback, :start_address, :dest_address, :next_ride)
+    .where(date_and_time: @current_date.all_day)
+    .where.not(id: Ride.select(:next_ride_id).where.not(next_ride_id: nil))
     @shift = @driver.shifts.where(shift_date: @current_date).first
 
     # Clear return_to_driver parameter after redirect from drivers index page to /drivers/id/today?date=XXX page
