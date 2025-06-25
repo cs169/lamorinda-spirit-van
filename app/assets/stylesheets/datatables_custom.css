@@ -1,0 +1,17 @@
+.dataTables_wrapper .row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem; /* Add some space below the controls */
+}
+
+/* Ensure the right-aligned controls stay together */
+.dataTables_wrapper .col-md-6:last-child {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+} 
+
+/* Add margin to the right of the buttons container */
+.dataTables_wrapper .dt-buttons {
+    margin-right: 1rem; 
+} 
