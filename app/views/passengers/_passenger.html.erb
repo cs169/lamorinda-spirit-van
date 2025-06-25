@@ -7,7 +7,8 @@
           <tr class="border-0">
             <th class="border-0"></th> <!-- Info -->
             <th class="border-0"></th> <!-- Delete -->
-            <th class="border-0 text-filter">Name</th>
+            <th class="border-0 text-filter">Last Name</th>
+            <th class="border-0 text-filter">First Name</th>
             <th class="border-0 text-filter">Address</th>
             <th class="border-0 text-filter">Phone</th>
             <th class="border-0 text-filter">Alternative Phone</th>
@@ -34,7 +35,12 @@
               <td><%= link_to 'Edit', edit_passenger_path(passenger), class: "btn btn-sm btn-primary" %></td>
               <td><%= link_to 'Delete', passenger, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: "btn btn-sm btn-danger" %></td>
 
-              <td><%= passenger.name %></td>
+              <% full_name = passenger&.name.to_s.strip %>
+              <% name_parts = full_name.split(' ') %>
+              <% last_name = name_parts.length > 1 ? name_parts.last : nil %>
+              <% first_name = name_parts.length > 1 ? name_parts[0...-1].join(' ') : name_parts.first %>
+              <td><%= last_name || 'N/A' %></td>
+              <td><%= first_name || 'N/A' %></td>
               <td><%= passenger.full_address %></td>
               <td><%= passenger.phone %></td>
               <td><%= passenger.alternative_phone %></td>

@@ -63,7 +63,7 @@ const initiateSearchbars = table => {
 // Creates the Datatables
 const initiateDatatables = () => {
   const tables = [
-    { selector: '#passengers-table', order: [[15, 'desc']]},
+    { selector: '#passengers-table', order: [[2, 'asc']]},
     { selector: '#rides-table', order: [[3, 'desc']]}
   ];
 

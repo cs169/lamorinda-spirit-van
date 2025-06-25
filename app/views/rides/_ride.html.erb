@@ -54,8 +54,9 @@
                 <td><%= ride.driver&.name || 'N/A' %></td>
                 <td><%= ride.van || 'N/A' %></td>
                 <% full_name = ride.passenger&.name.to_s.strip %>
-                <% first_name = full_name.split(' ', 2)[0] %>
-                <% last_name = full_name.split(' ', 2)[1] %>
+                <% name_parts = full_name.split(' ') %>
+                <% last_name = name_parts.length > 1 ? name_parts.last : nil %>
+                <% first_name = name_parts.length > 1 ? name_parts[0...-1].join(' ') : name_parts.first %>
                 <td><%= last_name || 'N/A' %></td>
                 <td><%= first_name || 'N/A' %></td>
                 <td>
