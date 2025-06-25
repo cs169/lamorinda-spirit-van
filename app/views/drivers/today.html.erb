@@ -17,17 +17,13 @@
       <table class="rides-table">
         <thead>
           <tr>
-            <th>First p/up Time</th>
-            <th>Van</th>
-            <th>Notes</th>
             <th>Passenger</th>
-            <th>Stops Info</th>
-            <th>Wheelchair</th>
-            <th>Disabled</th>
-            <th>Needs Caregiver</th>
-            <th>Fee</th>
-            <th>Ride Type</th>
             <th>Phone:</th>
+            <th>Stops Info</th>
+            <th>Origin</th>
+            <th>Destination(s)</th>
+            <th>Wheelchair</th>
+            <th>Fee</th>
             <th>Feedback</th>
             <th></th>
           </tr>
@@ -35,10 +31,8 @@
         <tbody>
           <% @rides.each do |ride| %>
             <tr>
-              <td><%= ride.date_and_time.strftime("%I:%M %p") %></td>
-              <td><%= ride.van %></td>
-              <td><%= ride.notes_to_driver %></td>
               <td><%= ride.passenger.name %></td>
+              <td><%= ride.passenger.phone %></td>
               <td>
                 <% 
                   all_rides = ride.get_all_linked_rides
@@ -60,12 +54,28 @@
                   <span class="badge bg-secondary">One-way</span>
                 <% end %>
               </td>
-              <td><%= ride.wheelchair ? "Yes" : "No" %></td>
-              <td><%= ride.disabled ? "Yes" : "No" %></td>
-              <td><%= ride.need_caregiver ? "Yes" : "No" %></td>
+              <td><%= ride.start_address&.full_address %></td>
+              <td>
+                <% if ride.next_ride_id? %>
+                  <% addresses = [] %>
+                  <% current_ride = ride %>
+                  <% while current_ride do %>
+                    <% addresses << (current_ride.dest_address&.name || current_ride.dest_address&.address_no_zip || 'N/A') %>
+                    <% current_ride = current_ride.next_ride %>
+                  <% end %>
+                  <%= addresses.join(' ➡️ ') %>
+                <% else %>
+                  <%= ride.dest_address&.name || ride.dest_address&.full_address || 'N/A' %>
+                <% end %>
+              </td>
+              <td>
+                <% if ride.wheelchair %>
+                  <span class="badge bg-success">Yes</span>
+                <% else %>
+                  <span>No</span>
+                <% end %>
+              </td>
               <td><%= number_to_currency(ride.amount_paid) %></td>
-              <td><%= ride.ride_type %></td>
-              <td><%= ride.passenger.phone %></td>
                <% if ride.feedback %>
                 <td><%= link_to "Feedback", edit_feedback_path(ride.feedback), class: "btn btn-primary" %></td>
               <% else %>
@@ -81,7 +91,6 @@
       <div class="rides-list">
         <% @rides.each do |ride| %>
           <div class="ride-block">
-            <p><strong>Notes:</strong> <%= ride.notes_to_driver %></p>
             <p><strong>Passenger:</strong> <%= ride.passenger.name %></p>
 
             <% if ride.wheelchair %>
@@ -126,7 +135,7 @@
                   <% addresses << (current_ride.dest_address&.name || current_ride.dest_address&.address_no_zip || 'N/A') %>
                   <% current_ride = current_ride.next_ride %>
                 <% end %>
-                <%= addresses.join(' → ') %>
+                <%= addresses.join(' ➡️ ') %>
               <% else %>
                 <%= ride.dest_address&.name || ride.dest_address&.full_address || 'N/A' %>
               <% end %>
@@ -152,13 +161,12 @@
   <% else %>
     <p>No shift found for this driver on <%= @current_date.strftime("%m/%d/%Y") %>.</p>
   <% end %>
-  
+
   <div class="btn-shift" id="btn-shift">
+    <%= link_to "My Shifts", all_shifts_driver_path(@driver), class: "btn btn-primary" %>
+
     <%# Pass the current page's full URL to the drivers index via the `return_to_drivers_today_from_drivers_index` parameter %>
-    <%= link_to "View Other Drivers", drivers_path(dont_jump: true, return_to_drivers_today_from_drivers_index: request.fullpath), class: "btn btn-primary" %>
-    
-    <%# Pass the current page's full URL to the shifts index via the `return_to` parameter %>
-    <%= link_to "View All Shifts", shifts_path(return_to_drivers_today_from_shifts_index: request.fullpath), class: "btn btn-primary" %>
+    <%= link_to "Shifts Calendar",shifts_path(return_to_drivers_today_from_shifts_index: request.fullpath), class: "btn btn-primary" %>
     
     <% if @shift %>
       <%= link_to "Shift Feedback", feedback_shift_path(@shift.id), class: "btn btn-primary" %>

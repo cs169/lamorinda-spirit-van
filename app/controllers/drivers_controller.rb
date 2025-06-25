@@ -30,8 +30,19 @@ class DriversController < ApplicationController
   # GET /drivers/:driver_id/shifts
   # Display all shifts for a certain driver
   def all_shifts
+    @current_date = begin
+                  Date.parse(params[:date])
+                rescue ArgumentError, TypeError
+                  Time.zone.today
+                end
+
+    month_start = @current_date.beginning_of_month
+    month_end = @current_date.end_of_month
+
     @driver = Driver.find(params[:id])
-    @shifts = @driver.shifts
+    @shifts = @driver.shifts.where(shift_date: month_start..month_end)
+                    .where("shift_date >= ?", Date.today)
+                    .order(:shift_date)
   end
 
   def today
