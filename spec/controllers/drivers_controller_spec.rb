@@ -128,9 +128,9 @@ RSpec.describe DriversController, type: :controller do
     end
   end
 
-  describe "GET #all_shifts" do
+  describe "GET #upcoming_shifts" do
     it "assigns the requested driver to @driver" do
-      get :all_shifts, params: { id: @driver1.id }
+      get :upcoming_shifts, params: { id: @driver1.id }
       expect(assigns(:driver)).to eq(@driver1)
     end
   end

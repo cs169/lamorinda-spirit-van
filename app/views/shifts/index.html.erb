@@ -20,7 +20,7 @@
       <div>
         <strong>
           <% if current_user.admin? || current_user.dispatcher? %>
-            <%= link_to shift.driver.name, all_shifts_driver_path(shift.driver), class: "driver-link" %>
+            <%= link_to shift.driver.name, upcoming_shifts_driver_path(shift.driver), class: "driver-link" %>
           <% elsif current_user.driver? %>
             <%= shift.driver.name %>
           <% end %>

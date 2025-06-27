@@ -28,8 +28,8 @@ class DriversController < ApplicationController
   end
 
   # GET /drivers/:driver_id/shifts
-  # Display all shifts for a certain driver
-  def all_shifts
+  # Display all upcoming shifts for a certain driver
+  def upcoming_shifts
     @current_date = begin
                   Date.parse(params[:date])
                 rescue ArgumentError, TypeError

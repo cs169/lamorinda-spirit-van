@@ -21,7 +21,7 @@
           <% if shift.day_of_week == day%>
             <div>
               <strong>
-                <%= link_to shift.driver.name, all_shifts_driver_path(shift.driver), class: "driver-link" %>
+                <%= link_to shift.driver.name, upcoming_shifts_driver_path(shift.driver), class: "driver-link" %>
               </strong>
               
               <%= link_to shift.shift_type, edit_shift_template_path(shift), style: "color: blue; text-decoration: underline;", class: "shift-type-link" %>

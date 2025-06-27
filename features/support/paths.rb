@@ -45,7 +45,7 @@ module NavigationHelpers
       shift_path(1)
 
     when /^the driver's upcoming shifts page$/i
-      all_shifts_driver_path(1)
+      upcoming_shifts_driver_path(1)
 
     when /^the admin users page$/i
       admin_users_path
