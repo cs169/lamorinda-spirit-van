@@ -15,10 +15,10 @@ Feature: Dispatcher Shift Navigation
       | John Smith | Time.zone.today | am |
     And I am on the shifts calendar page
 
-  Scenario: Dispatcher clicks on driver name to view all their shifts
+  Scenario: Dispatcher clicks on driver name to view their upcoming shifts
     When I click on a driver's name
-    Then I should be on the Driver's All Shifts page
-    And I should see a list of shifts belonging to that driver
+    Then I should be on the Driver's Upcoming Shifts page
+    And I should see a list of upcoming shifts belonging to that driver
 
   Scenario: Dispatcher clicks on shift type to view shift details
     When I click on a shift type

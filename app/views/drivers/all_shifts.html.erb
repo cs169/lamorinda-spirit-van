@@ -28,7 +28,7 @@
   </div>
 <% end %>
 
-<div class="d-flex justify-content-center mt-4">
-  <%= link_to "Back", "#", class: "btn btn-outline-secondary", onclick: "history.back(); return false;" %>
+<div class="d-flex justify-content-left mt-4">
+  <%= link_to "Back", @return_url || today_driver_path(@driver), class: "btn btn-outline-secondary" %>
 </div>
 

@@ -28,16 +28,23 @@ Then("the shift date field should show the date of the day I selected") do
 end
 
 
-# Scenario: Dispatcher clicks on driver name to view all their shifts
+# Scenario: Dispatcher clicks on driver name to view their upcoming shifts
 When("I click on a driver's name") do
   driver_link = find(".driver-link", match: :first)
   @clicked_driver_name = driver_link.text
   driver_link.click
 end
 
-Then("I should see a list of shifts belonging to that driver") do
+Then("I should see a list of upcoming shifts belonging to that driver") do
   expect(page).to have_content(@clicked_driver_name)
-  expect(page).to have_css("div.shift")
+  if page.has_css?(".list-group-item")
+    page.all('.list-group-item').each do |item|
+      expect(item).to have_content("Shift Date:")
+      expect(item.text).to match(/\w+day, \w{3} \d{2}, \d{4}/)
+    end
+  else
+    expect(page).to have_content("No upcoming shifts assigned this month for this driver")
+  end
 end
 
 

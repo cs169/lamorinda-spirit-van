@@ -163,10 +163,9 @@
   <% end %>
 
   <div class="btn-shift" id="btn-shift">
-    <%= link_to "My Shifts", all_shifts_driver_path(@driver), class: "btn btn-primary" %>
+    <%= link_to "Upcoming Shifts", all_shifts_driver_path(@driver), return_url: request.fullpath, class: "btn btn-primary" %>
 
-    <%# Pass the current page's full URL to the drivers index via the `return_to_drivers_today_from_drivers_index` parameter %>
-    <%= link_to "Shifts Calendar",shifts_path(return_to_drivers_today_from_shifts_index: request.fullpath), class: "btn btn-primary" %>
+    <%= link_to "View Other Drivers", drivers_path(dont_jump: true, return_to_drivers_today_from_drivers_index: request.fullpath), class: "btn btn-primary" %>
     
     <% if @shift %>
       <%= link_to "Shift Feedback", feedback_shift_path(@shift.id), class: "btn btn-primary" %>
