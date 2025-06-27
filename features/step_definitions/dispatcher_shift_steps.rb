@@ -38,7 +38,7 @@ end
 Then("I should see a list of upcoming shifts belonging to that driver") do
   expect(page).to have_content(@clicked_driver_name)
   if page.has_css?(".list-group-item")
-    page.all('.list-group-item').each do |item|
+    page.all(".list-group-item").each do |item|
       expect(item).to have_content("Shift Date:")
       expect(item.text).to match(/\w+day, \w{3} \d{2}, \d{4}/)
     end
