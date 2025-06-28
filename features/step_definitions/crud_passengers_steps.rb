@@ -33,9 +33,9 @@ When("I fill in all necessary information") do
 end
 
 
-When("I follow {string} for {string}") do |link_text, name|
+When(/^I follow "(Edit|Delete)" for "([^"]+) ([^"]+)"$/) do |link_text, first, last|
   # Find the row containing the passenger's name, then click the link
-  within(:xpath, "//tr[td[contains(text(),'#{name}')]]") do
+  within(:xpath, "//tr[td[contains(text(),'#{first}')] and td[contains(text(),'#{last}')]]") do
     click_link link_text
   end
 end
