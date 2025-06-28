@@ -20,7 +20,6 @@ document.addEventListener("turbo:load", function() {
         // Update hidden fields
         document.getElementById("ride_passenger_id").value = ui.item.id;
         document.getElementById("ride_wheelchair").value = yesNo(ui.item.wheelchair);
-        document.getElementById("ride_low_income").value = yesNo(ui.item.low_income);
         document.getElementById("ride_disabled").value = yesNo(ui.item.disabled);
         document.getElementById("ride_need_caregiver").value = yesNo(ui.item.need_caregiver);
 
@@ -49,7 +48,6 @@ document.addEventListener("turbo:load", function() {
 
         updateCheckbox('wheelchair', ui.item.wheelchair);
         updateCheckbox('disabled', ui.item.disabled);
-        updateCheckbox('low_income', ui.item.low_income);
         updateCheckbox('need_caregiver', ui.item.need_caregiver);
 
         document.querySelector('#notes_display').value = ui.item.notes || 'No notes available';

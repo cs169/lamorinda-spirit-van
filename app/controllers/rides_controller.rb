@@ -31,7 +31,7 @@ class RidesController < ApplicationController
 
     gon.passengers = passengers_with_data.map { |p| {
       label: p.name, id: p.id, phone: p.phone, wheelchair: p.wheelchair,
-      low_income: p.low_income, disabled: p.disabled, need_caregiver: p.need_caregiver,
+      disabled: p.disabled, need_caregiver: p.need_caregiver,
       notes: p.notes, ride_count: p.rides.length, # Use .length instead of .count for loaded association
       street: p.address&.street, city: p.address&.city
     } }
@@ -64,7 +64,6 @@ class RidesController < ApplicationController
 
     # Accessibility info is retrieved from the passenger
     @ride.wheelchair      = @ride.passenger&.wheelchair
-    @ride.low_income      = @ride.passenger&.low_income
     @ride.disabled        = @ride.passenger&.disabled
     @ride.need_caregiver  = @ride.passenger&.need_caregiver
   end
@@ -121,8 +120,8 @@ class RidesController < ApplicationController
       :driver_id,
       :notes,
       :notes_to_driver,
+      :fare_type,
       :wheelchair,
-      :low_income,
       :disabled,
       :need_caregiver,
       :start_address_id,

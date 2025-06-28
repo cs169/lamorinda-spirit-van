@@ -9,8 +9,8 @@ FactoryBot.define do
     association :start_address, factory: :address
     association :dest_address, factory: :address
     ride_type { "Default Type" }
+    fare_type { "Default Type" }
     wheelchair { false }
-    low_income { false }
     disabled { false }
     need_caregiver { false }
     notes_to_driver { "Default Note" }

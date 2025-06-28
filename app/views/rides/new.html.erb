@@ -63,6 +63,16 @@
            </div>
 
            <div class="mb-3">
+            <%= f.label :ride_type, "Ride Type:" %>
+            <%= f.text_field :ride_type, class: "form-control", rows: 3 %>
+           </div>
+
+           <div class="mb-3">
+            <%= f.label :fare_type, "Fare Type:" %>
+            <%= f.text_field :fare_type, class: "form-control", rows: 3 %>
+           </div>
+
+           <div class="mb-3">
              <%= f.label :status, "Status" %> <span class="text-danger">*</span>
              <%= f.select :status,
                           [["Requested"], ['Pending'], ['Scheduled'], ['Confirmed'], ['Email sent'], ["Waitlisted"], ['Cancelled']],
@@ -91,7 +101,6 @@
 
            <%= f.hidden_field :passenger_id, class: "form-control" %>
            <%= f.hidden_field :wheelchair, value: @ride.wheelchair ? "Yes" : "No" %>
-           <%= f.hidden_field :low_income, value: @ride.low_income ? "Yes" : "No" %>
            <%= f.hidden_field :disabled, value: @ride.disabled ? "Yes" : "No" %>
            <%= f.hidden_field :need_caregiver, value: @ride.need_caregiver ? "Yes" : "No" %>
 
@@ -143,14 +152,6 @@
                      <input type="checkbox" 
                             class="form-check-input bg-secondary opacity-50"
                             disabled
-                            id="low_income_display">
-                     <label class="form-check-label" for="low_income_display">Low Income</label>
-                   </div>
-
-                   <div class="form-check mb-2">
-                     <input type="checkbox" 
-                            class="form-check-input bg-secondary opacity-50"
-                            disabled
                             id="need_caregiver_display">
                      <label class="form-check-label" for="need_caregiver_display">Needs Caregiver</label>
                    </div>
@@ -178,11 +179,6 @@
              </div>
            </div>
            <!-- END: Accessibility Information -->
-
-           <div class="mb-3">
-            <%= f.label :ride_type, "Ride Type:" %>
-            <%= f.text_field :ride_type, class: "form-control", rows: 3 %>
-           </div>
 
            <!-- New Address Container with Justify Content Row -->
            <div class="row g-4" id="address-grid">

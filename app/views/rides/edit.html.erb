@@ -85,6 +85,16 @@
           </div>
 
           <div class="mb-3">
+            <%= f.label :ride_type, "Ride Type:" %>
+            <%= f.text_field :ride_type, class: "form-control" %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :fare_type, "Fare Type:" %>
+            <%= f.text_field :fare_type, class: "form-control" %>
+          </div>
+
+          <div class="mb-3">
              <%= f.label :status, "Status" %> <span class="text-danger">*</span>
              <%= f.select :status,
                           [["Requested"], ['Pending'], ['Scheduled'], ['Confirmed'], ['Email sent'], ["Waitlisted"], ['Cancelled']],
@@ -107,7 +117,6 @@
 
           <%= f.hidden_field :passenger_id, class: "form-control" %>
           <%= f.hidden_field :wheelchair, class: "form-control", value: @ride.wheelchair ? "Yes" : "No" %>
-          <%= f.hidden_field :low_income, class: "form-control", value: @ride.low_income ? "Yes" : "No" %>
           <%= f.hidden_field :disabled, class: "form-control", value: @ride.disabled ? "Yes" : "No" %>
           <%= f.hidden_field :need_caregiver, class: "form-control", value: @ride.need_caregiver ? "Yes" : "No" %>
 
@@ -127,11 +136,6 @@
                    style="cursor: not-allowed"
                    value="<%= @ride.passenger&.full_address || 'N/A' %>"
                    readonly>
-          </div>
-
-          <div class="mb-3">
-            <%= f.label :ride_type, "Ride Type:" %>
-            <%= f.text_field :ride_type, class: "form-control" %>
           </div>
 
           <!-- NEW: Accessibility Information -->
@@ -178,23 +182,6 @@
                 </div>
 
                 <div class="col-md-6">
-                  <div class="form-check mb-2">
-                    <% if @ride.passenger&.low_income %>
-                      <input type="checkbox" 
-                             class="form-check-input bg-primary"
-                             checked
-                             disabled
-                             id="low_income_display">
-                      <label class="form-check-label fw-bold" for="low_income_display">Low Income</label>
-                    <% else %>
-                      <input type="checkbox" 
-                             class="form-check-input bg-secondary opacity-50"
-                             disabled
-                             id="low_income_display">
-                      <label class="form-check-label" for="low_income_display">Low Income</label>
-                    <% end %>
-                  </div>
-
                   <div class="form-check mb-2">
                     <% if @ride.passenger&.need_caregiver %>
                       <input type="checkbox" 
