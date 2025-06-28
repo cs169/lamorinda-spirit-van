@@ -92,7 +92,7 @@
              <%= f.label :passenger_name, "Passenger" %> <span class="text-danger">*</span>
              <div class="input-group">
                <%= f.text_field :passenger_name, class: "form-control", required: true %>
-               <%= link_to new_passenger_path, class: "btn btn-success" do %>
+               <%= link_to new_passenger_path(return_url: request.fullpath), class: "btn btn-success" do %>
                  <i class="bi bi-person-plus"></i> Create New Passenger
                <% end %>
              </div>
