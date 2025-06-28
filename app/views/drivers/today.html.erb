@@ -163,7 +163,7 @@
   <% end %>
 
   <div class="btn-shift" id="btn-shift">
-    <%= link_to "Upcoming Shifts", upcoming_shifts_driver_path(@driver), return_url: request.fullpath, class: "btn btn-primary" %>
+    <%= link_to "Upcoming Shifts", upcoming_shifts_driver_path(@driver, return_url: request.fullpath), class: "btn btn-primary" %>
 
     <%= link_to "View Other Drivers", drivers_path(dont_jump: true, return_to_drivers_today_from_drivers_index: request.fullpath), class: "btn btn-primary" %>
     

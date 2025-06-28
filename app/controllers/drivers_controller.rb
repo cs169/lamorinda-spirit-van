@@ -40,7 +40,15 @@ class DriversController < ApplicationController
     month_end = @current_date.end_of_month
 
     @driver = Driver.find(params[:id])
-    @return_url = params[:return_url] || request.referer
+    
+    # For the "Back" button
+    @safe_return_url =
+      if params[:return_url].present? && params[:return_url].start_with?("/")
+        params[:return_url]
+      else
+        today_driver_path(@driver)
+      end
+    
     @shifts = @driver.shifts.where(shift_date: month_start..month_end)
                     .where("shift_date >= ?", Date.today)
                     .order(:shift_date)
