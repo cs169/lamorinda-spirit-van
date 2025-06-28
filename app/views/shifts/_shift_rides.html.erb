@@ -5,7 +5,6 @@
       <tr class="border-0">
         <th class="border-0"></th> <!-- Info Button -->
         <th class="border-0"></th> <!-- Delete Button -->
-        <th class="border-0">First Pickup Time</th>
         <th class="border-0">Passenger Name</th>
         <th class="border-0">Stops Info</th>
         <th class="border-0">Origin</th>
@@ -29,7 +28,6 @@
                 data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' },
                 class: "btn btn-sm btn-danger" %>
           </td>
-          <td><%= ride.date_and_time.strftime("%I:%M %p") %></td>
           <td><%= ride.passenger&.name || 'N/A' %></td>
           <td>
             <% 

@@ -28,10 +28,25 @@ class DriversController < ApplicationController
   end
 
   # GET /drivers/:driver_id/shifts
-  # Display all shifts for a certain driver
-  def all_shifts
+  # Display all upcoming shifts for a certain driver
+  def upcoming_shifts
+    @current_date = begin
+                  Date.parse(params[:date])
+                rescue ArgumentError, TypeError
+                  Time.zone.today
+                end
+
+    month_start = @current_date.beginning_of_month
+    month_end = @current_date.end_of_month
+
     @driver = Driver.find(params[:id])
-    @shifts = @driver.shifts
+
+    # For the "Back" button - secure URL validation
+    @safe_return_url = safe_return_url || today_driver_path(@driver)
+
+    @shifts = @driver.shifts.where(shift_date: month_start..month_end)
+                    .where("shift_date >= ?", Date.today)
+                    .order(:shift_date)
   end
 
   def today
@@ -118,5 +133,33 @@ class DriversController < ApplicationController
   # Only allow a list of trusted parameters through.
   def driver_params
     params.require(:driver).permit(:name, :phone, :email, :shifts, :active)
+  end
+
+  # Securely validate return URL to prevent open redirects and XSS
+  def safe_return_url
+    return nil unless params[:return_url].present?
+
+    begin
+      uri = URI.parse(params[:return_url])
+
+      # Only allow relative URLs (no scheme, no host)
+      # This prevents external redirects and javascript: schemes
+      if uri.scheme.nil? && uri.host.nil? && uri.path.start_with?("/")
+        # Additional validation: ensure the path doesn't contain dangerous patterns
+        path = uri.path
+        return nil if path.include?("..") || path.include?("javascript:")
+
+        # Reconstruct URL with only safe components (path + query)
+        url = path
+        url += "?#{uri.query}" if uri.query.present?
+        url += "##{uri.fragment}" if uri.fragment.present?
+
+        return url
+      end
+    rescue URI::InvalidURIError
+      # Invalid URI format - return nil for safety
+    end
+
+    nil
   end
 end
