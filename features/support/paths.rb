@@ -33,7 +33,7 @@ module NavigationHelpers
       passengers_path
 
     when /^the today's rides page$/i
-      today_rides_path
+      today_driver_path(1)
 
     when /^the drivers page$/i
       drivers_path
@@ -44,8 +44,8 @@ module NavigationHelpers
     when /^the shift details page$/i
       shift_path(1)
 
-    when /^the driver's all shifts page$/i
-      all_shifts_driver_path(1)
+    when /^the driver's upcoming shifts page$/i
+      upcoming_shifts_driver_path(1)
 
     when /^the admin users page$/i
       admin_users_path

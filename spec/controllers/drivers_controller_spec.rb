@@ -128,9 +128,9 @@ RSpec.describe DriversController, type: :controller do
     end
   end
 
-  describe "GET #all_shifts" do
+  describe "GET #upcoming_shifts" do
     it "assigns the requested driver to @driver" do
-      get :all_shifts, params: { id: @driver1.id }
+      get :upcoming_shifts, params: { id: @driver1.id }
       expect(assigns(:driver)).to eq(@driver1)
     end
   end
@@ -248,6 +248,52 @@ RSpec.describe DriversController, type: :controller do
 
       expect(response).to have_http_status(:unprocessable_entity)
       expect(flash[:alert]).to eq("Failed to remove the driver.")
+    end
+  end
+
+  describe "security tests for return URL validation" do
+    let(:driver) { FactoryBot.create(:driver) }
+
+    before do
+      # Mock authentication if needed
+      allow(controller).to receive(:require_role)
+    end
+
+    describe "GET #upcoming_shifts with malicious return_url" do
+      it "blocks external redirect attempts" do
+        get :upcoming_shifts, params: { id: driver.id, return_url: "//evil.com" }
+        expect(assigns(:safe_return_url)).to eq(today_driver_path(driver))
+      end
+
+      it "blocks javascript injection attempts" do
+        get :upcoming_shifts, params: { id: driver.id, return_url: "/javascript:alert('xss')" }
+        expect(assigns(:safe_return_url)).to eq(today_driver_path(driver))
+      end
+
+      it "blocks path traversal attempts" do
+        get :upcoming_shifts, params: { id: driver.id, return_url: "/../../../admin" }
+        expect(assigns(:safe_return_url)).to eq(today_driver_path(driver))
+      end
+
+      it "blocks external URLs with scheme" do
+        get :upcoming_shifts, params: { id: driver.id, return_url: "http://malicious.com" }
+        expect(assigns(:safe_return_url)).to eq(today_driver_path(driver))
+      end
+
+      it "allows safe internal paths" do
+        get :upcoming_shifts, params: { id: driver.id, return_url: "/drivers/123" }
+        expect(assigns(:safe_return_url)).to eq("/drivers/123")
+      end
+
+      it "allows safe paths with query parameters" do
+        get :upcoming_shifts, params: { id: driver.id, return_url: "/rides?status=pending" }
+        expect(assigns(:safe_return_url)).to eq("/rides?status=pending")
+      end
+
+      it "handles invalid URI gracefully" do
+        get :upcoming_shifts, params: { id: driver.id, return_url: "http://[invalid" }
+        expect(assigns(:safe_return_url)).to eq(today_driver_path(driver))
+      end
     end
   end
 

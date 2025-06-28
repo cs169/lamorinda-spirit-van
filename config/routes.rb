@@ -47,7 +47,7 @@ Rails.application.routes.draw do
 
   resources :drivers, except: [:show] do
     member do
-      get "all_shifts"
+      get "upcoming_shifts"
       get "today"
     end
   end

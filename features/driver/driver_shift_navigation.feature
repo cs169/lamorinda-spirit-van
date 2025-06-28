@@ -59,33 +59,30 @@ Feature: Driver Ride and Shift Navigation
     When I click on "Back" button
     Then I should return to the remembered rides page URL
 
-  Scenario: Returning to the same day's rides after visiting Shifts Calendar
+  Scenario: Returning to the same day's rides after visiting Upcoming Shifts Page
     Given I visit the Today's Rides page for that driver
-    Then I should see "View All Shifts" button
+    Then I should see "Upcoming Shifts" button
     
     When I click on "Prev. Day" button
     Then I should see the rides for one day ago
 
     And I remember the current rides page URL
 
-    When I click on "View All Shifts" button
-    Then I should be on the shifts calendar page
+    When I click on "Upcoming Shifts" button
+    Then I should be on the driver's upcoming shifts page
     And I should see "Back" button
-
-    When I follow "Prev. Month"
-    Then I should see the previous month title
 
     When I click on "Back" button
     Then I should return to the remembered rides page URL
   
-  Scenario: Returning to the same day's rides after visiting Shifts Calendar(Today)
+  Scenario: Returning to the same day's rides after visiting Upcoming Shifts Page(Today)
     Given I visit the Today's Rides page for that driver
-    Then I should see "View All Shifts" button
+    Then I should see "Upcoming Shifts" button
     
     And I remember the current rides page URL
 
-    When I click on "View All Shifts" button
-    Then I should be on the shifts calendar page
+    When I click on "Upcoming Shifts" button
+    Then I should be on the driver's upcoming shifts page
     And I should see "Back" button
 
     When I click on "Back" button
@@ -93,9 +90,9 @@ Feature: Driver Ride and Shift Navigation
 
   Scenario: Viewing monthly shifts from Today's Rides
     Given I visit the Today's Rides page for that driver
-    Then I should see "View All Shifts" button
-    When I click on "View All Shifts" button
-    Then I should be on the shifts calendar page
+    Then I should see "Upcoming Shifts" button
+    When I click on "Upcoming Shifts" button
+    Then I should be on the driver's upcoming shifts page
 
   Scenario: Viewing the current month in the shift calendar
     Given I am on the shifts calendar page
