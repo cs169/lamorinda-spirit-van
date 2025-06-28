@@ -67,16 +67,24 @@ namespace :import do
     # Define source identifier and file path
     source = "#{month}_2024"
 
-    # Try both full month name and abbreviated month name
-    full_month_file = Rails.root.join("lib", "tasks", "rides_#{month.downcase}.csv")
-    short_month_file = Rails.root.join("lib", "tasks", "rides_#{month.downcase[0..2]}.csv")
+    # Check for CSV files in both /tmp and lib/tasks directories
+    # Priority: /tmp (production) -> lib/tasks (development)
+    tmp_full_month_file = File.join("/tmp", "rides_#{month.downcase}.csv")
+    tmp_short_month_file = File.join("/tmp", "rides_#{month.downcase[0..2]}.csv")
+    lib_full_month_file = Rails.root.join("lib", "tasks", "rides_#{month.downcase}.csv")
+    lib_short_month_file = Rails.root.join("lib", "tasks", "rides_#{month.downcase[0..2]}.csv")
 
-    file_path = if File.exist?(full_month_file)
-      full_month_file
-    elsif File.exist?(short_month_file)
-      short_month_file
+    file_path = if File.exist?(tmp_full_month_file)
+      tmp_full_month_file
+    elsif File.exist?(tmp_short_month_file)
+      tmp_short_month_file
+    elsif File.exist?(lib_full_month_file)
+      lib_full_month_file
+    elsif File.exist?(lib_short_month_file)
+      lib_short_month_file
     else
-      full_month_file # Use full name in error message
+      # Default to lib/tasks location for error message
+      lib_full_month_file
     end
 
     puts "Importing #{month.titleize} 2024 data..."
