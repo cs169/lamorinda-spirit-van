@@ -35,8 +35,8 @@
            <h5 class="fw-bold text-success">Ride Details</h5>
 
            <div class="mb-3">
-             <%= f.label :date_and_time, "Date and Time" %> <span class="text-danger">*</span>
-             <%= f.text_field :date_and_time, type: "datetime-local", value: f.object.date_and_time&.strftime("%Y-%m-%dT%H:%M"), class: "form-control", required: true %>
+             <%= f.label :date, "Date" %> <span class="text-danger">*</span>
+             <%= f.text_field :date, type: "date", value: f.object.date&.strftime("%m/%d/%Y"), class: "form-control", required: true %>
            </div>
 
            <div class="mb-3">

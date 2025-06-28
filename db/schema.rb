@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_06_28_065723) do
+ActiveRecord::Schema[7.2].define(version: 2025_06_28_212856) do
   create_table "addresses", force: :cascade do |t|
     t.string "street"
     t.string "city"
@@ -140,7 +140,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_28_065723) do
     t.boolean "disabled", default: false, null: false
     t.boolean "need_caregiver", default: false, null: false
     t.integer "next_ride_id"
-    t.datetime "date_and_time"
+    t.date "date"
     t.string "status"
     t.text "notes"
     t.string "source"

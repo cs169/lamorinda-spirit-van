@@ -398,8 +398,7 @@ namespace :import do
         end
       end
 
-      # Calculate time once per CSV row: start at 10:00 AM + (daily_ride_counter * 10 minutes)
-      ride_time = base_date.beginning_of_day + 10.hours + (daily_ride_counters[base_date] * 10.minutes)
+      ride_date = base_date
       daily_ride_counters[base_date] += 1
 
       # Create the actual ride records with the same calculated time for all rides in this row
@@ -414,18 +413,17 @@ namespace :import do
           hours: row["Hours"]&.strip&.to_f,
           amount_paid: row["Amount Paid"]&.strip&.to_d,
           notes_to_driver: row["Notes to Driver"]&.strip,
-          date_and_time: ride_time,
+          date: row["Date"],
           status: row["Status"]&.strip,
           ride_type: "", # Empty
           notes: row["Notes/Date reserved"]&.strip.presence || row["Notes"]&.strip,
           source: source,
           wheelchair: passenger.wheelchair,
-          low_income: passenger.low_income,
           disabled: passenger.disabled,
           need_caregiver: passenger.need_caregiver
         )
         created_rides << ride
-        puts "✓ Created ride #{ride_idx + 1}/#{rides_to_create.length} for #{passenger.name} at #{ride_time.strftime('%I:%M %p')}: #{ride_data[:start_address]&.street} -> #{ride_data[:dest_address]&.street}"
+        puts "✓ Created ride #{ride_idx + 1}/#{rides_to_create.length} for #{passenger.name} on #{ride_date.strftime('%m/%d/%Y')}: #{ride_data[:start_address]&.street} -> #{ride_data[:dest_address]&.street}"
       rescue => e
         puts "ERROR Row #{row_number}: Failed to create ride #{ride_idx + 1} for #{passenger.name}: #{e.message}"
         error_count += 1

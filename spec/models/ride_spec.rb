@@ -13,7 +13,7 @@ RSpec.describe Ride, type: :model do
     @ride1 = FactoryBot.create(
       :ride,
       driver: @driver1,
-      date_and_time: Time.zone.today.yesterday.noon,
+      date: Date.current,
     )
     @ride2 = FactoryBot.create(
       :ride,
@@ -22,7 +22,7 @@ RSpec.describe Ride, type: :model do
     @ride3 = FactoryBot.create(
       :ride,
       driver: @driver1,
-      date_and_time: Time.zone.today.tomorrow.noon,
+      date: Date.current,
       wheelchair: true,
       need_caregiver: true
     )
@@ -133,7 +133,7 @@ RSpec.describe Ride, type: :model do
   describe ".extract_attrs_from_params" do
     it "parses addresses and converts Yes/No fields into booleans" do
       raw_params = {
-        date_and_time: "2025-05-01 10:00 AM",
+        date: "2025-05-01",
         van: "2",
         hours: "3",
         passenger_id: 1,
@@ -152,7 +152,7 @@ RSpec.describe Ride, type: :model do
       }
 
       input_params = ActionController::Parameters.new(raw_params).permit(
-        :date_and_time, :van, :hours, :passenger_id, :driver_id, :notes, :notes_to_driver,
+        :date, :van, :hours, :passenger_id, :driver_id, :notes, :notes_to_driver,
         :ride_type, :fare_type, :wheelchair, :disabled, :need_caregiver,
         addresses_attributes: [:name, :street, :city, :phone]
       )
@@ -162,7 +162,7 @@ RSpec.describe Ride, type: :model do
       expect(attrs[:wheelchair]).to eq(true)
       expect(attrs[:disabled]).to eq(true)
       expect(attrs[:need_caregiver]).to eq(false)
-      expect(attrs[:date_and_time]).to eq("2025-05-01 10:00 AM")
+      expect(attrs[:date]).to eq("2025-05-01")
       expect(attrs[:notes]).to eq("Sample ride")
       expect(attrs[:notes_to_driver]).to eq("Sample ride")
       expect(attrs[:ride_type]).to eq("Default")
@@ -176,7 +176,7 @@ RSpec.describe Ride, type: :model do
     let(:ride_attrs) do
       {
         driver_id: 1,
-        date_and_time: Time.zone.today.noon,
+        date: Date.current,
       }
     end
 

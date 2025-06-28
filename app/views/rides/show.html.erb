@@ -5,7 +5,7 @@
     <div class="card-body">
       <h5 class="card-title">Info</h5>
       <ul class="list-group list-group-flush">
-        <li class="list-group-item"><strong>Date:</strong> <%= @ride.date_and_time.strftime("%B %d, %Y %I:%M %p") %></li>
+        <li class="list-group-item"><strong>Date:</strong> <%= @ride.date.strftime('%m/%d/%Y') %></li>
         <li class="list-group-item"><strong>Van Number:</strong> <%= @ride.van %></li>
         <li class="list-group-item"><strong>Driver:</strong> <%= @ride.driver&.name || "Driver Not Assigned" %></li>
         <li class="list-group-item"><strong>Hours:</strong> <%= @ride.hours %></li>
@@ -72,7 +72,7 @@
     <% end %>
     
     <div class="col-12 mb-2 col-md-auto">
-      <%= link_to "Back", today_driver_path(@ride.driver_id, date: @ride.date_and_time.to_date), class: "btn btn-outline-secondary w-100" %>
+      <%= link_to "Back", today_driver_path(@ride.driver_id, date: @ride.date), class: "btn btn-outline-secondary w-100" %>
     </div>
   </div>
 </div>

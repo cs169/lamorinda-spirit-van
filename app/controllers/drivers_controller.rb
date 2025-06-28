@@ -57,7 +57,7 @@ class DriversController < ApplicationController
                     end
 
     @rides = @driver.rides.includes(:passenger, :feedback, :start_address, :dest_address, :next_ride)
-    .where(date_and_time: @current_date.all_day)
+    .where(date: @current_date)
     .where.not(id: Ride.select(:next_ride_id).where.not(next_ride_id: nil))
     @shift = @driver.shifts.where(shift_date: @current_date).first
 
@@ -134,5 +134,4 @@ class DriversController < ApplicationController
   def driver_params
     params.require(:driver).permit(:name, :phone, :email, :shifts, :active)
   end
-
 end

@@ -8,7 +8,7 @@
               <th class="border-0"></th> <!-- Feedback Button -->
               <th class="border-0"></th> <!-- Info Button -->
               <th class="border-0"></th> <!-- Delete Button -->
-              <th class="border-0 text-filter">Date and Time</th>
+              <th class="border-0 text-filter">Date</th>
               <th class="border-0 text-filter">Driver</th>
               <th class="border-0 text-filter">Van</th>
               <th class="border-0 text-filter">Last Name</th>
@@ -50,7 +50,9 @@
                       class: "btn btn-sm btn-danger" %>
                 </td>
 
-                <td data-sort="<%= ride.date_and_time.to_i %>"><%= ride.date_and_time.strftime("%B %d, %Y %I:%M %p") %></td>
+                <td data-order="<%= ride.date.strftime('%Y-%m-%d') %>">
+                  <%= ride.date.strftime('%m/%d/%Y') %>
+                </td>
                 <td><%= ride.driver&.name || 'N/A' %></td>
                 <td><%= ride.van || 'N/A' %></td>
                 <% full_name = ride.passenger&.name.to_s.strip %>
@@ -104,7 +106,7 @@
                 </td>
                 <% end %>
 
-                <td><%= ride.fare_type || 'N/A' %></td>
+                <td><%= ride.fare_type %></td>
                 <td><%= ride.notes_to_driver || 'N/A' %></td>
                 <td><%= ride.notes || 'N/A' %></td>
                 <td><%= ride.hours || 0 %></td>

@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :ride do
-    date_and_time { Time.zone.now.change(min: 0, sec: 0) }
+    date { Date.current }
     association :driver
     van { 1 }
     association :passenger
