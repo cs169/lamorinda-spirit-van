@@ -1,46 +1,92 @@
-<div class="col-md-5">
-    <h5 class="fw-bold text-success text-center">Stop <%= index %></h5>
-        <div class="mb-3">
-            <label class="form-label" for="ride_dest_address_attributes_<%= index %>_name">Address Name</label>
-            <input type="text"
-                name="ride[addresses_attributes][][name]"
-                value="<%= address&.name %>"
-                class="form-control dest-autocomplete"
-                id="ride_dest_address_attributes_<%= index %>_name"
-                autocomplete="ride-name">
+<div class="col-md-12 mb-4">
+    <div class="card">
+        <div class="card-header bg-success text-white">
+            <h6 class="mb-0 fw-bold text-center">Stop <%= index %></h6>
         </div>
-  
-        <div class="mb-3">
-            <label class="form-label" for="ride_dest_address_attributes_<%= index %>_street">Street</label>
-            <span class="text-danger">*</span>
-            <input type="text"
-                name="ride[addresses_attributes][][street]"
-                value="<%= address&.street %>"
-                class="form-control dest-autocomplete"
-                id="ride_dest_address_attributes_<%= index %>_street"
-                required
-                autocomplete="ride-address">
-        </div>
+        <div class="card-body">
+            <div class="row">
+                <!-- Address Fields -->
+                <div class="col-md-6">
+                    <h6 class="fw-bold text-muted mb-3">Address</h6>
+                    <div class="mb-3">
+                        <label class="form-label" for="ride_dest_address_attributes_<%= index %>_name">Address Name</label>
+                        <input type="text"
+                            name="ride[addresses_attributes][][name]"
+                            value="<%= address&.name %>"
+                            class="form-control dest-autocomplete"
+                            id="ride_dest_address_attributes_<%= index %>_name"
+                            autocomplete="ride-name">
+                    </div>
+              
+                    <div class="mb-3">
+                        <label class="form-label" for="ride_dest_address_attributes_<%= index %>_street">Street</label>
+                        <span class="text-danger">*</span>
+                        <input type="text"
+                            name="ride[addresses_attributes][][street]"
+                            value="<%= address&.street %>"
+                            class="form-control dest-autocomplete"
+                            id="ride_dest_address_attributes_<%= index %>_street"
+                            required
+                            autocomplete="ride-address">
+                    </div>
 
-        <div class="mb-3">
-            <label class="form-label" for="ride_dest_address_attributes_<%= index %>_city">City</label>
-            <span class="text-danger">*</span>
-            <input type="text"
-                name="ride[addresses_attributes][][city]"
-                value="<%= address&.city %>"
-                class="form-control"
-                id="ride_dest_address_attributes_<%= index %>_city"
-                required
-                autocomplete="ride-city">
-        </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="ride_dest_address_attributes_<%= index %>_city">City</label>
+                        <span class="text-danger">*</span>
+                        <input type="text"
+                            name="ride[addresses_attributes][][city]"
+                            value="<%= address&.city %>"
+                            class="form-control"
+                            id="ride_dest_address_attributes_<%= index %>_city"
+                            required
+                            autocomplete="ride-city">
+                    </div>
 
-        <div class="mb-3">
-            <label class="form-label" for="ride_dest_address_attributes_<%= index %>_phone">Phone</label>
-            <input type="text"
-                name="ride[addresses_attributes][][phone]"
-                value="<%= address&.phone %>"
-                class="form-control"
-                id="ride_dest_address_attributes_<%= index %>_phone"
-                autocomplete="ride-phone">
+                    <div class="mb-3">
+                        <label class="form-label" for="ride_dest_address_attributes_<%= index %>_phone">Phone</label>
+                        <input type="text"
+                            name="ride[addresses_attributes][][phone]"
+                            value="<%= address&.phone %>"
+                            class="form-control"
+                            id="ride_dest_address_attributes_<%= index %>_phone"
+                            autocomplete="ride-phone">
+                    </div>
+                </div>
+
+                <!-- Driver and Van Fields -->
+                <div class="col-md-6">
+                    <h6 class="fw-bold text-muted mb-3">Driver & Van</h6>
+                    <div class="mb-3">
+                        <label class="form-label" for="stop_<%= index %>_driver_id">Driver</label>
+                        <span class="text-danger">*</span>
+                        <% if defined?(drivers) && drivers %>
+                            <select name="ride[stops_attributes][][driver_id]"
+                                    class="form-select"
+                                    id="stop_<%= index %>_driver_id"
+                                    required>
+                                <option value="">Select a Driver</option>
+                                <% drivers.each do |driver| %>
+                                    <option value="<%= driver.id %>" 
+                                            <%= 'selected' if defined?(selected_driver_id) && selected_driver_id == driver.id %>>
+                                        <%= driver.name %>
+                                    </option>
+                                <% end %>
+                            </select>
+                        <% else %>
+                            <input type="text" class="form-control" value="Drivers not available" disabled>
+                        <% end %>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="stop_<%= index %>_van">Van</label>
+                        <input type="number"
+                               name="ride[stops_attributes][][van]"
+                               value="<%= defined?(selected_van) ? selected_van : '' %>"
+                               class="form-control"
+                               id="stop_<%= index %>_van">
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+</div>

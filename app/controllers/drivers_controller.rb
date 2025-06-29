@@ -22,9 +22,9 @@ class DriversController < ApplicationController
       end
     end
 
-    @drivers = Driver.all
-    # @drivers = @drivers.filter_by_active(params[:active])
-    # @drivers = @drivers.filter_by_name(params[:name])
+    @active_drivers = Driver.where(active: true).order(:name)
+    @inactive_drivers = Driver.where(active: false).order(:name)
+    @drivers = Driver.all # Keep this for compatibility if needed elsewhere
   end
 
   # GET /drivers/:driver_id/shifts

@@ -36,11 +36,12 @@ class RidesController < ApplicationController
       street: p.address&.street, city: p.address&.city
     } }
     gon.addresses = Address.all.map { |a| { name: a.name, street: a.street, city: a.city, phone: a.phone } }
+    gon.drivers = @drivers.map { |d| { id: d.id, name: d.name } }
   end
 
   def create
-    ride_attrs, addresses = Ride.extract_attrs_from_params(ride_params)
-    result_rides, success = Ride.build_linked_rides(ride_attrs, addresses)
+    ride_attrs, addresses, stops_data = Ride.extract_attrs_from_params(ride_params)
+    result_rides, success = Ride.build_linked_rides(ride_attrs, addresses, stops_data)
 
     if success
       @ride = result_rides[0]
@@ -61,6 +62,7 @@ class RidesController < ApplicationController
 
     # Mapping data for autocomplete
     gon.addresses = Address.all.map { |a| { name: a.name, street: a.street, city: a.city, phone: a.phone } }
+    gon.drivers = @drivers.map { |d| { id: d.id, name: d.name } }
 
     # Accessibility info is retrieved from the passenger
     @ride.wheelchair      = @ride.passenger&.wheelchair
@@ -72,7 +74,7 @@ class RidesController < ApplicationController
     @ride = Ride.find(params[:id])
     @drivers = Driver.order(:name)
 
-    ride_attrs, addresses = Ride.extract_attrs_from_params(ride_params)
+    ride_attrs, addresses, stops_data = Ride.extract_attrs_from_params(ride_params)
 
     # Destroy old ride chain
     all_rides = @ride.get_all_linked_rides
@@ -81,7 +83,7 @@ class RidesController < ApplicationController
     end
 
     # Rebuild new ride chain
-    result_rides, success = Ride.build_linked_rides(ride_attrs, addresses)
+    result_rides, success = Ride.build_linked_rides(ride_attrs, addresses, stops_data)
 
     if success
       @ride = result_rides[0]
@@ -128,6 +130,7 @@ class RidesController < ApplicationController
       :dest_address_id,
       :ride_type,
       addresses_attributes: [:name, :street, :city, :phone],
+      stops_attributes: [:driver_id, :van],
     )
   end
 end

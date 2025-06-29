@@ -9,8 +9,8 @@
               <th class="border-0"></th> <!-- Info Button -->
               <th class="border-0"></th> <!-- Delete Button -->
               <th class="border-0 text-filter">Date</th>
-              <th class="border-0 text-filter">Driver</th>
-              <th class="border-0 text-filter">Van</th>
+              <th class="border-0 text-filter">Driver(s)</th>
+              <th class="border-0 text-filter">Van(s)</th>
               <th class="border-0 text-filter">Last Name</th>
               <th class="border-0 text-filter">First Name</th>
               <th class="border-0 text-filter">Stops Info</th>
@@ -53,8 +53,8 @@
                 <td data-order="<%= ride.date.strftime('%Y-%m-%d') %>">
                   <%= ride.date.strftime('%m/%d/%Y') %>
                 </td>
-                <td><%= ride.driver&.name || 'N/A' %></td>
-                <td><%= ride.van || 'N/A' %></td>
+                <td><%= ride.all_drivers_names.present? ? ride.all_drivers_names : 'N/A' %></td>
+                <td><%= ride.all_vans_numbers.present? ? ride.all_vans_numbers : 'N/A' %></td>
                 <% full_name = ride.passenger&.name.to_s.strip %>
                 <% name_parts = full_name.split(' ') %>
                 <% last_name = name_parts.length > 1 ? name_parts.last : nil %>

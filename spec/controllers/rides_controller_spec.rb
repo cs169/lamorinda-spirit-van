@@ -112,6 +112,37 @@ RSpec.describe RidesController, type: :controller do
         expect(response).to redirect_to(rides_path)
         expect(flash[:notice]).to eq("Ride was successfully created.")
       end
+
+      it "creates a new ride with per-stop driver and van assignment" do
+        attributes_with_stops = valid_attributes.merge(
+          addresses_attributes: [
+            { street: "123 Main St", city: "Oakland", state: "CA", zip: "94601" },
+            { street: "456 Second Ave", city: "Berkeley", state: "CA", zip: "94704" },
+            { street: "789 Third Ave", city: "San Francisco", state: "CA", zip: "94105" }
+          ],
+                  stops_attributes: [
+          { driver_id: @driver1.id, van: 1 },
+          { driver_id: @driver2.id, van: 2 }
+        ]
+        )
+
+        expect {
+          post :create, params: { ride: attributes_with_stops }
+        }.to change(Ride, :count).by(2)
+
+        created_rides = Ride.order(:created_at).last(2)
+
+        # First ride should use first stop's driver and van
+        expect(created_rides[0].driver_id).to eq(@driver1.id)
+        expect(created_rides[0].van).to eq(1)
+
+        # Second ride should use second stop's driver and van
+        expect(created_rides[1].driver_id).to eq(@driver2.id)
+        expect(created_rides[1].van).to eq(2)
+
+        expect(response).to redirect_to(rides_path)
+        expect(flash[:notice]).to eq("Ride was successfully created.")
+      end
     end
   end
 
@@ -200,6 +231,40 @@ RSpec.describe RidesController, type: :controller do
 
       expect(flash[:notice]).to eq("Ride was successfully updated.")
     end
+
+    it "updates a ride with per-stop driver and van assignment" do
+      # Create initial ride chain
+      ride1 = FactoryBot.create(:ride, passenger: @passenger1, driver: @driver1)
+      ride2 = FactoryBot.create(:ride, passenger: @passenger1, driver: @driver1)
+      ride1.update!(next_ride: ride2)
+      ride2.update!(previous_ride: ride1)
+
+      update_attrs = {
+        date: ride1.date,
+        passenger_id: ride1.passenger_id,
+        addresses_attributes: [
+          { street: "1 Start St", city: "A", state: "CA", zip: "90001" },
+          { street: "2 Middle St", city: "B", state: "CA", zip: "90002" },
+          { street: "3 End St", city: "C", state: "CA", zip: "90003" }
+        ],
+        stops_attributes: [
+          { driver_id: @driver1.id, van: 5 },
+          { driver_id: @driver2.id, van: 6 }
+        ]
+      }
+
+      put :update, params: { id: ride1.id, ride: update_attrs }
+
+      # Should create 2 new rides (3 addresses = 2 ride segments)
+      updated_rides = Ride.order(:created_at).last(2)
+
+      expect(updated_rides[0].driver_id).to eq(@driver1.id)
+      expect(updated_rides[0].van).to eq(5)
+      expect(updated_rides[1].driver_id).to eq(@driver2.id)
+      expect(updated_rides[1].van).to eq(6)
+
+      expect(flash[:notice]).to eq("Ride was successfully updated.")
+    end
   end
 
   describe "DELETE #destroy" do
@@ -250,6 +315,65 @@ RSpec.describe RidesController, type: :controller do
       expect {
         get :show, params: { id: -1 } # Non-existent ID
       }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
+
+  describe "parameter permissions" do
+    it "permits stops_attributes parameter" do
+      # This test ensures that stops_attributes with driver_id and van are permitted
+      valid_params = {
+        ride: {
+          date: Date.current,
+          driver_id: @driver1.id,
+          passenger_id: @passenger1.id,
+          addresses_attributes: [
+            { street: "123 Main", city: "Oakland", state: "CA", zip: "94601" },
+            { street: "456 Elm", city: "Berkeley", state: "CA", zip: "94704" }
+          ],
+          stops_attributes: [
+            { driver_id: @driver2.id, van: "5" }
+          ]
+        }
+      }
+
+      expect {
+        post :create, params: valid_params
+      }.to change(Ride, :count).by(1)
+
+      created_ride = Ride.last
+      expect(created_ride.driver_id).to eq(@driver2.id)
+      expect(created_ride.van).to eq(5)
+    end
+
+    it "ignores unpermitted parameters in stops_attributes" do
+      # This test ensures that any unpermitted parameters in stops_attributes are filtered out
+      valid_params = {
+        ride: {
+          date: Date.current,
+          driver_id: @driver1.id,
+          passenger_id: @passenger1.id,
+          addresses_attributes: [
+            { street: "123 Main", city: "Oakland", state: "CA", zip: "94601" },
+            { street: "456 Elm", city: "Berkeley", state: "CA", zip: "94704" }
+          ],
+          stops_attributes: [
+            {
+              driver_id: @driver2.id,
+              van: "5",
+              malicious_param: "should_be_filtered" # This should be ignored
+            }
+          ]
+        }
+      }
+
+      expect {
+        post :create, params: valid_params
+      }.to change(Ride, :count).by(1)
+
+      created_ride = Ride.last
+      expect(created_ride.driver_id).to eq(@driver2.id)
+      expect(created_ride.van).to eq(5)
+      # The malicious parameter should not affect the ride creation
     end
   end
 
