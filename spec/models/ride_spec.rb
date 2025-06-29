@@ -446,4 +446,143 @@ RSpec.describe Ride, type: :model do
       end
     end
   end
+
+  describe "linked ride driver and van aggregation methods" do
+    before(:each) do
+      @driver3 = FactoryBot.create(:driver, name: "Third Driver")
+    end
+
+    describe "#all_drivers_names" do
+      it "returns single driver name for a ride with no linked rides" do
+        ride = FactoryBot.create(:ride, driver: @driver1)
+        expect(ride.all_drivers_names).to eq(@driver1.name)
+      end
+
+      it "returns all unique driver names from linked rides" do
+        address1 = FactoryBot.create(:address, street: "100 Start", city: "Berkeley")
+        address2 = FactoryBot.create(:address, street: "200 Middle", city: "Oakland")
+        address3 = FactoryBot.create(:address, street: "300 End", city: "San Francisco")
+
+        addrs = [address1, address2, address3]
+        stops_data = [
+          { driver_id: @driver1.id, van: 1 },
+          { driver_id: @driver2.id, van: 2 }
+        ]
+
+        rides, success = Ride.build_linked_rides({ driver_id: @driver1.id, date: Date.current }, addrs, stops_data)
+        expect(success).to eq(true)
+
+        # Test from first ride in chain
+        expect(rides[0].all_drivers_names).to eq("#{@driver1.name}, #{@driver2.name}")
+        
+      end
+
+      it "returns unique driver names when same driver appears multiple times" do
+        address1 = FactoryBot.create(:address, street: "100 Start", city: "Berkeley")
+        address2 = FactoryBot.create(:address, street: "200 Middle", city: "Oakland")
+        address3 = FactoryBot.create(:address, street: "300 End", city: "San Francisco")
+
+        addrs = [address1, address2, address3]
+        stops_data = [
+          { driver_id: @driver1.id, van: 1 },
+          { driver_id: @driver1.id, van: 3 } # Same driver, different van
+        ]
+
+        rides, success = Ride.build_linked_rides({ driver_id: @driver1.id, date: Date.current }, addrs, stops_data)
+        expect(success).to eq(true)
+
+        expect(rides[0].all_drivers_names).to eq(@driver1.name)
+      end
+
+    end
+
+    describe "#all_vans_numbers" do
+      it "returns single van number for a ride with no linked rides" do
+        ride = FactoryBot.create(:ride, van: 5)
+        expect(ride.all_vans_numbers).to eq("5")
+      end
+
+      it "returns all unique van numbers from linked rides" do
+        address1 = FactoryBot.create(:address, street: "100 Start", city: "Berkeley")
+        address2 = FactoryBot.create(:address, street: "200 Middle", city: "Oakland")
+        address3 = FactoryBot.create(:address, street: "300 End", city: "San Francisco")
+
+        addrs = [address1, address2, address3]
+        stops_data = [
+          { driver_id: @driver1.id, van: 2 },
+          { driver_id: @driver2.id, van: 5 }
+        ]
+
+        rides, success = Ride.build_linked_rides({ driver_id: @driver1.id, date: Date.current }, addrs, stops_data)
+        expect(success).to eq(true)
+
+        # Test from first ride in chain
+        expect(rides[0].all_vans_numbers).to eq("2, 5")
+      end
+
+      it "returns unique van numbers when same van appears multiple times" do
+        address1 = FactoryBot.create(:address, street: "100 Start", city: "Berkeley")
+        address2 = FactoryBot.create(:address, street: "200 Middle", city: "Oakland")
+        address3 = FactoryBot.create(:address, street: "300 End", city: "San Francisco")
+
+        addrs = [address1, address2, address3]
+        stops_data = [
+          { driver_id: @driver1.id, van: 3 },
+          { driver_id: @driver2.id, van: 3 } # Same van, different driver
+        ]
+
+        rides, success = Ride.build_linked_rides({ driver_id: @driver1.id, date: Date.current }, addrs, stops_data)
+        expect(success).to eq(true)
+
+        expect(rides[0].all_vans_numbers).to eq("3")
+      end
+
+      it "handles rides with nil vans gracefully" do
+        ride1 = FactoryBot.create(:ride, van: 7)
+        ride2 = FactoryBot.create(:ride, van: nil)
+        
+        # Manually link the rides
+        ride1.update!(next_ride: ride2)
+
+        expect(ride1.all_vans_numbers).to eq("7")
+      end
+
+      it "returns empty string when all rides have nil vans" do
+        ride1 = FactoryBot.create(:ride, van: nil)
+        ride2 = FactoryBot.create(:ride, van: nil)
+        
+        # Manually link the rides
+        ride1.update!(next_ride: ride2)
+
+        expect(ride1.all_vans_numbers).to eq("")
+      end
+    end
+
+    describe "integration with linked rides containing three stops" do
+      it "correctly aggregates drivers and vans from a three-ride chain" do
+        address1 = FactoryBot.create(:address, street: "100 Start", city: "Berkeley")
+        address2 = FactoryBot.create(:address, street: "200 Middle", city: "Oakland")
+        address3 = FactoryBot.create(:address, street: "300 Almost End", city: "San Francisco")
+        address4 = FactoryBot.create(:address, street: "400 End", city: "San Jose")
+
+        addrs = [address1, address2, address3, address4]
+        stops_data = [
+          { driver_id: @driver1.id, van: 1 },
+          { driver_id: @driver2.id, van: 2 },
+          { driver_id: @driver3.id, van: 3 }
+        ]
+
+        rides, success = Ride.build_linked_rides({ driver_id: @driver1.id, date: Date.current }, addrs, stops_data)
+        expect(success).to eq(true)
+        expect(rides.length).to eq(3)
+
+        # Test from any ride in the chain
+        expected_drivers = "#{@driver1.name}, #{@driver2.name}, #{@driver3.name}"
+        expect(rides[0].all_drivers_names).to eq(expected_drivers)
+
+        expected_vans = "1, 2, 3"
+        expect(rides[0].all_vans_numbers).to eq(expected_vans)
+      end
+    end
+  end
 end
