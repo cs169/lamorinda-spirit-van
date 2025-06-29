@@ -474,7 +474,6 @@ RSpec.describe Ride, type: :model do
 
         # Test from first ride in chain
         expect(rides[0].all_drivers_names).to eq("#{@driver1.name}, #{@driver2.name}")
-        
       end
 
       it "returns unique driver names when same driver appears multiple times" do
@@ -493,7 +492,6 @@ RSpec.describe Ride, type: :model do
 
         expect(rides[0].all_drivers_names).to eq(@driver1.name)
       end
-
     end
 
     describe "#all_vans_numbers" do
@@ -540,7 +538,7 @@ RSpec.describe Ride, type: :model do
       it "handles rides with nil vans gracefully" do
         ride1 = FactoryBot.create(:ride, van: 7)
         ride2 = FactoryBot.create(:ride, van: nil)
-        
+
         # Manually link the rides
         ride1.update!(next_ride: ride2)
 
@@ -550,7 +548,7 @@ RSpec.describe Ride, type: :model do
       it "returns empty string when all rides have nil vans" do
         ride1 = FactoryBot.create(:ride, van: nil)
         ride2 = FactoryBot.create(:ride, van: nil)
-        
+
         # Manually link the rides
         ride1.update!(next_ride: ride2)
 

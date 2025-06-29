@@ -75,11 +75,11 @@ class Ride < ApplicationRecord
   end
 
   def all_drivers_names
-    get_all_linked_rides.map { |ride| ride.driver.name }.uniq.join(', ')
+    get_all_linked_rides.map { |ride| ride.driver.name }.uniq.join(", ")
   end
 
   def all_vans_numbers
-    get_all_linked_rides.map { |ride| ride.van }.compact.uniq.join(', ')
+    get_all_linked_rides.filter_map { |ride| ride.van }.uniq.join(", ")
   end
 
   def self.extract_attrs_from_params(params)
