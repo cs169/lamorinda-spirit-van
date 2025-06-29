@@ -1,260 +1,321 @@
 <%= javascript_importmap_tags %>
 
-
 <!-- app/views/rides/new.html.erb -->
- <div class="row justify-content-center">
-   <div class="col-md-10">
-     <h1 class="mb-4 text-center">New Ride </h1>
+<div class="row justify-content-center">
+  <div class="col-md-12">
+    <h1 class="mb-4 text-center">New Ride</h1>
 
+    <!-- Display error messages -->
+    <% if @ride.errors.any? %>
+      <div class="alert alert-danger">
+        <h4><%= pluralize(@ride.errors.count, "error") %> prohibited this ride from being saved:</h4>
+        <ul>
+          <% @ride.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
 
-     <!-- Display error messages -->
-     <% if @ride.errors.any? %>
-       <div class="alert alert-danger">
-         <h4><%= pluralize(@ride.errors.count, "error") %> prohibited this ride from being saved:</h4>
-         <ul>
-           <% @ride.errors.full_messages.each do |message| %>
-             <li><%= message %></li>
-           <% end %>
-         </ul>
-       </div>
-     <% end %>
+    <!-- Display success notice -->
+    <% if flash[:notice].present? %>
+      <div class="alert alert-success">
+        <%= flash[:notice] %>
+      </div>
+    <% end %>
 
+    <%= form_with(model: @ride, local: true) do |f| %>
+      <div class="row">
+        <!-- Left Column (Ride Details) -->
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0 fw-bold">Ride Details</h5>
+            </div>
+            <div class="card-body">
+              <div class="mb-3">
+                <%= f.label :date, "Date" %> <span class="text-danger">*</span>
+                <%= f.text_field :date, type: "date", value: f.object.date&.strftime("%m/%d/%Y"), class: "form-control", required: true %>
+              </div>
 
-     <!-- Display success notice -->
-     <% if flash[:notice].present? %>
-       <div class="alert alert-success">
-         <%= flash[:notice] %>
-       </div>
-     <% end %>
+              <div class="mb-3">
+                <%= f.label :notes_to_driver, "Notes to Driver" %>
+                <%= f.text_area :notes_to_driver, class: "form-control", rows: 3 %>
+              </div>
 
+              <div class="mb-3">
+                <%= f.label :notes, "Notes (to dispatcher)" %>
+                <%= f.text_area :notes, class: "form-control", rows: 3 %>
+              </div>
 
-     <%= form_with(model: @ride, local: true) do |f| %>
-       <div class="row">
-         <!-- Left Column (Ride Details) -->
-         <div class="col-md-6 border-end">
-           <h5 class="fw-bold text-success">Ride Details</h5>
+              <div class="mb-3">
+                <%= f.label :ride_type, "Ride Type" %>
+                <%= f.text_field :ride_type, class: "form-control" %>
+              </div>
 
-           <div class="mb-3">
-             <%= f.label :date, "Date" %> <span class="text-danger">*</span>
-             <%= f.text_field :date, type: "date", value: f.object.date&.strftime("%m/%d/%Y"), class: "form-control", required: true %>
-           </div>
+              <div class="mb-3">
+                <%= f.label :fare_type, "Fare Type" %>
+                <%= f.text_field :fare_type, class: "form-control" %>
+              </div>
 
-           <div class="mb-3">
-             <%= f.label :driver_id, "Driver" %> <span class="text-danger">*</span>
-             <%= f.select :driver_id,
-                          options_from_collection_for_select(@drivers, :id, :name, @ride.driver_id),
-                          { prompt: "Select a Driver" },
-                          { class: "form-select", required: true  }%>
-           </div>
+              <div class="mb-3">
+                <%= f.label :status, "Status" %> <span class="text-danger">*</span>
+                <%= f.select :status,
+                             [["Requested"], ['Pending'], ['Scheduled'], ['Confirmed'], ['Email sent'], ["Waitlisted"], ['Cancelled']],
+                             {},
+                             class: "form-select", required: true %>
+              </div>
+            </div>
+          </div>
+        </div>
 
-           <div class="mb-3">
-             <%= f.label :van, "Van" %>
-             <%= f.number_field :van, class: "form-control" %>
-           </div>
-
-           <div class="mb-3">
-             <%= f.label :notes_to_driver, "Notes to Driver" %>
-             <%= f.text_area :notes_to_driver, class: "form-control", rows: 3 %>
-           </div>
-
-            <div class="mb-3">
-             <%= f.label :notes, "Notes" %>
-             <%= f.text_area :notes, class: "form-control", rows: 3 %>
-           </div>
-
-           <div class="mb-3">
-            <%= f.label :ride_type, "Ride Type:" %>
-            <%= f.text_field :ride_type, class: "form-control", rows: 3 %>
-           </div>
-
-           <div class="mb-3">
-            <%= f.label :fare_type, "Fare Type:" %>
-            <%= f.text_field :fare_type, class: "form-control", rows: 3 %>
-           </div>
-
-           <div class="mb-3">
-             <%= f.label :status, "Status" %> <span class="text-danger">*</span>
-             <%= f.select :status,
-                          [["Requested"], ['Pending'], ['Scheduled'], ['Confirmed'], ['Email sent'], ["Waitlisted"], ['Cancelled']],
-                          {},
-                          class: "form-select", required: true %>
-           </div>
-         </div>
-
-
-         <!-- Right Column (Passenger + Addresses) -->
-         <div class="col-md-6">
-           <h5 class="fw-bold text-success">
-             Passenger Details
-           </h5>
-
-           <div class="mb-3">
-             <%= f.label :passenger_name, "Passenger" %> <span class="text-danger">*</span>
-             <div class="input-group">
-               <%= f.text_field :passenger_name, class: "form-control", required: true %>
-               <%= link_to new_passenger_path(return_url: request.fullpath), class: "btn btn-success" do %>
-                 <i class="bi bi-person-plus"></i> Create New Passenger
-               <% end %>
-             </div>
-             <small class="form-text text-muted">Type to search existing passengers or click "Create New Passenger" to create one</small>
-           </div>
-
-           <%= f.hidden_field :passenger_id, class: "form-control" %>
-           <%= f.hidden_field :wheelchair, value: @ride.wheelchair ? "Yes" : "No" %>
-           <%= f.hidden_field :disabled, value: @ride.disabled ? "Yes" : "No" %>
-           <%= f.hidden_field :need_caregiver, value: @ride.need_caregiver ? "Yes" : "No" %>
-
-           <!-- Selected Passenger Overview -->
-           <div class="card mb-3">
-             <div class="card-header bg-success text-white py-2 d-flex justify-content-between align-items-center">
-               <h6 class="mb-0">Selected Passenger Overview</h6>
-               <!-- First Time Rider Badge -->
-                <div id="new_passenger_badge" style="display: none;">
-                  <span class="badge bg-warning text-dark" data-bs-toggle="tooltip" data-bs-placement="top" 
-                        title="This is a new passenger with no previous ride history">
-                    First Time Rider <i class="bi bi-exclamation-triangle"></i>
-                  </span>
+        <!-- Middle Column (Passenger Details) -->
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-header bg-info text-white">
+              <h5 class="mb-0 fw-bold">Passenger Details</h5>
+            </div>
+            <div class="card-body">
+              <div class="mb-3">
+                <%= f.label :passenger_name, "Passenger" %> <span class="text-danger">*</span>
+                <div class="input-group">
+                  <%= f.text_field :passenger_name, class: "form-control", required: true %>
+                  <%= link_to new_passenger_path(return_url: request.fullpath), class: "btn btn-success" do %>
+                    <i class="bi bi-person-plus"></i> Create
+                  <% end %>
                 </div>
-             </div>
+                <small class="form-text text-muted">Type to search existing passengers</small>
+              </div>
 
-             <div class="card-body">
-               <!-- Selected Passenger Name -->
-               <div class="mb-3">
-                 <label class="form-label">Passenger:</label>
-                 <input type="text" 
-                        class="form-control bg-light" 
-                        disabled
-                        id="name_display"
-                        value="No passenger selected">
-               </div>
+              <%= f.hidden_field :passenger_id, class: "form-control" %>
+              <%= f.hidden_field :wheelchair, value: @ride.wheelchair ? "Yes" : "No" %>
+              <%= f.hidden_field :disabled, value: @ride.disabled ? "Yes" : "No" %>
+              <%= f.hidden_field :need_caregiver, value: @ride.need_caregiver ? "Yes" : "No" %>
 
-               <div class="row">
-                 <div class="col-md-6">
-                   <div class="form-check mb-2">
-                     <input type="checkbox" 
-                            class="form-check-input bg-secondary opacity-50"
-                            disabled
-                            id="wheelchair_display">
-                     <label class="form-check-label" for="wheelchair_display">Requires Wheelchair</label>
-                   </div>
+              <!-- Selected Passenger Overview -->
+              <div class="card mb-3">
+                <div class="card-header bg-success text-white py-2 d-flex justify-content-between align-items-center">
+                  <h6 class="mb-0">Selected Passenger Overview</h6>
+                  <!-- First Time Rider Badge -->
+                  <div id="new_passenger_badge" style="display: none;">
+                    <span class="badge bg-warning text-dark" data-bs-toggle="tooltip" data-bs-placement="top" 
+                          title="This is a new passenger with no previous ride history">
+                      First Time Rider <i class="bi bi-exclamation-triangle"></i>
+                    </span>
+                  </div>
+                </div>
 
-                   <div class="form-check mb-2">
-                     <input type="checkbox" 
-                            class="form-check-input bg-secondary opacity-50"
-                            disabled
-                            id="disabled_display">
-                     <label class="form-check-label" for="disabled_display">Has Disability</label>
-                   </div>
-                 </div>
-
-                 <div class="col-md-6">
-                   <div class="form-check mb-2">
-                     <input type="checkbox" 
-                            class="form-check-input bg-secondary opacity-50"
-                            disabled
-                            id="need_caregiver_display">
-                     <label class="form-check-label" for="need_caregiver_display">Needs Caregiver</label>
-                   </div>
-                 </div>
-               </div>
-
-               <!-- Passenger Notes -->
-               <div class="mt-3">
-                 <label class="form-label">Accessibility Notes:</label>
-                 <textarea class="form-control bg-light" 
+                <div class="card-body">
+                  <!-- Selected Passenger Name -->
+                  <div class="mb-3">
+                    <label class="form-label">Passenger:</label>
+                    <input type="text" 
+                           class="form-control bg-light" 
                            disabled
-                           id="notes_display"
-                           rows="2">No notes available</textarea>
-               </div>
+                           id="name_display"
+                           value="No passenger selected">
+                  </div>
 
-               <!-- Passenger Phone -->
-               <div class="mt-3">
-                 <label class="form-label">Phone Number:</label>
-                 <input type="text" 
-                        class="form-control bg-light" 
-                        disabled
-                        id="phone_display"
-                        value="No phone available">
-               </div>
-             </div>
-           </div>
-           <!-- END: Accessibility Information -->
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-check mb-2">
+                        <input type="checkbox" 
+                               class="form-check-input bg-secondary opacity-50"
+                               disabled
+                               id="wheelchair_display">
+                        <label class="form-check-label" for="wheelchair_display">Wheelchair</label>
+                      </div>
 
-           <!-- New Address Container with Justify Content Row -->
-           <div class="row g-4" id="address-grid">
-             <!-- Origin Address -->
-              <div class="col-md-5">
-                <h5 class="fw-bold text-success text-center">Origin</h5>
-                    <div class="mb-3">
-                        <label class="form-label" for="ride_start_address_attributes_name">Address Name</label>
-                        <input type="text"
-                            name="ride[addresses_attributes][][name]"
-                            class="form-control"
-                            id="ride_start_address_attributes_name"
-                            autocomplete="ride-name">
+                      <div class="form-check mb-2">
+                        <input type="checkbox" 
+                               class="form-check-input bg-secondary opacity-50"
+                               disabled
+                               id="disabled_display">
+                        <label class="form-check-label" for="disabled_display">Disability</label>
+                      </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label" for="ride_start_address_attributes_street">Street</label>
-                        <span class="text-danger">*</span>
-                        <input type="text"
-                            name="ride[addresses_attributes][][street]"
-                            class="form-control"
-                            id="ride_start_address_attributes_street"
-                            required
-                            autocomplete="ride-address">
+                    <div class="col-md-6">
+                      <div class="form-check mb-2">
+                        <input type="checkbox" 
+                               class="form-check-input bg-secondary opacity-50"
+                               disabled
+                               id="need_caregiver_display">
+                        <label class="form-check-label" for="need_caregiver_display">Caregiver</label>
+                      </div>
                     </div>
+                  </div>
 
-                    <div class="mb-3">
-                        <label class="form-label" for="ride_start_address_attributes_city">City</label>
-                        <span class="text-danger">*</span>
-                        <input type="text"
-                            name="ride[addresses_attributes][][city]"
-                            class="form-control"
-                            id="ride_start_address_attributes_city"
-                            required
-                            autocomplete="ride-city">
-                    </div>
+                  <!-- Passenger Notes -->
+                  <div class="mt-3">
+                    <label class="form-label">Accessibility Notes:</label>
+                    <textarea class="form-control bg-light" 
+                              disabled
+                              id="notes_display"
+                              rows="2">No notes available</textarea>
+                  </div>
 
-                    <div class="mb-3">
-                        <label class="form-label" for="ride_start_address_attributes_phone">Phone</label>
-                        <input type="text"
-                            name="ride[addresses_attributes][][phone]"
-                            class="form-control"
-                            id="ride_start_address_attributes_phone"
-                            autocomplete="ride-phone">
-                    </div>
+                  <!-- Passenger Phone -->
+                  <div class="mt-3">
+                    <label class="form-label">Phone Number:</label>
+                    <input type="text" 
+                           class="form-control bg-light" 
+                           disabled
+                           id="phone_display"
+                           value="No phone available">
+                  </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-             <!-- Spacer -->
-             <div class="col-md-1" id="col-space"></div>
+        <!-- Right Column (Stops Detail) -->
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-header bg-warning text-dark">
+              <h5 class="mb-0 fw-bold">Stops Detail</h5>
+            </div>
+            <div class="card-body" id="address-grid" data-last-index="1">
+              <!-- Origin Address -->
+              <div class="card mb-4">
+                <div class="card-header bg-secondary text-white">
+                  <h6 class="mb-0 fw-bold text-center">Origin</h6>
+                </div>
+                <div class="card-body">
+                  <div class="mb-3">
+                    <label class="form-label" for="ride_start_address_attributes_name">Address Name</label>
+                    <input type="text"
+                           name="ride[addresses_attributes][][name]"
+                           class="form-control"
+                           id="ride_start_address_attributes_name"
+                           autocomplete="ride-name">
+                  </div>
 
-             <!-- Destination Address -->
-              <%= render partial: "stop_fields", locals: {index: 1, address: nil} %>                 
-             </div>
+                  <div class="mb-3">
+                    <label class="form-label" for="ride_start_address_attributes_street">Street</label>
+                    <span class="text-danger">*</span>
+                    <input type="text"
+                           name="ride[addresses_attributes][][street]"
+                           class="form-control"
+                           id="ride_start_address_attributes_street"
+                           required
+                           autocomplete="ride-address">
+                  </div>
 
-             <div class="text-center mt-4">
-              <div class="mt-3">
-                <button type="button" class="btn btn-success mt-3" id="add-stop-button">Add Stop</button>
-                <button type="button" class="btn btn-danger mt-3" id="delete-stop-button">Delete Stop</button>
-             </div>
-           </div>
-           </div>
+                  <div class="mb-3">
+                    <label class="form-label" for="ride_start_address_attributes_city">City</label>
+                    <span class="text-danger">*</span>
+                    <input type="text"
+                           name="ride[addresses_attributes][][city]"
+                           class="form-control"
+                           id="ride_start_address_attributes_city"
+                           required
+                           autocomplete="ride-city">
+                  </div>
 
+                  <div class="mb-3">
+                    <label class="form-label" for="ride_start_address_attributes_phone">Phone</label>
+                    <input type="text"
+                           name="ride[addresses_attributes][][phone]"
+                           class="form-control"
+                           id="ride_start_address_attributes_phone"
+                           autocomplete="ride-phone">
+                  </div>
+                </div>
+              </div>
 
-           <!-- Hidden Template for Additional Destination -->
-          <template id="destination-template">
-            <%= render partial: "stop_fields", locals: {index: "__INDEX__", address: nil} %>
-          </template>
-       </div>
+              <!-- Stops Container -->
+              <div id="stops-container">
+                <%= render partial: "stop_fields", locals: {index: 1, address: nil, drivers: @drivers} %>
+              </div>
 
+              <!-- Add/Delete Stop Buttons -->
+              <div class="text-center mt-4">
+                <button type="button" class="btn btn-success" id="add-stop-button">Add Stop</button>
+                <button type="button" class="btn btn-danger" id="delete-stop-button">Delete Stop</button>
+              </div>
 
-       <!-- Action Buttons -->
-       <div class="text-center mt-4">
-         <%= f.submit "Create Ride", class: "btn btn-success" %>
-         <%= link_to "Back to Rides", rides_path, class: "btn btn-secondary" %>
-       </div>
-     <% end %>
-   </div>
- </div>
+              <!-- Hidden Template for Additional Destination -->
+              <template id="destination-template">
+                <div class="col-md-12 mb-4">
+                  <div class="card">
+                    <div class="card-header bg-success text-white">
+                      <h6 class="mb-0 fw-bold text-center">Stop __INDEX__</h6>
+                    </div>
+                    <div class="card-body">
+                      <div class="row">
+                        <!-- Address Fields -->
+                        <div class="col-md-6">
+                          <h6 class="fw-bold text-muted mb-3">Address</h6>
+                                                     <div class="mb-3">
+                             <label class="form-label">Address Name</label>
+                             <input type="text" 
+                                    name="ride[addresses_attributes][][name]" 
+                                    class="form-control dest-autocomplete" 
+                                    id="ride_dest_address_attributes___INDEX___name"
+                                    autocomplete="ride-name">
+                           </div>
+                           <div class="mb-3">
+                             <label class="form-label">Street</label>
+                             <span class="text-danger">*</span>
+                             <input type="text" 
+                                    name="ride[addresses_attributes][][street]" 
+                                    class="form-control dest-autocomplete" 
+                                    id="ride_dest_address_attributes___INDEX___street"
+                                    required 
+                                    autocomplete="ride-address">
+                           </div>
+                           <div class="mb-3">
+                             <label class="form-label">City</label>
+                             <span class="text-danger">*</span>
+                             <input type="text" 
+                                    name="ride[addresses_attributes][][city]" 
+                                    class="form-control"
+                                    id="ride_dest_address_attributes___INDEX___city" 
+                                    required 
+                                    autocomplete="ride-city">
+                           </div>
+                           <div class="mb-3">
+                             <label class="form-label">Phone</label>
+                             <input type="text" 
+                                    name="ride[addresses_attributes][][phone]" 
+                                    class="form-control"
+                                    id="ride_dest_address_attributes___INDEX___phone" 
+                                    autocomplete="ride-phone">
+                           </div>
+                        </div>
+                        <!-- Driver and Van Fields -->
+                        <div class="col-md-6">
+                          <h6 class="fw-bold text-muted mb-3">Driver & Van</h6>
+                          <div class="mb-3">
+                            <label class="form-label">Driver</label>
+                            <span class="text-danger">*</span>
+                            <select name="ride[stops_attributes][][driver_id]" class="form-select driver-select" required>
+                              <option value="">Select a Driver</option>
+                            </select>
+                          </div>
+                          <div class="mb-3">
+                            <label class="form-label">Van</label>
+                            <input type="number" name="ride[stops_attributes][][van]" class="form-control">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="text-center mt-4">
+        <%= f.submit "Create Ride", class: "btn btn-success" %>
+        <%= link_to "Back to Rides", rides_path, class: "btn btn-secondary" %>
+      </div>
+    <% end %>
+  </div>
+</div>
 

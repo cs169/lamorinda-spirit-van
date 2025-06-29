@@ -134,7 +134,7 @@ RSpec.describe Ride, type: :model do
     it "parses addresses and converts Yes/No fields into booleans" do
       raw_params = {
         date: "2025-05-01",
-        van: "2",
+        van: 2,
         hours: "3",
         passenger_id: 1,
         driver_id: 1,
@@ -157,7 +157,7 @@ RSpec.describe Ride, type: :model do
         addresses_attributes: [:name, :street, :city, :phone]
       )
 
-      attrs, addresses = Ride.extract_attrs_from_params(input_params)
+      attrs, addresses, stops_data = Ride.extract_attrs_from_params(input_params)
 
       expect(attrs[:wheelchair]).to eq(true)
       expect(attrs[:disabled]).to eq(true)
@@ -169,6 +169,70 @@ RSpec.describe Ride, type: :model do
       expect(attrs[:fare_type]).to eq("Default")
       expect(addresses.length).to eq(2)
       expect(addresses.first[:city]).to eq("Oakland")
+    end
+
+    it "handles stops_attributes parameter and returns three values" do
+      raw_params = {
+        date: "2025-05-01",
+        van: 2,
+        hours: "3",
+        passenger_id: 1,
+        driver_id: 1,
+        notes: "Sample ride",
+        wheelchair: "No",
+        disabled: "No",
+        need_caregiver: "No",
+        addresses_attributes: [
+          { name: "Origin", street: "123 Main", city: "Oakland", phone: "(123)456-7890" },
+          { name: "Stop 1", street: "456 Elm", city: "Berkeley", phone: "(456)123-1234" },
+          { name: "Stop 2", street: "789 Oak", city: "San Francisco", phone: "(789)456-7890" }
+        ],
+        stops_attributes: [
+          { driver_id: "2", van: 1 },
+          { driver_id: "3", van: 2 }
+        ]
+      }
+
+      input_params = ActionController::Parameters.new(raw_params).permit(
+        :date, :van, :hours, :passenger_id, :driver_id, :notes, :notes_to_driver,
+        :ride_type, :fare_type, :wheelchair, :disabled, :need_caregiver,
+        addresses_attributes: [:name, :street, :city, :phone],
+        stops_attributes: [:driver_id, :van]
+      )
+
+      attrs, addresses, stops_data = Ride.extract_attrs_from_params(input_params)
+
+      expect(attrs[:wheelchair]).to eq(false)
+      expect(attrs[:disabled]).to eq(false)
+      expect(attrs[:need_caregiver]).to eq(false)
+      expect(addresses.length).to eq(3)
+      expect(stops_data.length).to eq(2)
+      expect(stops_data[0][:driver_id]).to eq("2")
+      expect(stops_data[0][:van]).to eq(1)
+      expect(stops_data[1][:driver_id]).to eq("3")
+      expect(stops_data[1][:van]).to eq(2)
+    end
+
+    it "returns empty array when stops_attributes is not present" do
+      raw_params = {
+        date: "2025-05-01",
+        van: 2,
+        driver_id: 1,
+        addresses_attributes: [
+          { name: "Origin", street: "123 Main", city: "Oakland" },
+          { name: "Destination", street: "456 Elm", city: "Berkeley" }
+        ]
+      }
+
+      input_params = ActionController::Parameters.new(raw_params).permit(
+        :date, :van, :driver_id,
+        addresses_attributes: [:name, :street, :city, :phone]
+      )
+
+      attrs, addresses, stops_data = Ride.extract_attrs_from_params(input_params)
+
+      expect(stops_data).to eq([])
+      expect(addresses.length).to eq(2)
     end
   end
 
@@ -250,12 +314,136 @@ RSpec.describe Ride, type: :model do
       expect(rides[0].dest_address_id).not_to eq(rides[1].dest_address_id)
       expect(Address.where(street: "123 Main", city: "Oakland").count).to eq(1)
     end
-  end
 
-  after(:each) do
-    Ride.destroy_all
-    Driver.destroy_all
-    Passenger.destroy_all
-    Address.destroy_all
+    context "with per-stop driver and van assignment" do
+      it "assigns different drivers and vans to each stop" do
+        address1 = FactoryBot.create(:address, street: "100 Start", city: "Berkeley")
+        address2 = FactoryBot.create(:address, street: "200 Middle", city: "Oakland")
+        address3 = FactoryBot.create(:address, street: "300 End", city: "San Francisco")
+
+        addrs = [address1, address2, address3]
+        stops_data = [
+          { driver_id: @driver1.id, van: 1 },
+          { driver_id: @driver2.id, van: 2 }
+        ]
+
+        rides, success = Ride.build_linked_rides(ride_attrs, addrs, stops_data)
+
+        expect(success).to eq(true)
+        expect(rides.length).to eq(2)
+
+        # First ride: address1 -> address2 with driver1 and van 1
+        expect(rides[0].start_address).to eq(address1)
+        expect(rides[0].dest_address).to eq(address2)
+        expect(rides[0].driver_id).to eq(@driver1.id)
+        expect(rides[0].van).to eq(1)
+
+        # Second ride: address2 -> address3 with driver2 and van 2
+        expect(rides[1].start_address).to eq(address2)
+        expect(rides[1].dest_address).to eq(address3)
+        expect(rides[1].driver_id).to eq(@driver2.id)
+        expect(rides[1].van).to eq(2)
+
+        # Verify linking
+        expect(rides[0].next_ride).to eq(rides[1])
+        expect(rides[1].previous_ride).to eq(rides[0])
+      end
+
+      it "uses base ride attributes when stops_data is insufficient" do
+        address1 = FactoryBot.create(:address, street: "100 Start", city: "Berkeley")
+        address2 = FactoryBot.create(:address, street: "200 Middle", city: "Oakland")
+        address3 = FactoryBot.create(:address, street: "300 End", city: "San Francisco")
+
+        addrs = [address1, address2, address3]
+        stops_data = [
+          { driver_id: @driver2.id, van: 5 }
+          # Only one stop specified, second should use base attributes
+        ]
+
+        rides, success = Ride.build_linked_rides(ride_attrs, addrs, stops_data)
+
+        expect(success).to eq(true)
+        expect(rides.length).to eq(2)
+
+        # First ride uses stops_data
+        expect(rides[0].driver_id).to eq(@driver2.id)
+        expect(rides[0].van).to eq(5)
+
+        # Second ride uses base ride_attrs
+        expect(rides[1].driver_id).to eq(ride_attrs[:driver_id])
+        expect(rides[1].van).to be_nil # base attrs don't include van
+      end
+
+      it "handles partial stops_data with only driver_id specified" do
+        address1 = FactoryBot.create(:address, street: "100 Start", city: "Berkeley")
+        address2 = FactoryBot.create(:address, street: "200 End", city: "Oakland")
+
+        addrs = [address1, address2]
+        stops_data = [
+          { driver_id: @driver2.id } # van not specified
+        ]
+
+        rides, success = Ride.build_linked_rides(ride_attrs, addrs, stops_data)
+
+        expect(success).to eq(true)
+        expect(rides.length).to eq(1)
+        expect(rides[0].driver_id).to eq(@driver2.id)
+        expect(rides[0].van).to be_nil # not specified in stops_data
+      end
+
+      it "handles partial stops_data with only van specified" do
+        address1 = FactoryBot.create(:address, street: "100 Start", city: "Berkeley")
+        address2 = FactoryBot.create(:address, street: "200 End", city: "Oakland")
+
+        addrs = [address1, address2]
+        stops_data = [
+          { van: 3 } # driver_id not specified
+        ]
+
+        rides, success = Ride.build_linked_rides(ride_attrs, addrs, stops_data)
+
+        expect(success).to eq(true)
+        expect(rides.length).to eq(1)
+        expect(rides[0].driver_id).to eq(ride_attrs[:driver_id]) # uses base
+        expect(rides[0].van).to eq(3)
+      end
+
+      it "ignores empty stops_data entries" do
+        address1 = FactoryBot.create(:address, street: "100 Start", city: "Berkeley")
+        address2 = FactoryBot.create(:address, street: "200 Middle", city: "Oakland")
+        address3 = FactoryBot.create(:address, street: "300 End", city: "San Francisco")
+
+        addrs = [address1, address2, address3]
+        stops_data = [
+          {}, # empty hash
+          { driver_id: @driver2.id, van: 7 }
+        ]
+
+        rides, success = Ride.build_linked_rides(ride_attrs, addrs, stops_data)
+
+        expect(success).to eq(true)
+        expect(rides.length).to eq(2)
+
+        # First ride uses base attributes (empty stops_data entry ignored)
+        expect(rides[0].driver_id).to eq(ride_attrs[:driver_id])
+
+        # Second ride uses stops_data
+        expect(rides[1].driver_id).to eq(@driver2.id)
+        expect(rides[1].van).to eq(7)
+      end
+
+      it "works with no stops_data provided (backward compatibility)" do
+        address1 = FactoryBot.create(:address, street: "100 Start", city: "Berkeley")
+        address2 = FactoryBot.create(:address, street: "200 End", city: "Oakland")
+
+        addrs = [address1, address2]
+
+        rides, success = Ride.build_linked_rides(ride_attrs, addrs) # no stops_data
+
+        expect(success).to eq(true)
+        expect(rides.length).to eq(1)
+        expect(rides[0].driver_id).to eq(ride_attrs[:driver_id])
+      end
+    end
   end
 end

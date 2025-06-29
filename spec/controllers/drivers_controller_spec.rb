@@ -70,7 +70,7 @@ RSpec.describe DriversController, type: :controller do
         # Create active drivers
         @active_driver1 = FactoryBot.create(:driver, name: "Active Driver A", active: true)
         @active_driver2 = FactoryBot.create(:driver, name: "Active Driver B", active: true)
-        
+
         # Create inactive drivers
         @inactive_driver1 = FactoryBot.create(:driver, name: "Inactive Driver A", active: false)
         @inactive_driver2 = FactoryBot.create(:driver, name: "Inactive Driver B", active: false)
