@@ -36,6 +36,110 @@ def parse_address(destination_text)
   end
 end
 
+def normalize_name(name)
+  return nil if name.blank?
+  # Remove accents and normalize to ASCII
+  name.strip
+      .unicode_normalize(:nfd)
+      .encode('ascii', fallback: ->(char) { char.unicode_normalize(:nfd).gsub(/[^\x00-\x7F]/, '') })
+      .gsub(/\s+/, ' ')
+      .downcase
+end
+
+def find_or_create_smart_address(address_parts)
+  street = address_parts[:street]
+  city = address_parts[:city]
+  zip_code = address_parts[:zip_code]
+  name = address_parts[:name]
+  normalized_name = normalize_name(name)
+
+  address_description = "#{name.present? ? "(#{name}) " : ""}#{street}, #{city}#{zip_code.present? ? ", #{zip_code}" : ""}"
+
+  # First, try to find an exact match including zip_code
+  if zip_code.present?
+    exact_match = Address.find_by(street: street, city: city, zip_code: zip_code)
+    if exact_match
+      puts "✓ Found exact match for #{address_description} -> Address ID #{exact_match.id}"
+      # Update name if it was blank but we have a name now
+      if exact_match.name.blank? && name.present?
+        exact_match.update(name: name)
+        puts "  └─ Enhanced existing address with name '#{name}'"
+      end
+      return exact_match
+    else
+      puts "⚬ No exact match found for #{address_description}, trying broader search..."
+    end
+  else
+    puts "⚬ No zip code provided for #{address_description}, searching by street/city..."
+  end
+
+  # Second, try to find a match without zip_code (street + city only)
+  potential_matches = Address.where(street: street, city: city)
+  
+  if potential_matches.any?
+    puts "  ⚬ Found #{potential_matches.count} potential match(es) for #{street}, #{city}"
+    
+    # If we have a zip_code and there's a match without zip_code, update it
+    if zip_code.present?
+      match_without_zip = potential_matches.find { |addr| addr.zip_code.blank? }
+      if match_without_zip
+        match_without_zip.update(zip_code: zip_code)
+        puts "  ✓ Enhanced existing address ID #{match_without_zip.id} with zip code '#{zip_code}'"
+        if match_without_zip.name.blank? && name.present?
+          match_without_zip.update(name: name)
+          puts "  └─ Also added name '#{name}'"
+        end
+        return match_without_zip
+      end
+    end
+
+    # If we have a name, try to find a match with similar normalized name
+    if normalized_name.present?
+      name_match = potential_matches.find do |addr|
+        addr.name.present? && normalize_name(addr.name) == normalized_name
+      end
+      if name_match
+        puts "  ✓ Found name match for #{address_description} -> Address ID #{name_match.id} (#{name_match.name})"
+        # Update with zip_code if we have it and the match doesn't
+        if zip_code.present? && name_match.zip_code.blank?
+          name_match.update(zip_code: zip_code)
+          puts "  └─ Enhanced with zip code '#{zip_code}'"
+        end
+        return name_match
+      else
+        puts "  ⚬ No name match found (looking for normalized '#{normalized_name}')"
+      end
+    end
+
+    # Return the first match if no better match found
+    first_match = potential_matches.first
+    puts "  ✓ Using first available match -> Address ID #{first_match.id}"
+    updates = []
+    if zip_code.present? && first_match.zip_code.blank?
+      first_match.update(zip_code: zip_code)
+      updates << "zip code '#{zip_code}'"
+    end
+    if name.present? && first_match.name.blank?
+      first_match.update(name: name)
+      updates << "name '#{name}'"
+    end
+    if updates.any?
+      puts "  └─ Enhanced with #{updates.join(' and ')}"
+    end
+    return first_match
+  end
+
+  # No matches found, create new address
+  new_address = Address.create!(
+    street: street,
+    city: city,
+    zip_code: zip_code,
+    name: name
+  )
+  puts "✓ Created new address: #{address_description} -> Address ID #{new_address.id}"
+  new_address
+end
+
 def convert_passenger_name(csv_name)
   # Convert "Last, First" to "First Last"
   return nil if csv_name.blank?
@@ -53,6 +157,8 @@ namespace :import do
     "John R." => "John Raskin",
     "John R" => "John Raskin",
     "Anne" => "Anna Wah",
+    "Mark Deborah" => "Deborah Sandberg",
+    "null driver" => "Unknown"
   }.freeze
 
   desc "Import shifts and rides from CSV file for a specific month"
@@ -92,13 +198,22 @@ namespace :import do
     puts "File path: #{file_path}"
 
     # Delete existing data for this month only
-    puts "Deleting existing shifts for #{source} to prevent duplicates..."
-    deleted_shifts = Shift.where(source: source).destroy_all
-    puts "Deleted #{deleted_shifts.count} existing shifts"
-
-    puts "Deleting existing rides for #{source} to prevent duplicates..."
-    deleted_rides = Ride.where(source: source).destroy_all
-    puts "Deleted #{deleted_rides.count} existing rides"
+    existing_shifts = Shift.where(source: source).count
+    existing_rides = Ride.where(source: source).count
+    
+    if existing_shifts > 0 || existing_rides > 0
+      puts "🧹 Cleaning up existing data for #{source} to prevent duplicates..."
+      if existing_shifts > 0
+        Shift.where(source: source).destroy_all
+        puts "  ✓ Deleted #{existing_shifts} existing shifts"
+      end
+      if existing_rides > 0
+        Ride.where(source: source).destroy_all
+        puts "  ✓ Deleted #{existing_rides} existing rides"
+      end
+    else
+      puts "✨ No existing data found for #{source} - starting fresh import"
+    end
 
     unless File.exist?(file_path)
       puts "ERROR: Rides data file not found: #{file_path}"
@@ -107,8 +222,7 @@ namespace :import do
 
     puts "Importing from #{file_path}"
 
-    # First pass: Create addresses
-    puts "Creating destination addresses..."
+    puts "\n📍 Pass 1: Processing and creating destination addresses with smart matching..."
     CSV.foreach(file_path, headers: true, liberal_parsing: true) do |row|
       destinations_string = row["Destination"]&.strip
       next if destinations_string.blank?
@@ -128,23 +242,14 @@ namespace :import do
       destinations.each do |destination_text|
         address_parts = parse_address(destination_text)
         if address_parts
-          address = Address.find_or_create_by(street: address_parts[:street], city: address_parts[:city], zip_code: address_parts[:zip_code]) do |addr|
-            addr.name = address_parts[:name]
-            puts "Creating new address: #{address_parts.inspect}"
-          end
-
-          if address.name.blank? && address_parts[:name].present?
-            address.update(name: address_parts[:name])
-            puts "Updated address ID #{address.id} with name '#{address_parts[:name]}'"
-          end
+          address = find_or_create_smart_address(address_parts)
         else
           puts "ADDRESS PARSE ERROR: Please fix format for '#{destination_text.strip}'. Expected format: (Name) Street, City, CA Zip" unless destination_text.blank?
         end
       end
     end
 
-    # Second pass: Create shifts
-    puts "Creating shifts..."
+    puts "\n📋 Pass 2: Creating driver shifts..."
     CSV.foreach(file_path, headers: true, liberal_parsing: true) do |row|
       driver_entries = row["Driver"]&.strip&.split(",")&.map(&:strip)&.reject(&:empty?) || []
       van_entries = row["Van"]&.strip&.split(/[\s,]+/)&.map(&:strip)&.reject(&:empty?) || []
@@ -196,13 +301,20 @@ namespace :import do
       end
     end
 
-    # Third pass: Create rides
-    puts "Creating rides..."
+    puts "\n🚐 Pass 3: Creating rides and linking multi-stop journeys..."
     error_count = 0
+    processed_rows = 0
     daily_ride_counters = {} # Track ride count per day for time calculation
 
     CSV.foreach(file_path, headers: true, liberal_parsing: true) do |row|
       row_number = $.
+      processed_rows += 1
+      
+      # Show progress every 10 rows
+      if processed_rows % 10 == 0
+        puts "  📊 Processing row #{processed_rows}..."
+      end
+      
       # Parse basic ride info
       passenger_csv_name = row["Passenger Name"]&.strip
       ride_count = row["Ride Count"]&.strip&.to_i || 1
@@ -281,17 +393,8 @@ namespace :import do
       destinations.each_with_index do |dest_text, idx|
         address_parts = parse_address(dest_text)
         if address_parts
-          address = Address.find_by(
-            street: address_parts[:street],
-            city: address_parts[:city],
-            zip_code: address_parts[:zip_code]
-          )
-          if address
-            destination_addresses << address
-          else
-            puts "ERROR Row #{row_number}: Destination address not found for '#{dest_text.strip}'. Address should have been created in first pass."
-            error_count += 1
-          end
+          address = find_or_create_smart_address(address_parts)
+          destination_addresses << address
         else
           puts "ERROR Row #{row_number}: Could not parse destination '#{dest_text.strip}'"
           error_count += 1
@@ -443,16 +546,37 @@ namespace :import do
     end
 
     puts "\n" + "=" * 50
+    puts "IMPORT SUMMARY FOR #{month.titleize.upcase} 2024"
+    puts "=" * 50
+    
     if error_count > 0
-      puts "Import for #{month.titleize} 2024 completed with #{error_count} errors. Please review and fix the CSV data."
+      puts "❌ Import completed with #{error_count} errors. Please review and fix the CSV data."
     else
-      puts "Import for #{month.titleize} 2024 completed successfully with no errors!"
+      puts "✅ Import completed successfully with no errors!"
     end
 
-    # Show summary statistics
+    # Show detailed statistics
     total_rides = Ride.where(source: source).count
     total_shifts = Shift.where(source: source).count
-    puts "Created #{total_rides} rides and #{total_shifts} shifts for #{source}"
+    total_addresses = Address.count
+    unique_passengers = Ride.where(source: source).joins(:passenger).distinct.count(:passenger_id)
+    unique_drivers = Ride.where(source: source).joins(:driver).distinct.count(:driver_id)
+
+    puts "\nData Created:"
+    puts "  🚐 #{total_rides} rides"
+    puts "  👨‍💼 #{total_shifts} shifts"
+    puts "  👥 #{unique_passengers} unique passengers served"
+    puts "  🚗 #{unique_drivers} unique drivers assigned"
+    puts "  📍 #{total_addresses} total addresses in system"
+    
+    # Show source breakdown
+    puts "\nAll Import Sources:"
+    sources_summary = Ride.group(:source).count
+    sources_summary.each do |src, count|
+      status = src == source ? " (just imported)" : ""
+      puts "  #{src}: #{count} rides#{status}"
+    end
+    
     puts "=" * 50
   end
 
