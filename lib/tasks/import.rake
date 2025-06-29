@@ -12,6 +12,8 @@ namespace :import do
       Rake::Task["import:rides_month"].invoke("feb")
       Rake::Task["import:rides_month"].reenable
       Rake::Task["import:rides_month"].invoke("march")
+      Rake::Task["import:rides_month"].reenable
+      Rake::Task["import:rides_month"].invoke("april")
       Rake::Task["blazer:import"].invoke
       puts "✅ All import tasks have finished successfully!"
     end

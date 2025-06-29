@@ -32,11 +32,12 @@
     BY passengers.name, year_month\r\n)\r\nORDER BY city, name, year_month;"
   :data_source: main
 - :name: Fare by Passengers
-  :description: ''
+  :description: The total sum of fare paid by passengers on rides starting and ending
+    on selected time
   :statement: "SELECT \r\n  passengers.name, \r\n  CONCAT('$', ROUND(SUM(rides.amount_paid),
     2)) AS total_fare\r\nFROM rides\r\nJOIN passengers ON rides.passenger_id = passengers.id\r\nWHERE
-    rides.date_and_time >= {start_time} AND rides.date_and_time <= {end_time}\r\nGROUP
-    BY passengers.name\r\n"
+    rides.date_and_time >= {start_time} \r\n  AND rides.date_and_time <= {end_time}\r\n
+    \ AND rides.next_ride_id IS NULL\r\nGROUP BY passengers.name"
   :data_source: main
 - :name: Foundation Report
   :description: Total Low Income Passengers, Total Passengers, % Low Income Passengers,
@@ -92,14 +93,20 @@
   :statement: SELECT * FROM PASSENGERS;
   :data_source: main
 - :name: 'Rides Manifest '
-  :description: ''
-  :statement: "SELECT \r\n    rides.id,\r\n    rides.date_and_time,\r\n    passengers.name
-    as passenger_name,\r\n    drivers.name as driver_name,\r\n    start_addr.street
-    as pickup_address,\r\n    start_addr.city as pickup_city,\r\n    dest_addr.street
-    as destination_address,\r\n    dest_addr.city as destination_city,\r\n    rides.ride_type,\r\n
-    \   rides.amount_paid,\r\n    rides.status,\r\n    rides.van,\r\n    rides.notes\r\nFROM
-    rides\r\nLEFT JOIN passengers ON rides.passenger_id = passengers.id\r\nLEFT JOIN
-    drivers ON rides.driver_id = drivers.id\r\nLEFT JOIN addresses start_addr ON rides.start_address_id
+  :description: Rides starting and ending from the selected time. Each row is one
+    ride, so multi-stop rides span across mutiple rows. Keep in mind that amount_paid
+    is the total of the multi-stop, but are displayed across each "stop"
+  :statement: "SELECT \r\n    rides.id,\r\n    strftime('%Y-%m-%d %I:%M %p', datetime(rides.date_and_time,
+    '-8 hours')) as Datetime,\r\n    passengers.name as Passenger,\r\n    drivers.name
+    as Driver,\r\n    start_addr.street || ', ' || start_addr.city || CASE WHEN start_addr.zip_code
+    IS NOT NULL THEN ', ' || start_addr.zip_code ELSE '' END as Pickup,\r\n    dest_addr.street
+    || ', ' || dest_addr.city || CASE WHEN dest_addr.zip_code IS NOT NULL THEN ',
+    ' || dest_addr.zip_code ELSE '' END as Destination,\r\n    rides.ride_type,\r\n
+    \   rides.amount_paid,\r\n    rides.status,\r\n    rides.van,\r\n    rides.notes,\r\n
+    \   rides.notes_to_driver,\r\n    passengers.wheelchair,\r\n    passengers.low_income,\r\n
+    \   passengers.disabled,\r\n    passengers.need_caregiver\r\nFROM rides\r\nLEFT
+    JOIN passengers ON rides.passenger_id = passengers.id\r\nLEFT JOIN drivers ON
+    rides.driver_id = drivers.id\r\nLEFT JOIN addresses start_addr ON rides.start_address_id
     = start_addr.id\r\nLEFT JOIN addresses dest_addr ON rides.dest_address_id = dest_addr.id\r\nWHERE
     rides.date_and_time >= {start_time} \r\n    AND rides.date_and_time <= {end_time}\r\nORDER
     BY rides.date_and_time DESC;"
