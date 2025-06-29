@@ -157,7 +157,7 @@ RSpec.describe Ride, type: :model do
         addresses_attributes: [:name, :street, :city, :phone]
       )
 
-      attrs, addresses, stops_data = Ride.extract_attrs_from_params(input_params)
+      attrs, addresses, _ = Ride.extract_attrs_from_params(input_params)
 
       expect(attrs[:wheelchair]).to eq(true)
       expect(attrs[:disabled]).to eq(true)
@@ -229,7 +229,7 @@ RSpec.describe Ride, type: :model do
         addresses_attributes: [:name, :street, :city, :phone]
       )
 
-      attrs, addresses, stops_data = Ride.extract_attrs_from_params(input_params)
+      _, addresses, stops_data = Ride.extract_attrs_from_params(input_params)
 
       expect(stops_data).to eq([])
       expect(addresses.length).to eq(2)

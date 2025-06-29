@@ -131,11 +131,11 @@ RSpec.describe RidesController, type: :controller do
         }.to change(Ride, :count).by(2)
 
         created_rides = Ride.order(:created_at).last(2)
-        
+
         # First ride should use first stop's driver and van
         expect(created_rides[0].driver_id).to eq(@driver1.id)
         expect(created_rides[0].van).to eq(1)
-        
+
         # Second ride should use second stop's driver and van
         expect(created_rides[1].driver_id).to eq(@driver2.id)
         expect(created_rides[1].van).to eq(2)
@@ -254,10 +254,10 @@ RSpec.describe RidesController, type: :controller do
       }
 
       put :update, params: { id: ride1.id, ride: update_attrs }
-      
+
       # Should create 2 new rides (3 addresses = 2 ride segments)
       updated_rides = Ride.order(:created_at).last(2)
-      
+
       expect(updated_rides[0].driver_id).to eq(@driver1.id)
       expect(updated_rides[0].van).to eq(5)
       expect(updated_rides[1].driver_id).to eq(@driver2.id)
@@ -357,8 +357,8 @@ RSpec.describe RidesController, type: :controller do
             { street: "456 Elm", city: "Berkeley", state: "CA", zip: "94704" }
           ],
           stops_attributes: [
-            { 
-              driver_id: @driver2.id, 
+            {
+              driver_id: @driver2.id,
               van: "5",
               malicious_param: "should_be_filtered" # This should be ignored
             }
