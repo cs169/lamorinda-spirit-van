@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_06_12_094229) do
+ActiveRecord::Schema[7.2].define(version: 2025_06_28_212856) do
   create_table "addresses", force: :cascade do |t|
     t.string "street"
     t.string "city"
@@ -137,14 +137,14 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_12_094229) do
     t.integer "dest_address_id"
     t.string "ride_type"
     t.boolean "wheelchair", default: false, null: false
-    t.boolean "low_income", default: false, null: false
     t.boolean "disabled", default: false, null: false
     t.boolean "need_caregiver", default: false, null: false
     t.integer "next_ride_id"
-    t.datetime "date_and_time"
+    t.date "date"
     t.string "status"
     t.text "notes"
     t.string "source"
+    t.text "fare_type"
     t.index ["driver_id"], name: "index_rides_on_driver_id"
     t.index ["next_ride_id"], name: "index_rides_on_next_ride_id"
     t.index ["passenger_id"], name: "index_rides_on_passenger_id"

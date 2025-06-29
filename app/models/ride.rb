@@ -70,7 +70,7 @@ class Ride < ApplicationRecord
     ride_attrs = params.except(:addresses_attributes).to_h
     addresses = params[:addresses_attributes]
 
-    [:wheelchair, :low_income, :disabled, :need_caregiver].each do |field|
+    [:wheelchair, :disabled, :need_caregiver].each do |field|
       ride_attrs[field] = (ride_attrs[field] == "Yes") if ride_attrs.key?(field)
     end
 

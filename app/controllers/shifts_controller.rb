@@ -25,7 +25,7 @@ class ShiftsController < ApplicationController
     end
 
     @rides = Ride.includes(:passenger, :start_address, :dest_address, :next_ride)
-    .where(date_and_time: @shift.shift_date.all_day)
+    .where(date: @shift.shift_date)
     .where(driver_id: @shift.driver_id)
     .where.not(id: Ride.select(:next_ride_id).where.not(next_ride_id: nil))
   end

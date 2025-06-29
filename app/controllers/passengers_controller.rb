@@ -19,10 +19,15 @@ class PassengersController < ApplicationController
     # since creating new passenger also have address,
     # this will also create new address record and associates it
     @passenger.build_address
+
+    # For the "Back" button - secure URL validation
+    @safe_return_url = safe_return_url || passengers_path
   end
 
   # GET /passengers/1/edit
   def edit
+    # For the "Back" button - secure URL validation
+    @safe_return_url = safe_return_url || passengers_path
   end
 
   # POST /passengers or /passengers.json

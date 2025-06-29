@@ -5,11 +5,13 @@
     <div class="card-body">
       <h5 class="card-title">Info</h5>
       <ul class="list-group list-group-flush">
-        <li class="list-group-item"><strong>Date:</strong> <%= @ride.date_and_time.strftime("%B %d, %Y %I:%M %p") %></li>
+        <li class="list-group-item"><strong>Date:</strong> <%= @ride.date.strftime('%m/%d/%Y') %></li>
         <li class="list-group-item"><strong>Van Number:</strong> <%= @ride.van %></li>
         <li class="list-group-item"><strong>Driver:</strong> <%= @ride.driver&.name || "Driver Not Assigned" %></li>
         <li class="list-group-item"><strong>Hours:</strong> <%= @ride.hours %></li>
         <li class="list-group-item"><strong>Amount Paid:</strong> <%= number_to_currency(@ride.amount_paid) %></li>
+        <li class="list-group-item"><strong>Ride Type:</strong> <%= @ride.ride_type %></li>
+        <li class="list-group-item"><strong>Fare Type:</strong> <%= @ride.fare_type %></li>
       </ul>
     </div>
   </div>
@@ -33,7 +35,6 @@
         <% @all_rides.each_with_index do |ride, index| %>
           <li class="list-group-item"><strong>Stop <%= index + 1 %>:</strong> <%= ride.dest_address ? [ride.dest_address.name, ride.dest_address.full_address, ride.dest_address.phone].compact.join(", ") : "N/A" %></li>
         <% end %>
-        <li class="list-group-item"><strong>Ride Type:</strong> <%= @ride.ride_type %></li>
       </ul>
     </div>
   </div>
@@ -43,7 +44,6 @@
       <h5 class="card-title">Accessibility</h5>
       <ul class="list-group list-group-flush">
         <li class="list-group-item"><strong>Wheelchair:</strong> <%= @ride.wheelchair ? "Yes" : "No" %></li>
-        <li class="list-group-item"><strong>Low Income:</strong> <%= @ride.low_income ? "Yes" : "No" %></li>
         <li class="list-group-item"><strong>Disabled:</strong> <%= @ride.disabled ? "Yes" : "No" %></li>
         <li class="list-group-item"><strong>Needs Caregiver:</strong> <%= @ride.need_caregiver ? "Yes" : "No" %></li>
         <li class="list-group-item"><strong>Accessibility Notes:</strong> <%= simple_format(@ride.passenger.notes) %></li>
@@ -72,7 +72,7 @@
     <% end %>
     
     <div class="col-12 mb-2 col-md-auto">
-      <%= link_to "Back", today_driver_path(@ride.driver_id, date: @ride.date_and_time.to_date), class: "btn btn-outline-secondary w-100" %>
+      <%= link_to "Back", today_driver_path(@ride.driver_id, date: @ride.date), class: "btn btn-outline-secondary w-100" %>
     </div>
   </div>
 </div>

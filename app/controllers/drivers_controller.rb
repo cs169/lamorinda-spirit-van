@@ -57,7 +57,7 @@ class DriversController < ApplicationController
                     end
 
     @rides = @driver.rides.includes(:passenger, :feedback, :start_address, :dest_address, :next_ride)
-    .where(date_and_time: @current_date.all_day)
+    .where(date: @current_date)
     .where.not(id: Ride.select(:next_ride_id).where.not(next_ride_id: nil))
     @shift = @driver.shifts.where(shift_date: @current_date).first
 
@@ -133,33 +133,5 @@ class DriversController < ApplicationController
   # Only allow a list of trusted parameters through.
   def driver_params
     params.require(:driver).permit(:name, :phone, :email, :shifts, :active)
-  end
-
-  # Securely validate return URL to prevent open redirects and XSS
-  def safe_return_url
-    return nil unless params[:return_url].present?
-
-    begin
-      uri = URI.parse(params[:return_url])
-
-      # Only allow relative URLs (no scheme, no host)
-      # This prevents external redirects and javascript: schemes
-      if uri.scheme.nil? && uri.host.nil? && uri.path.start_with?("/")
-        # Additional validation: ensure the path doesn't contain dangerous patterns
-        path = uri.path
-        return nil if path.include?("..") || path.include?("javascript:")
-
-        # Reconstruct URL with only safe components (path + query)
-        url = path
-        url += "?#{uri.query}" if uri.query.present?
-        url += "##{uri.fragment}" if uri.fragment.present?
-
-        return url
-      end
-    rescue URI::InvalidURIError
-      # Invalid URI format - return nil for safety
-    end
-
-    nil
   end
 end

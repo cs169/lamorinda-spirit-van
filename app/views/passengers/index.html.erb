@@ -3,4 +3,4 @@
 
 <%= render 'passenger' %>
 
-<%= link_to 'New Passenger', new_passenger_path, class: "btn btn-success mt-3" %>
+<%= link_to 'New Passenger', new_passenger_path(return_url: request.fullpath), class: "btn btn-success mt-3" %>

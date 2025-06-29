@@ -98,7 +98,7 @@ RSpec.describe FeedbacksController, type: :controller do
         }
         @feedback.reload
         expect(@feedback.note).to eq("Updated note")
-        expected_date = @feedback.ride.date_and_time.to_date.to_s
+        expected_date = @feedback.ride.date.to_s
         expect(response).to redirect_to(today_driver_path(@driver.id, date: expected_date))
         expect(response).to have_http_status(:see_other)
       end
@@ -140,7 +140,7 @@ RSpec.describe FeedbacksController, type: :controller do
           feedback: { note: "dispatcher updated" }
         }
 
-        expect(response).to redirect_to(today_driver_path(@driver.id, date: @ride.date_and_time.to_date.to_s))
+        expect(response).to redirect_to(today_driver_path(@driver.id, date: @ride.date.to_s))
         expect(response).to have_http_status(:see_other)
       end
     end

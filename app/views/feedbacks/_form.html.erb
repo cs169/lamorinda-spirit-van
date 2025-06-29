@@ -59,7 +59,7 @@
         <%# This "Back" button returns to the driver's today page for the same date as the feedback's ride. %>
         <%# Suggested Cucumber test (not yet implemented): clicking this button should redirect to /drivers/:id/today?date=... %>
         <div class="mt-4 text-sm-start text-center">
-          <%= link_to "Back", today_driver_path(feedback.ride.driver_id, date: feedback.ride.date_and_time.to_date),
+          <%= link_to "Back", today_driver_path(feedback.ride.driver_id, date: feedback.ride.date),
               class: "btn btn-outline-secondary px-5 ride-feedback-btn" %>
         </div>
       </div>

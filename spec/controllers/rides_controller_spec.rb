@@ -16,7 +16,7 @@ RSpec.describe RidesController, type: :controller do
      @ride1 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1)
      @ride2 = FactoryBot.create(:ride, driver: @driver2, passenger: @passenger1)
      @ride3 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1)
-     @ride4 = FactoryBot.create(:ride, date_and_time: 5.days.ago.noon)
+     @ride4 = FactoryBot.create(:ride, date: 5.days.ago)
    end
 
   describe "GET #index" do
@@ -31,7 +31,7 @@ RSpec.describe RidesController, type: :controller do
     context "with valid attributes" do
       let(:valid_attributes) do
         {
-          date_and_time: @ride1.date_and_time,
+          date: @ride1.date,
           van: @ride1.van,
           hours: @ride1.hours,
           amount_paid: @ride1.amount_paid,
@@ -118,7 +118,7 @@ RSpec.describe RidesController, type: :controller do
   describe "PUT #update" do
     it "updates the ride and redirects" do
       update_attrs = {
-        date_and_time: Time.zone.today.tomorrow.noon,
+        date: Date.tomorrow,
         driver_id: @driver2.id,
         passenger_id: @passenger1.id,
         addresses_attributes: [
@@ -156,7 +156,7 @@ RSpec.describe RidesController, type: :controller do
 
       # New set of 3 destinations
       update_attrs = {
-        date_and_time: ride1.date_and_time,
+        date: ride1.date,
         driver_id: ride1.driver_id,
         passenger_id: ride1.passenger_id,
         addresses_attributes: [
@@ -184,7 +184,7 @@ RSpec.describe RidesController, type: :controller do
 
       # Now send only 2 stops
       update_attrs = {
-        date_and_time: ride1.date_and_time,
+        date: ride1.date,
         driver_id: ride1.driver_id,
         passenger_id: ride1.passenger_id,
         addresses_attributes: [

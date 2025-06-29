@@ -13,6 +13,7 @@
  *= require_tree .
  *= require_self
  */
+@import "datatables_custom";
 
 /* app/assets/stylesheets/application.css */
 

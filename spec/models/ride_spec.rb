@@ -13,7 +13,7 @@ RSpec.describe Ride, type: :model do
     @ride1 = FactoryBot.create(
       :ride,
       driver: @driver1,
-      date_and_time: Time.zone.today.yesterday.noon,
+      date: Date.current,
     )
     @ride2 = FactoryBot.create(
       :ride,
@@ -22,9 +22,9 @@ RSpec.describe Ride, type: :model do
     @ride3 = FactoryBot.create(
       :ride,
       driver: @driver1,
-      date_and_time: Time.zone.today.tomorrow.noon,
+      date: Date.current,
       wheelchair: true,
-      low_income: true
+      need_caregiver: true
     )
   end
 
@@ -41,9 +41,9 @@ RSpec.describe Ride, type: :model do
       expect(@ride1).to be_valid
     end
 
-    it "checks wheelchair and low_income fields" do
+    it "checks wheelchair and needs_caregiver fields" do
       expect(@ride3.wheelchair).to eq(true)
-      expect(@ride3.low_income).to eq(true)
+      expect(@ride3.need_caregiver).to eq(true)
     end
   end
 
@@ -133,15 +133,16 @@ RSpec.describe Ride, type: :model do
   describe ".extract_attrs_from_params" do
     it "parses addresses and converts Yes/No fields into booleans" do
       raw_params = {
-        date_and_time: "2025-05-01 10:00 AM",
+        date: "2025-05-01",
         van: "2",
         hours: "3",
         passenger_id: 1,
         driver_id: 1,
         notes: "Sample ride",
         notes_to_driver: "Sample ride",
+        ride_type: "Default",
+        fare_type: "Default",
         wheelchair: "Yes",
-        low_income: "No",
         disabled: "Yes",
         need_caregiver: "No",
         addresses_attributes: [
@@ -151,19 +152,21 @@ RSpec.describe Ride, type: :model do
       }
 
       input_params = ActionController::Parameters.new(raw_params).permit(
-        :date_and_time, :van, :hours, :passenger_id, :driver_id, :notes, :notes_to_driver,
-        :wheelchair, :low_income, :disabled, :need_caregiver,
+        :date, :van, :hours, :passenger_id, :driver_id, :notes, :notes_to_driver,
+        :ride_type, :fare_type, :wheelchair, :disabled, :need_caregiver,
         addresses_attributes: [:name, :street, :city, :phone]
       )
 
       attrs, addresses = Ride.extract_attrs_from_params(input_params)
 
       expect(attrs[:wheelchair]).to eq(true)
-      expect(attrs[:low_income]).to eq(false)
       expect(attrs[:disabled]).to eq(true)
       expect(attrs[:need_caregiver]).to eq(false)
-      expect(attrs[:date_and_time]).to eq("2025-05-01 10:00 AM")
+      expect(attrs[:date]).to eq("2025-05-01")
       expect(attrs[:notes]).to eq("Sample ride")
+      expect(attrs[:notes_to_driver]).to eq("Sample ride")
+      expect(attrs[:ride_type]).to eq("Default")
+      expect(attrs[:fare_type]).to eq("Default")
       expect(addresses.length).to eq(2)
       expect(addresses.first[:city]).to eq("Oakland")
     end
@@ -173,7 +176,7 @@ RSpec.describe Ride, type: :model do
     let(:ride_attrs) do
       {
         driver_id: 1,
-        date_and_time: Time.zone.today.noon,
+        date: Date.current,
       }
     end
 

@@ -8,7 +8,7 @@
               <th class="border-0"></th> <!-- Feedback Button -->
               <th class="border-0"></th> <!-- Info Button -->
               <th class="border-0"></th> <!-- Delete Button -->
-              <th class="border-0 text-filter">Date and Time</th>
+              <th class="border-0 text-filter">Date</th>
               <th class="border-0 text-filter">Driver</th>
               <th class="border-0 text-filter">Van</th>
               <th class="border-0 text-filter">Last Name</th>
@@ -18,9 +18,9 @@
               <th class="border-0 text-filter">Destination(s)</th>
               <th class="border-0 text-filter">Ride Type</th>
               <th class="border-0 text-filter">Wheelchair</th>
-              <th class="border-0 text-filter">Low Income</th>
               <th class="border-0 text-filter">Disabled</th>
               <th class="border-0 text-filter">Needs Caregiver</th>
+              <th class="border-0 text-filter">Fare Type</th>
               <th class="border-0 text-filter">Notes to Driver</th>
               <th class="border-0 text-filter">Notes</th>
               <th class="border-0 text-filter">Hours</th>
@@ -50,12 +50,15 @@
                       class: "btn btn-sm btn-danger" %>
                 </td>
 
-                <td data-sort="<%= ride.date_and_time.to_i %>"><%= ride.date_and_time.strftime("%B %d, %Y %I:%M %p") %></td>
+                <td data-order="<%= ride.date.strftime('%Y-%m-%d') %>">
+                  <%= ride.date.strftime('%m/%d/%Y') %>
+                </td>
                 <td><%= ride.driver&.name || 'N/A' %></td>
                 <td><%= ride.van || 'N/A' %></td>
                 <% full_name = ride.passenger&.name.to_s.strip %>
-                <% first_name = full_name.split(' ', 2)[0] %>
-                <% last_name = full_name.split(' ', 2)[1] %>
+                <% name_parts = full_name.split(' ') %>
+                <% last_name = name_parts.length > 1 ? name_parts.last : nil %>
+                <% first_name = name_parts.length > 1 ? name_parts[0...-1].join(' ') : name_parts.first %>
                 <td><%= last_name || 'N/A' %></td>
                 <td><%= first_name || 'N/A' %></td>
                 <td>
@@ -95,7 +98,7 @@
                 </td>
                 <td><%= ride.ride_type %></td>
 
-                <% [:wheelchair, :low_income, :disabled, :need_caregiver].each do |field| %>
+                <% [:wheelchair, :disabled, :need_caregiver].each do |field| %>
                 <td>
                   <span class="badge <%= ride.send(field) ? 'bg-success' : 'bg-danger' %>">
                     <%= ride.send(field) ? 'Yes' : 'No' %>
@@ -103,6 +106,7 @@
                 </td>
                 <% end %>
 
+                <td><%= ride.fare_type %></td>
                 <td><%= ride.notes_to_driver || 'N/A' %></td>
                 <td><%= ride.notes || 'N/A' %></td>
                 <td><%= ride.hours || 0 %></td>
