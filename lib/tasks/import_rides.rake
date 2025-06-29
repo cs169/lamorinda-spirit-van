@@ -41,8 +41,8 @@ def normalize_name(name)
   # Remove accents and normalize to ASCII
   name.strip
       .unicode_normalize(:nfd)
-      .encode('ascii', fallback: ->(char) { char.unicode_normalize(:nfd).gsub(/[^\x00-\x7F]/, '') })
-      .gsub(/\s+/, ' ')
+      .encode("ascii", fallback: ->(char) { char.unicode_normalize(:nfd).gsub(/[^\x00-\x7F]/, "") })
+      .gsub(/\s+/, " ")
       .downcase
 end
 
@@ -75,10 +75,10 @@ def find_or_create_smart_address(address_parts)
 
   # Second, try to find a match without zip_code (street + city only)
   potential_matches = Address.where(street: street, city: city)
-  
+
   if potential_matches.any?
     puts "  ⚬ Found #{potential_matches.count} potential match(es) for #{street}, #{city}"
-    
+
     # If we have a zip_code and there's a match without zip_code, update it
     if zip_code.present?
       match_without_zip = potential_matches.find { |addr| addr.zip_code.blank? }
@@ -200,7 +200,7 @@ namespace :import do
     # Delete existing data for this month only
     existing_shifts = Shift.where(source: source).count
     existing_rides = Ride.where(source: source).count
-    
+
     if existing_shifts > 0 || existing_rides > 0
       puts "🧹 Cleaning up existing data for #{source} to prevent duplicates..."
       if existing_shifts > 0
@@ -242,7 +242,7 @@ namespace :import do
       destinations.each do |destination_text|
         address_parts = parse_address(destination_text)
         if address_parts
-          address = find_or_create_smart_address(address_parts)
+          find_or_create_smart_address(address_parts)
         else
           puts "ADDRESS PARSE ERROR: Please fix format for '#{destination_text.strip}'. Expected format: (Name) Street, City, CA Zip" unless destination_text.blank?
         end
@@ -309,12 +309,12 @@ namespace :import do
     CSV.foreach(file_path, headers: true, liberal_parsing: true) do |row|
       row_number = $.
       processed_rows += 1
-      
+
       # Show progress every 10 rows
       if processed_rows % 10 == 0
         puts "  📊 Processing row #{processed_rows}..."
       end
-      
+
       # Parse basic ride info
       passenger_csv_name = row["Passenger Name"]&.strip
       ride_count = row["Ride Count"]&.strip&.to_i || 1
@@ -548,7 +548,7 @@ namespace :import do
     puts "\n" + "=" * 50
     puts "IMPORT SUMMARY FOR #{month.titleize.upcase} 2024"
     puts "=" * 50
-    
+
     if error_count > 0
       puts "❌ Import completed with #{error_count} errors. Please review and fix the CSV data."
     else
@@ -568,7 +568,7 @@ namespace :import do
     puts "  👥 #{unique_passengers} unique passengers served"
     puts "  🚗 #{unique_drivers} unique drivers assigned"
     puts "  📍 #{total_addresses} total addresses in system"
-    
+
     # Show source breakdown
     puts "\nAll Import Sources:"
     sources_summary = Ride.group(:source).count
@@ -576,7 +576,7 @@ namespace :import do
       status = src == source ? " (just imported)" : ""
       puts "  #{src}: #{count} rides#{status}"
     end
-    
+
     puts "=" * 50
   end
 
