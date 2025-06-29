@@ -157,7 +157,6 @@ namespace :import do
     "John R." => "John Raskin",
     "John R" => "John Raskin",
     "Anne" => "Anna Wah",
-    "Mark Deborah" => "Deborah Sandberg",
     "null driver" => "Unknown"
   }.freeze
 
