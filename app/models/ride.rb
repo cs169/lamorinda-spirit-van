@@ -74,6 +74,14 @@ class Ride < ApplicationRecord
     chain
   end
 
+  def all_drivers_names
+    get_all_linked_rides.map { |ride| ride.driver&.name }.compact.uniq.join(', ')
+  end
+
+  def all_vans_numbers
+    get_all_linked_rides.map { |ride| ride.van }.compact.uniq.join(', ')
+  end
+
   def self.extract_attrs_from_params(params)
     ride_attrs = params.except(:addresses_attributes, :stops_attributes).to_h
     addresses = params[:addresses_attributes]
