@@ -65,109 +65,9 @@ RSpec.describe DriversController, type: :controller do
       expect(response).to render_template(:index)
     end
 
-    context "active and inactive drivers separation" do
-      before do
-        # Create active drivers
-        @active_driver1 = FactoryBot.create(:driver, name: "Active Driver A", active: true)
-        @active_driver2 = FactoryBot.create(:driver, name: "Active Driver B", active: true)
-
-        # Create inactive drivers
-        @inactive_driver1 = FactoryBot.create(:driver, name: "Inactive Driver A", active: false)
-        @inactive_driver2 = FactoryBot.create(:driver, name: "Inactive Driver B", active: false)
-      end
-
-      it "assigns active drivers to @active_drivers" do
-        get :index
-        expect(assigns(:active_drivers)).to match_array([@driver1, @driver2, @active_driver1, @active_driver2])
-      end
-
-      it "assigns inactive drivers to @inactive_drivers" do
-        get :index
-        expect(assigns(:inactive_drivers)).to match_array([@inactive_driver1, @inactive_driver2])
-      end
-
-      it "orders active drivers by name" do
-        get :index
-        active_drivers = assigns(:active_drivers)
-        expect(active_drivers.map(&:name)).to eq(active_drivers.map(&:name).sort)
-      end
-
-      it "orders inactive drivers by name" do
-        get :index
-        inactive_drivers = assigns(:inactive_drivers)
-        expect(inactive_drivers.map(&:name)).to eq(inactive_drivers.map(&:name).sort)
-      end
-
-      it "excludes inactive drivers from active drivers list" do
-        get :index
-        expect(assigns(:active_drivers)).not_to include(@inactive_driver1, @inactive_driver2)
-      end
-
-      it "excludes active drivers from inactive drivers list" do
-        get :index
-        expect(assigns(:inactive_drivers)).not_to include(@driver1, @driver2, @active_driver1, @active_driver2)
-      end
-
-      context "with only active drivers" do
-        before do
-          Driver.where(active: false).destroy_all
-        end
-
-        it "returns empty array for inactive drivers" do
-          get :index
-          expect(assigns(:inactive_drivers)).to be_empty
-        end
-
-        it "still returns active drivers" do
-          get :index
-          expect(assigns(:active_drivers)).not_to be_empty
-        end
-      end
-
-      context "with only inactive drivers" do
-        before do
-          Driver.where(active: true).destroy_all
-          @only_inactive = FactoryBot.create(:driver, name: "Only Inactive", active: false)
-        end
-
-        it "returns empty array for active drivers" do
-          get :index
-          expect(assigns(:active_drivers)).to be_empty
-        end
-
-        it "still returns inactive drivers" do
-          get :index
-          expect(assigns(:inactive_drivers)).to include(@only_inactive)
-        end
-      end
-
-      context "with mixed case names" do
-        before do
-          @mixed_case_active = FactoryBot.create(:driver, name: "zeta Active", active: true)
-          @mixed_case_inactive = FactoryBot.create(:driver, name: "Alpha Inactive", active: false)
-        end
-
-        it "orders active drivers alphabetically regardless of case" do
-          get :index
-          active_drivers = assigns(:active_drivers)
-          names = active_drivers.map(&:name)
-          expect(names).to eq(names.sort)
-        end
-
-        it "orders inactive drivers alphabetically regardless of case" do
-          get :index
-          inactive_drivers = assigns(:inactive_drivers)
-          names = inactive_drivers.map(&:name)
-          expect(names).to eq(names.sort)
-        end
-      end
-    end
-
     context "as driver with matching Driver record" do
       before do
         sign_in @driver1_user
-        # Create at least one inactive driver for testing assignment
-        @test_inactive_driver = FactoryBot.create(:driver, name: "Test Inactive Driver", active: false)
       end
 
       it "redirects to today_driver_path" do
@@ -178,12 +78,6 @@ RSpec.describe DriversController, type: :controller do
       it "renders the index template without redirecting" do
         get :index, params: { dont_jump: true }
         expect(response).to render_template(:index)
-      end
-
-      it "still assigns active and inactive drivers when not redirecting" do
-        get :index, params: { dont_jump: true }
-        expect(assigns(:active_drivers)).to include(@driver1, @driver2)
-        expect(assigns(:inactive_drivers)).to include(@test_inactive_driver)
       end
     end
   end

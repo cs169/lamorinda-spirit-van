@@ -1,161 +1,42 @@
-<!-- Active Drivers Section -->
-<div class="active-drivers-section">
-  <h3 class="mb-3">Active Drivers (<span id="active-count"><%= @active_drivers.count %></span>)</h3>
-  
-  <!-- Card Grid with more columns per row -->
-  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
-    <% @active_drivers.each do |driver| %>
-      <div class="col">
-        <div class="card driver-card">
-          <!-- Card header -->
-          <div class="driver-card-header">
-            <h5 class="card-title mb-0"><%= driver.name %></h5>
-            <small><%= driver.email.presence || "No email provided" %></small>
-          </div>
+<!-- Card Grid -->
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+  <% @drivers.each do |driver| %>
+    <div class="col">
 
-          <!-- Card body -->
-          <div class="driver-card-body">
-            <p class="mb-2">
-              <strong>Phone:</strong> <%= driver.phone.presence || "No phone number provided" %>
-            </p>
+      <div class="card driver-card">
 
-            <hr/>
-            <strong>Active:</strong> <span class="badge bg-success">Yes</span>
-          </div>
+        <!-- Card header -->
+        <div class="driver-card-header">
+          <h5 class="card-title mb-0"><%= driver.name %></h5>
+          <small><%= driver.email.presence || "No email provided" %></small>
+        </div>
 
-          <!-- Card footer -->
-          <div class="driver-card-footer">
-            <% if current_user.dispatcher? || current_user.admin? %>
-              <%= link_to "Edit", edit_driver_path(driver), class: "btn btn-sm btn-outline-primary" %>
-            <% end %>
-            
-            <%= link_to "Today\'s Rides", today_driver_path(id: driver.id), class: "btn btn-primary", id: "today-btn" %>
-            
-            <% if current_user.dispatcher? || current_user.admin? %>
-              <%= link_to "Delete", driver, 
-                  data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
-                  class: "btn btn-sm btn-outline-danger"
-              %>
-            <% end %>
-          </div>
+        <!-- Card body -->
+        <div class="driver-card-body">
+          <p class="mb-2">
+            <strong>Phone:</strong> <%= driver.phone.presence || "No phone number provided" %>
+          </p>
+
+          <hr/>
+          <strong>Active:</strong> <%= driver.active? ? "Yes" : "No" %>
+        </div>
+
+        <!-- Card footer -->
+        <div class="driver-card-footer">
+          <% if current_user.dispatcher? || current_user.admin? %>
+            <%= link_to "Edit", edit_driver_path(driver), class: "btn btn-sm btn-outline-primary" %>
+          <% end %>
+          
+          <%= link_to "Today\'s Rides", today_driver_path(id: driver.id), class: "btn btn-primary", id: "today-btn" %>
+          
+          <% if current_user.dispatcher? || current_user.admin? %>
+            <%= link_to "Delete", driver, 
+                data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+                class: "btn btn-sm btn-outline-danger"
+            %>
+          <% end %>
         </div>
       </div>
-    <% end %>
-  </div>
+    </div>
+  <% end %>
 </div>
-
-<!-- Inactive Drivers Section -->
-<% if @inactive_drivers.any? %>
-  <div class="inactive-drivers-section mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h3 class="mb-0">Inactive Drivers (<span id="inactive-count"><%= @inactive_drivers.count %></span>)</h3>
-      <button type="button" class="btn btn-outline-secondary" id="toggle-inactive-btn">
-        <span id="toggle-text">Show Inactive</span>
-        <i class="fas fa-chevron-down" id="toggle-icon"></i>
-      </button>
-    </div>
-    
-    <!-- Card Grid for inactive drivers (initially hidden) -->
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4" id="inactive-drivers-grid" style="display: none;">
-      <% @inactive_drivers.each do |driver| %>
-        <div class="col">
-          <div class="card driver-card inactive-driver-card">
-            <!-- Card header -->
-            <div class="driver-card-header">
-              <h5 class="card-title mb-0"><%= driver.name %></h5>
-              <small><%= driver.email.presence || "No email provided" %></small>
-            </div>
-
-            <!-- Card body -->
-            <div class="driver-card-body">
-              <p class="mb-2">
-                <strong>Phone:</strong> <%= driver.phone.presence || "No phone number provided" %>
-              </p>
-
-              <hr/>
-              <strong>Active:</strong> <span class="badge bg-secondary">No</span>
-            </div>
-
-            <!-- Card footer -->
-            <div class="driver-card-footer">
-              <% if current_user.dispatcher? || current_user.admin? %>
-                <%= link_to "Edit", edit_driver_path(driver), class: "btn btn-sm btn-outline-primary" %>
-              <% end %>
-              
-              <%= link_to "Today\'s Rides", today_driver_path(id: driver.id), class: "btn btn-primary", id: "today-btn" %>
-              
-              <% if current_user.dispatcher? || current_user.admin? %>
-                <%= link_to "Delete", driver, 
-                    data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
-                    class: "btn btn-sm btn-outline-danger"
-                %>
-              <% end %>
-            </div>
-          </div>
-        </div>
-      <% end %>
-    </div>
-  </div>
-<% end %>
-
-<script>
-function initializeInactiveToggle() {
-  const toggleBtn = document.getElementById('toggle-inactive-btn');
-  const inactiveGrid = document.getElementById('inactive-drivers-grid');
-  const toggleText = document.getElementById('toggle-text');
-  const toggleIcon = document.getElementById('toggle-icon');
-  
-  if (toggleBtn && inactiveGrid) {
-    // Remove any existing event listeners to prevent duplicates
-    toggleBtn.replaceWith(toggleBtn.cloneNode(true));
-    const newToggleBtn = document.getElementById('toggle-inactive-btn');
-    const newToggleText = document.getElementById('toggle-text');
-    const newToggleIcon = document.getElementById('toggle-icon');
-    
-    newToggleBtn.addEventListener('click', function() {
-      if (inactiveGrid.style.display === 'none') {
-        inactiveGrid.style.display = 'flex';
-        newToggleText.textContent = 'Hide Inactive';
-        newToggleIcon.classList.remove('fa-chevron-down');
-        newToggleIcon.classList.add('fa-chevron-up');
-      } else {
-        inactiveGrid.style.display = 'none';
-        newToggleText.textContent = 'Show Inactive';
-        newToggleIcon.classList.remove('fa-chevron-up');
-        newToggleIcon.classList.add('fa-chevron-down');
-      }
-    });
-  }
-}
-
-// Handle both initial page load and Turbo navigation
-document.addEventListener('DOMContentLoaded', initializeInactiveToggle);
-document.addEventListener('turbo:load', initializeInactiveToggle);
-</script>
-
-<style>
-.inactive-driver-card {
-  opacity: 0.8;
-}
-
-.inactive-driver-card:hover {
-  opacity: 1;
-}
-
-.badge {
-  font-size: 0.75em;
-}
-
-#toggle-inactive-btn {
-  transition: all 0.3s ease;
-}
-
-#toggle-inactive-btn:hover {
-  transform: translateY(-1px);
-}
-
-#toggle-icon {
-  transition: transform 0.3s ease;
-  margin-left: 5px;
-}
-</style>

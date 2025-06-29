@@ -25,7 +25,7 @@ class Ride < ApplicationRecord
     self.dest_address = Address.find_or_create_by!(normalized)
   end
 
-  def self.build_linked_rides(ride_attrs, addrs, stops_data = [])
+  def self.build_linked_rides(ride_attrs, addrs)
     created_rides = []
     prev_ride = nil
 
@@ -35,17 +35,9 @@ class Ride < ApplicationRecord
         origin = addrs[i]
         destination = addrs[i + 1]
 
-        # Create ride with base attributes
         ride = Ride.new(ride_attrs)
         ride.start_address_attributes = origin
         ride.dest_address_attributes = destination
-
-        # Override driver and van if provided in stops_data
-        if stops_data.present? && stops_data[i].present?
-          stop_data = stops_data[i]
-          ride.driver_id = stop_data[:driver_id] if stop_data[:driver_id].present?
-          ride.van = stop_data[:van] if stop_data[:van].present?
-        end
 
         if prev_ride
           prev_ride.next_ride = ride
@@ -74,24 +66,15 @@ class Ride < ApplicationRecord
     chain
   end
 
-  def all_drivers_names
-    get_all_linked_rides.map { |ride| ride.driver.name }.uniq.join(", ")
-  end
-
-  def all_vans_numbers
-    get_all_linked_rides.filter_map { |ride| ride.van }.uniq.join(", ")
-  end
-
   def self.extract_attrs_from_params(params)
-    ride_attrs = params.except(:addresses_attributes, :stops_attributes).to_h
+    ride_attrs = params.except(:addresses_attributes).to_h
     addresses = params[:addresses_attributes]
-    stops_data = params[:stops_attributes] || []
 
     [:wheelchair, :disabled, :need_caregiver].each do |field|
       ride_attrs[field] = (ride_attrs[field] == "Yes") if ride_attrs.key?(field)
     end
 
-    [ride_attrs, addresses, stops_data]
+    [ride_attrs, addresses]
   end
 
   private
