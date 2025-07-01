@@ -74,6 +74,10 @@ class Ride < ApplicationRecord
     chain
   end
 
+  def previous_ride
+    Ride.find_by(next_ride_id: self.id)
+  end
+
   def all_drivers_names
     get_all_linked_rides.map { |ride| ride.driver.name }.uniq.join(", ")
   end
