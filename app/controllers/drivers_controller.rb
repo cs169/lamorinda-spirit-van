@@ -37,14 +37,14 @@ class DriversController < ApplicationController
                 end
 
     month_start = @current_date.beginning_of_month
-    month_end = @current_date.end_of_month
+    next_month_end = @current_date.next_month.end_of_month
 
     @driver = Driver.find(params[:id])
 
     # For the "Back" button - secure URL validation
     @safe_return_url = safe_return_url || today_driver_path(@driver)
 
-    @shifts = @driver.shifts.where(shift_date: month_start..month_end)
+    @shifts = @driver.shifts.where(shift_date: month_start..next_month_end)
                     .where("shift_date >= ?", Date.today)
                     .order(:shift_date)
   end

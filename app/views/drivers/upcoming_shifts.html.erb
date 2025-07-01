@@ -1,5 +1,5 @@
 <h1 class="mb-4">
- Upcoming <%= @current_date.strftime("%B") %> Shifts for <%= @driver.name %>
+  Upcoming <%= @current_date.strftime("%B") %> & <%= @current_date.next_month.strftime("%B") %> Shifts for <%= @driver.name %>
 </h1>
 
 <% content_for :title, "Driver's All Shifts" %>

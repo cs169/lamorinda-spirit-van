@@ -55,10 +55,47 @@ const initiateSearchbars = table => {
       .on('keyup change clear', function () {
         if (column.search() !== this.value) {
           column.search(this.value).draw();
+          // update filter indicator after table redraw
+          updateFilterIndicator(table, '#' + table.table().node().id);
         }
       });
   });
 };
+
+// Visual for when search has been applied
+function updateFilterIndicator(table, tableSelector) {
+  // Check if any column search is applied
+  let columnFiltered = false;
+  table.columns().every(function () {
+    if (this.search() !== '') columnFiltered = true;
+  });
+
+  const indicatorDiv = document.querySelector(`${tableSelector}-filter-indicator`);
+  if (columnFiltered) {
+    indicatorDiv.innerHTML = `
+      <div style="
+        background: #ffe066;
+        color: #8d5400;
+        border: 2px solid #ffd43b;
+        border-radius: 8px;
+        font-size: 1.6rem;
+        font-weight: bold;
+        padding: 16px;
+        margin-bottom: 10px;
+        text-align: center;
+        letter-spacing: 1px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.09);
+      ">
+        <span> Filter Active — Results Limited </span>
+        <br>
+        <span>Check the search bars below</span>
+      </div>
+    `;
+  } else {
+    indicatorDiv.innerHTML = '';
+  }
+}
+
   
 // Creates the Datatables
 const initiateDatatables = () => {
@@ -109,6 +146,7 @@ const initiateDatatables = () => {
       });
       initiateCheckboxes(newTable);
       initiateSearchbars(newTable);
+      updateFilterIndicator(newTable, table.selector);
 
       // Rebuild searchbars on column reorder
       newTable.on('column-reorder', function () {
