@@ -121,7 +121,7 @@ RSpec.describe ShiftsController, type: :controller do
         sign_in @driver_user
       end
 
-      it "updates feedback fields and redirects to driver's today page" do
+      it "updates feedback fields and redirects to the driver's page for the specific shift date" do
         patch :update, params: {
           id: @shift.id,
           shift: {
@@ -133,14 +133,13 @@ RSpec.describe ShiftsController, type: :controller do
           },
           commit_type: "feedback"
         }
-
         @shift.reload
         expect(@shift.van).to eq(101)
         expect(@shift.pick_up_time).to eq("08:00")
         expect(@shift.drop_off_time).to eq("10:00")
         expect(@shift.odometer_pre).to eq("12345")
         expect(@shift.odometer_post).to eq("12400")
-        expect(response).to redirect_to(today_driver_path(id: @shift.driver_id))
+        expect(response).to redirect_to(today_driver_path(id: @shift.driver_id, date: @shift.shift_date))
       end
     end
 
