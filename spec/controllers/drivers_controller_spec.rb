@@ -18,8 +18,8 @@ RSpec.describe DriversController, type: :controller do
     @ride1 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1)
     @ride2 = FactoryBot.create(:ride, driver: @driver2, passenger: @passenger1)
     @ride3 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger2)
-    @ride4 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1, date: Date.tomorrow)
-    @ride5 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1, date: Date.yesterday)
+    @ride4 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1, date: Time.zone.tomorrow)
+    @ride5 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1, date: Time.zone.yesterday)
   end
 
   describe "Access control: driver user restrictions" do

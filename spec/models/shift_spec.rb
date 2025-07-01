@@ -35,7 +35,7 @@ RSpec.describe Shift, type: :model do
   describe ".shifts_by_date" do
     it "filters shifts by date" do
       shift1 = FactoryBot.create(:shift, shift_date: Time.zone.today)
-      FactoryBot.create(:shift, shift_date: Date.yesterday)
+      FactoryBot.create(:shift, shift_date: Time.zone.yesterday)
 
       expect(Shift.shifts_by_date(Shift.all, Time.zone.today)).to contain_exactly(shift1)
     end

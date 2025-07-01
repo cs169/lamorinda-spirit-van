@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 When(/^the current date is (.*)$/) do |date|
-  date = Date.parse(date)
+  date = Time.zone.parse(date)
   travel_to Time.zone.local(date.year, date.month, date.day)
 end
 

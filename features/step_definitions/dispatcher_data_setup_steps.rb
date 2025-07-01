@@ -13,7 +13,7 @@ Given("the following shift exists:") do |table|
       if row["shift_date"] == "Time.zone.today"
         Time.zone.today
       else
-        Date.parse(row["shift_date"])
+        Time.zone.parse(row["shift_date"])
       end
     Shift.create!(
       driver: driver,

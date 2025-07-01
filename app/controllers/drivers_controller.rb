@@ -31,7 +31,7 @@ class DriversController < ApplicationController
   # Display all upcoming shifts for a certain driver
   def upcoming_shifts
     @current_date = begin
-                  Date.parse(params[:date])
+                  Time.zone.parse(params[:date])
                 rescue ArgumentError, TypeError
                   Time.zone.today
                 end
@@ -45,13 +45,13 @@ class DriversController < ApplicationController
     @safe_return_url = safe_return_url || today_driver_path(@driver)
 
     @shifts = @driver.shifts.where(shift_date: month_start..next_month_end)
-                    .where("shift_date >= ?", Date.today)
+                    .where("shift_date >= ?", Time.zone.today)
                     .order(:shift_date)
   end
 
   def today
     @current_date = begin
-                      Date.parse(params[:date])
+                      Time.zone.parse(params[:date])
                     rescue ArgumentError, TypeError
                       Time.zone.today
                     end
