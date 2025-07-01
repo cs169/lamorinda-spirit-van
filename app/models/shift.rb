@@ -33,7 +33,7 @@ class Shift < ApplicationRecord
       end
     end
 
-    Shift.transaction { batch.each { |shift| shift.save } }
+    Shift.transaction { batch.each(&:save) }
 
     batch.map { |shift| shift.errors.full_messages }.flatten
   end
