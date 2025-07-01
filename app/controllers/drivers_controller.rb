@@ -63,8 +63,6 @@ class DriversController < ApplicationController
 
     # Clear return_to_driver parameter after redirect from drivers index page to /drivers/id/today?date=XXX page
     clear_return_to(:return_to_drivers_today_from_drivers_index)
-
-    clear_return_to(:return_to_drivers_today_from_drivers_index)
   end
 
   # NOTE: We deliberately disabled the `show` action.

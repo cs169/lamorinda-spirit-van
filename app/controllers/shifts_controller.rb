@@ -85,7 +85,8 @@ class ShiftsController < ApplicationController
     if params[:commit_type] == "feedback"
       # Allow driver to submit feedback
       if @shift.update(shift_params)
-        redirect_to today_driver_path(id: @shift.driver_id)
+        redirect_to today_driver_path(id: @shift.driver_id, date: @shift.shift_date),
+          notice: "Shift feedback was successfully saved."
       else
         render :feedback, status: :unprocessable_entity
       end
