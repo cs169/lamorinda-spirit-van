@@ -18,13 +18,13 @@ When("I click one day's {string} button") do |button_text|
   raise "No '#{button_text}' button with data-date found" if buttons.empty?
 
   selected = buttons.sample
-  @clicked_date = Date.parse(selected[:'data-date'])
+  @clicked_date = Time.zone.parse(selected[:'data-date'])
   selected.click
 end
 
 Then("the shift date field should show the date of the day I selected") do
   input_value = find("#shift_shift_date").value
-  expect(input_value).to eq @clicked_date.to_s
+  expect(Date.parse(input_value)).to eq @clicked_date.to_date
 end
 
 

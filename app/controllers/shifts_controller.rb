@@ -11,7 +11,7 @@ class ShiftsController < ApplicationController
   # GET /shifts or /shifts.json
   def index
     # @shifts = Shift.all
-    @date = params[:start_date] ? Date.parse(params[:start_date]) : Time.zone.today
+    @date = params[:start_date] ? Time.zone.parse(params[:start_date]) : Time.zone.today
     @shifts = Shift.where(shift_date: @date.beginning_of_month..@date.end_of_month)
     @shift_templates = ShiftTemplate.all
   end
@@ -47,14 +47,14 @@ class ShiftsController < ApplicationController
 
   # POST /shifts/fill_from_template
   def fill_from_template
-    error_messages = Shift.fill_month(ShiftTemplate.all, Date.parse(params[:date]))
+    error_messages = Shift.fill_month(ShiftTemplate.all, Time.zone.parse(params[:date]))
     flash[:alert] = "Error with creating shifts from templates" unless error_messages.empty?
     redirect_to shifts_path(start_date: params[:date])
   end
 
   # POST /shifts/clear_month
   def clear_month
-    Shift.clear_month(Date.parse(params[:date]))
+    Shift.clear_month(Time.zone.parse(params[:date]))
     redirect_to shifts_path(start_date: params[:date])
   end
 
@@ -85,7 +85,8 @@ class ShiftsController < ApplicationController
     if params[:commit_type] == "feedback"
       # Allow driver to submit feedback
       if @shift.update(shift_params)
-        redirect_to today_driver_path(id: @shift.driver_id)
+        redirect_to today_driver_path(id: @shift.driver_id, date: @shift.shift_date),
+          notice: "Shift feedback was successfully saved."
       else
         render :feedback, status: :unprocessable_entity
       end

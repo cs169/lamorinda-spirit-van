@@ -149,7 +149,7 @@ RSpec.describe RidesController, type: :controller do
   describe "PUT #update" do
     it "updates the ride and redirects" do
       update_attrs = {
-        date: Date.tomorrow,
+        date: Time.zone.tomorrow,
         driver_id: @driver2.id,
         passenger_id: @passenger1.id,
         addresses_attributes: [

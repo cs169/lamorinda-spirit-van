@@ -322,7 +322,7 @@ namespace :import do
       van_entries = row["Van"]&.strip&.split(/[\s,]+/)&.map(&:strip)&.reject(&:empty?) || []
 
       # Parse the date and prepare for time calculation
-      base_date = Date.parse(row["Date"]) rescue nil
+      base_date = Time.zone.parse(row["Date"]) rescue nil
       unless base_date
         puts "ERROR Row #{row_number}: Invalid date '#{row['Date']}'"
         error_count += 1

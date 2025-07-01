@@ -60,7 +60,7 @@
             <%= form.label :date_registered, "Date Registered", class: "form-label" %>
             <span class="text-danger">*</span>
             <%= form.date_field :date_registered, 
-                              value: @passenger.date_registered || Date.today, 
+                              value: @passenger.date_registered || Time.zone.today, 
                               class: "form-control", 
                               required: true %>
           </div>

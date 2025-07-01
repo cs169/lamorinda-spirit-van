@@ -5,7 +5,7 @@ FactoryBot.define do
     sequence(:name) { |n| "#{n.humanize.titleize}y Mc#{n.humanize.titleize}son" }
     association :address
     sequence(:phone)  { |n| "(#{n}#{n}#{n})-#{n}#{n}#{n}-#{n}#{n}#{n}#{n}" }
-    birthday { DateTime.now }
+    birthday { Time.zone.now }
     race { 1 }
     hispanic { false }
     wheelchair { false }
@@ -13,6 +13,6 @@ FactoryBot.define do
     disabled { false }
     need_caregiver { false }
     sequence(:email)  { |n| "#{n.humanize}y_mc#{n.humanize}son@gmail.com" }
-    date_registered { DateTime.now }
+    date_registered { Time.zone.now }
   end
 end
