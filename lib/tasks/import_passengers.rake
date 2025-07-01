@@ -42,7 +42,7 @@ namespace :import do
         # Parse birthday from timestamp format
         birthday = begin
           if row["Bday"].present?
-            Date.parse(row["Bday"].split(" ").first)  # Take only the date part before the space
+            Time.zone.parse(row["Bday"].split(" ").first)  # Take only the date part before the space
           end
         rescue Date::Error
           nil
@@ -63,7 +63,7 @@ namespace :import do
           need_caregiver: row["Caregiver"] == "Yes",
           notes: row["Notes"].presence,
           email: row["Email"].presence,
-          date_registered: row["Date Registered"].present? ? Date.strptime(row["Date Registered"], "%Y-%m-%d") : nil,
+          date_registered: row["Date Registered"].present? ? Time.zone.strptime(row["Date Registered"], "%Y-%m-%d") : nil,
           audit: row["Audit: Date, Status"],
           lmv_member: row["LMV Member"] == "Yes",
           mail_updates: row["Returned Mail Updates"].presence,

@@ -41,7 +41,7 @@ namespace :import do
           when :integer then value.to_i if value.present?
           when :decimal, :float then value.to_f if value.present?
           when :boolean then value.downcase.in?(%w[true t yes y 1]) if value.present?
-          when :date then Date.strptime(value, "%m/%d/%Y") rescue nil if value.present?
+          when :date then Time.zone.strptime(value, "%m/%d/%Y") rescue nil if value.present?
           when :datetime then DateTime.parse(value) rescue nil if value.present?
           else value.presence
           end

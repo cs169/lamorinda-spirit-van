@@ -50,8 +50,8 @@ RSpec.describe FeedbacksController, type: :controller do
               companion: "wife",
               mobility: "cane",
               note: "Smooth ride",
-              pick_up_time: Time.now,
-              drop_off_time: Time.now + 20.minutes,
+              pick_up_time: Time.zone.now,
+              drop_off_time: Time.zone.now + 20.minutes,
               fare: 12.5,
               ride_id: @ride.id
             }

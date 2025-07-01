@@ -18,7 +18,7 @@ When("I click one day's {string} button") do |button_text|
   raise "No '#{button_text}' button with data-date found" if buttons.empty?
 
   selected = buttons.sample
-  @clicked_date = Date.parse(selected[:'data-date'])
+  @clicked_date = Time.zone.parse(selected[:'data-date'])
   selected.click
 end
 
