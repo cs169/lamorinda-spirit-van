@@ -157,7 +157,8 @@ namespace :import do
     "John R." => "John Raskin",
     "John R" => "John Raskin",
     "Anne" => "Anna Wah",
-    "null driver" => "Unknown"
+    "null driver" => "Unknown",
+    "??" => "Unknown"
   }.freeze
 
   desc "Import shifts and rides from CSV file for a specific month"
@@ -331,10 +332,21 @@ namespace :import do
       # Initialize daily counter if not exists
       daily_ride_counters[base_date] ||= 0
 
-      # Validate required fields
-      if passenger_csv_name.blank?
+      # Check if we should give warning instead of error for missing passenger/destination
+      destinations_string = row["Destination"]&.strip
+      has_driver_van_date = !driver_entries.empty? && van_entries.any? && base_date
+
+      if passenger_csv_name.blank? && has_driver_van_date
+        puts "WARNING Row #{row_number}: Missing passenger name but driver/van/date present - skipping ride creation"
+        next
+      elsif passenger_csv_name.blank?
         puts "ERROR Row #{row_number}: Missing passenger name"
         error_count += 1
+        next
+      end
+
+      if destinations_string.blank? && has_driver_van_date
+        puts "WARNING Row #{row_number}: Missing destination but driver/van/date present - skipping ride creation"
         next
       end
 
@@ -367,7 +379,6 @@ namespace :import do
       end
 
       # Parse destinations
-      destinations_string = row["Destination"]&.strip
       destination_addresses = []
 
       if destinations_string.blank?
