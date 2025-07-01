@@ -11,6 +11,9 @@
     </div>
   <% end %>
 
+  <%# Pass along the shift date so it redirects users back to the month they were on after saving %>
+  <%= hidden_field_tag :start_date, @start_date %>
+
   <div>
     <%= form.label :shift_type, style: "display: block" %>
     <%= form.text_field :shift_type, class: "form-control" %>
@@ -25,7 +28,7 @@
 
   <div>
     <%= form.label :driver_id, style: "display: block" %>
-    <%= form.select :driver_id, options_from_collection_for_select(@drivers, :id, :name),
+    <%= form.select :driver_id, options_from_collection_for_select(@drivers, :id, :name, @shift_template.driver_id),
         { prompt: "Select a Driver" },
         { class: "form-select", required: true } %>
   </div>
