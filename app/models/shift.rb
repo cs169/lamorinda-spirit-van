@@ -23,7 +23,7 @@ class Shift < ApplicationRecord
     current_shifts = shifts_for_month(month_date)
 
     batch = []
-    (month_date.beginning_of_month..month_date.end_of_month).each do |date|
+    (month_date.beginning_of_month.to_date..month_date.end_of_month.to_date).each do |date|
       templates.where(day_of_week: date.wday).each do |template|
         new_shift_attributes = { driver_id: template.driver_id, shift_type: template.shift_type, shift_date: date }
 
