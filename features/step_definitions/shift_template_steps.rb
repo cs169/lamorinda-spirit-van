@@ -28,13 +28,13 @@ end
 Then(/^there should be ([0-9]*) shifts for (January|February|March|April|May|June|July|August|September|October|November|December)$/) do |count, month|
   date = Time.zone.parse(month)
   shifts_this_month = Shift.where("shift_date >= ? AND shift_date <= ?", date.beginning_of_month, date.end_of_month)
-  expect(shifts_this_month.count).to equal(count.to_i)
+  expect(shifts_this_month.count).to eq(count.to_i)
 end
 
 Given(/^([0-9]*) shifts exist for (January|February|March|April|May|June|July|August|September|October|November|December)$/) do |count, month|
   # dont put more shifts than there are days in the month
   date = Time.zone.parse(month)
   (1..count.to_i).each do |i|
-    FactoryBot.create(:shift, shift_date: date.beginning_of_month + i)
+    FactoryBot.create(:shift, shift_date: date.beginning_of_month + i.days)
   end
 end
