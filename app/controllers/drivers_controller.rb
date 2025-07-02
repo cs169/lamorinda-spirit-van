@@ -56,21 +56,11 @@ class DriversController < ApplicationController
                       Time.zone.today
                     end
 
-    # Find all rides for this driver for this date
+    # Get all rides for the driver on the date
     rides_for_driver = Ride.where(driver_id: @driver.id, date: @current_date)
-    .includes(:passenger, :feedback, :start_address, :dest_address, :next_ride)
 
-    # For each, walk up the chain to the "root" ride
-    root_rides = rides_for_driver.map do |ride|
-      r = ride
-      while r.previous_ride.present?
-        r = r.previous_ride
-      end
-      r
-    end
-
-    # Only show each root ride once
-    @rides = root_rides.uniq
+    # Walk up to the root for each ride, collect unique roots
+    @rides = rides_for_driver.map { |r| r.walk_to_root }.uniq
 
     @shift = @driver.shifts.where(shift_date: @current_date).first
 

@@ -582,5 +582,31 @@ RSpec.describe Ride, type: :model do
         expect(rides[0].all_vans_numbers).to eq(expected_vans)
       end
     end
+
+    describe "#walk_to_root" do
+      it "returns itself when not linked" do
+        ride = FactoryBot.create(:ride, driver: @driver1)
+        expect(ride.walk_to_root).to eq(ride)
+      end
+
+      it "returns the root ride from a chain (start -> middle -> end)" do
+        a1 = FactoryBot.create(:address, street: "Start", city: "Berkeley")
+        a2 = FactoryBot.create(:address, street: "Middle", city: "Oakland")
+        a3 = FactoryBot.create(:address, street: "End", city: "SF")
+
+        # Build linked rides
+        root_ride = FactoryBot.create(:ride, start_address: a1, dest_address: a2, driver: @driver1)
+        middle_ride = FactoryBot.create(:ride, start_address: a2, dest_address: a3, driver: @driver2, previous_ride: root_ride)
+        end_ride = FactoryBot.create(:ride, start_address: a3, dest_address: a1, driver: @driver1, previous_ride: middle_ride)
+
+        # Link next_ride
+        root_ride.update!(next_ride: middle_ride)
+        middle_ride.update!(next_ride: end_ride)
+
+        expect(root_ride.walk_to_root).to eq(root_ride)
+        expect(middle_ride.walk_to_root).to eq(root_ride)
+        expect(end_ride.walk_to_root).to eq(root_ride)
+      end
+    end
   end
 end
