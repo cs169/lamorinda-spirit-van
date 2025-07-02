@@ -136,6 +136,8 @@ class RidesController < ApplicationController
       :dest_address_id,
       :ride_type,
       addresses_attributes: [:name, :street, :city, :phone],
+      start_address_attributes: [:name, :street, :city, :phone],
+      dest_address_attributes:  [:name, :street, :city, :phone],
       stops_attributes: [:driver_id, :van],
     )
   end
