@@ -50,6 +50,7 @@ class RidesController < ApplicationController
     else
       @ride = Ride.new(ride_attrs)
       flash[:alert] = @ride.errors.full_messages.join
+      Rails.logger.info("Ride creation failed: #{@ride.errors.full_messages}")
       render :new
     end
   end
@@ -91,6 +92,7 @@ class RidesController < ApplicationController
       redirect_to edit_ride_path(@ride)
     else
       flash[:alert] = @ride.errors.full_messages.join
+      Rails.logger.info("Ride update failed: #{@ride.errors.full_messages}")
       render :edit
     end
   end
