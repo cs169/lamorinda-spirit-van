@@ -49,6 +49,7 @@ class RidesController < ApplicationController
       redirect_to session[:return_to], notice: "Ride was successfully created."
     else
       @ride = Ride.new(ride_attrs)
+      @ride.valid?
       flash[:alert] = @ride.errors.full_messages.join
       Rails.logger.info("Ride creation failed: #{@ride.errors.full_messages}")
       render :new
@@ -91,6 +92,9 @@ class RidesController < ApplicationController
       flash[:notice] = "Ride was successfully updated."
       redirect_to edit_ride_path(@ride)
     else
+      @all_rides = @ride.get_all_linked_rides
+      @ride = Ride.new(ride_attrs)
+      @ride.valid?
       flash[:alert] = @ride.errors.full_messages.join
       Rails.logger.info("Ride update failed: #{@ride.errors.full_messages}")
       render :edit
