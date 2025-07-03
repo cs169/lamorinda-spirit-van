@@ -41,7 +41,8 @@ class RidesController < ApplicationController
 
   def create
     ride_attrs, addresses, stops_data = Ride.extract_attrs_from_params(ride_params)
-    result_rides, success = Ride.build_linked_rides(ride_attrs, addresses, stops_data)
+    
+    result_rides, success, errors = Ride.build_linked_rides(ride_attrs, addresses, stops_data)
 
     if success
       @ride = result_rides[0]
@@ -49,9 +50,9 @@ class RidesController < ApplicationController
       redirect_to session[:return_to], notice: "Ride was successfully created."
     else
       @ride = Ride.new(ride_attrs)
-      @ride.valid?
-      flash[:alert] = @ride.errors.full_messages.join
-      Rails.logger.info("Ride creation failed: #{@ride.errors.full_messages}")
+      @drivers = Driver.order(:name)
+      flash[:alert] = errors.join(", ")
+      Rails.logger.info("Ride creation failed: #{errors}")
       render :new
     end
   end
@@ -85,7 +86,7 @@ class RidesController < ApplicationController
     end
 
     # Rebuild new ride chain
-    result_rides, success = Ride.build_linked_rides(ride_attrs, addresses, stops_data)
+    result_rides, success, errors = Ride.build_linked_rides(ride_attrs, addresses, stops_data)
 
     if success
       @ride = result_rides[0]
@@ -93,9 +94,7 @@ class RidesController < ApplicationController
       redirect_to edit_ride_path(@ride)
     else
       @all_rides = @ride.get_all_linked_rides
-      @ride = Ride.new(ride_attrs)
-      @ride.valid?
-      flash[:alert] = @ride.errors.full_messages.join
+      flash[:alert] = errors.join(", ")
       Rails.logger.info("Ride update failed: #{@ride.errors.full_messages}")
       render :edit
     end
