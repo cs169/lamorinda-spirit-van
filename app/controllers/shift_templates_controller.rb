@@ -8,20 +8,23 @@ class ShiftTemplatesController < ApplicationController
   def new
     @shift_template = ShiftTemplate.new(params.permit(:day_of_week))
     @drivers = Driver.order(:name)
+    @start_date = params[:start_date]
   end
 
   # GET /shift_templates/1/edit
   def edit
+    @shift_template = ShiftTemplate.find(params[:id])
     @drivers = Driver.order(:name)
+    @start_date = params[:start_date]
   end
 
   # POST /shift_templates or /shift_templates.json
   def create
     @shift_template = ShiftTemplate.new(shift_template_params)
-
+    @start_date = params[:start_date]
     respond_to do |format|
       if @shift_template.save
-        format.html { redirect_to shifts_path, notice: "Shift template was successfully created." }
+        format.html { redirect_to shifts_path(start_date: @start_date), notice: "Shift template was successfully created." }
         format.json { render :show, status: :created, location: @shift_template }
       else
         @drivers = Driver.order(:name)
@@ -33,9 +36,10 @@ class ShiftTemplatesController < ApplicationController
 
   # PATCH/PUT /shift_templates/1 or /shift_templates/1.json
   def update
+    @start_date = params[:start_date]
     respond_to do |format|
       if @shift_template.update(shift_template_params)
-        format.html { redirect_to shifts_path, notice: "Shift template was successfully updated." }
+        format.html { redirect_to shifts_path(start_date: @start_date), notice: "Shift template was successfully updated." }
         format.json { render :show, status: :ok, location: @shift_template }
       else
         @drivers = Driver.order(:name)

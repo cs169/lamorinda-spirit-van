@@ -42,7 +42,7 @@ namespace :import do
         # Parse birthday from timestamp format
         birthday = begin
           if row["Bday"].present?
-            Time.zone.parse(row["Bday"].split(" ").first)  # Take only the date part before the space
+            Date.parse(row["Bday"].split(" ").first)  # Take only the date part before the space
           end
         rescue Date::Error
           nil

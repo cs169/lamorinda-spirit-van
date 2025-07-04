@@ -74,6 +74,12 @@ class Ride < ApplicationRecord
     chain
   end
 
+  def walk_to_root
+    ride = self
+    ride = ride.previous_ride while ride.previous_ride
+    ride
+  end
+
   def all_drivers_names
     get_all_linked_rides.map { |ride| ride.driver.name }.uniq.join(", ")
   end

@@ -49,7 +49,9 @@ class RidesController < ApplicationController
       redirect_to session[:return_to], notice: "Ride was successfully created."
     else
       @ride = Ride.new(ride_attrs)
+      @ride.valid?
       flash[:alert] = @ride.errors.full_messages.join
+      Rails.logger.info("Ride creation failed: #{@ride.errors.full_messages}")
       render :new
     end
   end
@@ -90,7 +92,11 @@ class RidesController < ApplicationController
       flash[:notice] = "Ride was successfully updated."
       redirect_to edit_ride_path(@ride)
     else
+      @all_rides = @ride.get_all_linked_rides
+      @ride = Ride.new(ride_attrs)
+      @ride.valid?
       flash[:alert] = @ride.errors.full_messages.join
+      Rails.logger.info("Ride update failed: #{@ride.errors.full_messages}")
       render :edit
     end
   end
@@ -100,7 +106,8 @@ class RidesController < ApplicationController
     ActiveRecord::Base.transaction do
       all_rides.reverse_each(&:destroy!)
     end
-    redirect_to rides_url, notice: "Ride(s) were successfully removed."
+    flash[:notice] = "Ride(s) were successfully removed."
+    redirect_back(fallback_location: root_path)
   rescue ActiveRecord::RecordNotDestroyed
     flash[:alert] = "Failed to remove the ride."
     redirect_to rides_url, status: :unprocessable_entity

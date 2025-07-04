@@ -16,15 +16,15 @@
   <tbody>
     <% (0..6).each do |day| %>
       <td>
-        <%= link_to "New shift", new_shift_template_path(day_of_week: day) %>
+        <%= link_to "New shift", new_shift_template_path(day_of_week: day, start_date: params[:start_date]) %>
         <% @shift_templates.each do |shift| %>
           <% if shift.day_of_week == day%>
             <div>
               <strong>
                 <%= link_to shift.driver.name, upcoming_shifts_driver_path(shift.driver, return_url: request.fullpath), class: "driver-link" %>
               </strong>
-              
-              <%= link_to shift.shift_type, edit_shift_template_path(shift), style: "color: blue; text-decoration: underline;", class: "shift-type-link" %>
+              -
+              <%= link_to shift.shift_type, edit_shift_template_path(shift, start_date: params[:start_date]), style: "color: blue; text-decoration: underline;", class: "shift-type-link" %>
             </div>
           <% end %> 
         <% end %>

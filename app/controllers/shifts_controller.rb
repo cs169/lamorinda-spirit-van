@@ -25,9 +25,10 @@ class ShiftsController < ApplicationController
     end
 
     @rides = Ride.includes(:passenger, :start_address, :dest_address, :next_ride)
-    .where(date: @shift.shift_date)
-    .where(driver_id: @shift.driver_id)
-    .where.not(id: Ride.select(:next_ride_id).where.not(next_ride_id: nil))
+    .where(driver_id: @shift.driver.id, date: @shift.shift_date)
+
+    # Walk up to the root for each ride, collect unique roots
+    @rides = @rides.map { |r| r.walk_to_root }.uniq
   end
 
   # GET /shifts/new

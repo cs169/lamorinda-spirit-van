@@ -282,7 +282,7 @@ RSpec.describe RidesController, type: :controller do
         delete :destroy, params: { id: @ride1.id }
       }.to change(Ride, :count).by(-1)
 
-      expect(response).to redirect_to(rides_url)
+      expect(response).to redirect_to(root_path)
       expect(flash[:notice]).to eq("Ride(s) were successfully removed.")
     end
 
@@ -298,7 +298,7 @@ RSpec.describe RidesController, type: :controller do
         delete :destroy, params: { id: ride1.id }
       }.to change(Ride, :count).by(-3)
 
-      expect(response).to redirect_to(rides_url)
+      expect(response).to redirect_to(root_path)
       expect(flash[:notice]).to eq("Ride(s) were successfully removed.")
     end
   end

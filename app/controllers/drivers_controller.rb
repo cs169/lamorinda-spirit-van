@@ -56,9 +56,12 @@ class DriversController < ApplicationController
                       Time.zone.today
                     end
 
-    @rides = @driver.rides.includes(:passenger, :feedback, :start_address, :dest_address, :next_ride)
-    .where(date: @current_date)
-    .where.not(id: Ride.select(:next_ride_id).where.not(next_ride_id: nil))
+    # Get all rides for the driver on the date
+    rides_for_driver = Ride.where(driver_id: @driver.id, date: @current_date)
+
+    # Walk up to the root for each ride, collect unique roots
+    @rides = rides_for_driver.map { |r| r.walk_to_root }.uniq
+
     @shift = @driver.shifts.where(shift_date: @current_date).first
 
     # Clear return_to_driver parameter after redirect from drivers index page to /drivers/id/today?date=XXX page
