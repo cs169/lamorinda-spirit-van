@@ -74,10 +74,6 @@ class Ride < ApplicationRecord
     chain
   end
 
-  def previous_ride
-    Ride.find_by(next_ride_id: self.id)
-  end
-
   def walk_to_root
     ride = self
     ride = ride.previous_ride while ride.previous_ride
