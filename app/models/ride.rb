@@ -7,8 +7,6 @@ class Ride < ApplicationRecord
   belongs_to :start_address, class_name: "Address", foreign_key: :start_address_id
   belongs_to :dest_address, class_name: "Address", foreign_key: :dest_address_id
   belongs_to :next_ride, class_name: "Ride", optional: true
-  accepts_nested_attributes_for :start_address
-  accepts_nested_attributes_for :dest_address
   has_one :previous_ride, class_name: "Ride", foreign_key: "next_ride_id", dependent: :destroy
 
   after_create :create_initial_feedback
@@ -74,6 +72,10 @@ class Ride < ApplicationRecord
       current = current.next_ride
     end
     chain
+  end
+
+  def previous_ride
+    Ride.find_by(next_ride_id: self.id)
   end
 
   def walk_to_root
