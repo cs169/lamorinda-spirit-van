@@ -30,47 +30,40 @@ class Ride < ApplicationRecord
   def self.build_linked_rides(ride_attrs, addrs, stops_data = [])
     created_rides = []
     prev_ride = nil
-    errors = []
 
     ActiveRecord::Base.transaction do
       i = 0
       while i < (addrs.length - 1)
-        # Build attributes for this segment
-        this_attrs = ride_attrs.dup
-        this_attrs['start_address_attributes'] = addrs[i]
-        this_attrs['dest_address_attributes'] = addrs[i + 1]
+        origin = addrs[i]
+        destination = addrs[i + 1]
+
+        # Create ride with base attributes
+        ride = Ride.new(ride_attrs)
+        ride.start_address_attributes = origin
+        ride.dest_address_attributes = destination
 
         # Override driver and van if provided in stops_data
         if stops_data.present? && stops_data[i].present?
           stop_data = stops_data[i]
-          this_attrs['driver_id'] = stop_data['driver_id'] || stop_data[:driver_id]
-          this_attrs['van'] = stop_data['van'] || stop_data[:van]
+          ride.driver_id = stop_data[:driver_id] if stop_data[:driver_id].present?
+          ride.van = stop_data[:van] if stop_data[:van].present?
         end
-
-        # Create the ride
-        ride = Ride.new(this_attrs)
 
         if prev_ride
           prev_ride.next_ride = ride
           prev_ride.save!
         end
 
-        unless ride.save
-          errors << ride.errors.full_messages
-          raise ActiveRecord::Rollback
-        end
-
+        ride.save!
         created_rides << ride
         prev_ride = ride
         i += 1
       end
     end
 
-    if errors.any?
-      [created_rides, false, errors.flatten]
-    else
-      [created_rides, true, []]
-    end
+    [created_rides, true]
+  rescue => e
+    [e, false]
   end
 
   def get_all_linked_rides
