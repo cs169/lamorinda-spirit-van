@@ -26,6 +26,9 @@ class RidesController < ApplicationController
     # For driver dropdown list in creating / updating
     @drivers = Driver.order(:name)
 
+    # For autofilling first stop's driver
+    @ride.driver_id = params[:driver_id]
+
     # Load all passengers with their associations at once
     passengers_with_data = Passenger.includes(:address, :rides)
 
