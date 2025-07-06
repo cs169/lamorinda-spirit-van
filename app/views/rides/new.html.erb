@@ -39,11 +39,6 @@
               </div>
 
               <div class="mb-3">
-                <%= f.label :appointment_time, "Appointment Time" %>
-                <%= f.text_field :appointment_time, type: "time", value: f.object.appointment_time&.strftime("%H:%M"), class: "form-control" %>
-              </div>
-
-              <div class="mb-3">
                 <%= f.label :notes_to_driver, "Notes to Driver" %>
                 <%= f.text_area :notes_to_driver, class: "form-control", rows: 3 %>
               </div>
@@ -61,11 +56,6 @@
               <div class="mb-3">
                 <%= f.label :fare_type, "Fare Type" %>
                 <%= f.text_field :fare_type, class: "form-control" %>
-              </div>
-
-              <div class="mb-3">
-                <%= f.label :fare_amount, "Fare Amount" %>
-                <%= f.number_field :fare_amount, step: 0.01 , class: "form-control" %>
               </div>
 
               <div class="mb-3">
