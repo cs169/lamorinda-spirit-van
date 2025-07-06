@@ -29,6 +29,10 @@ class ShiftsController < ApplicationController
 
     # Walk up to the root for each ride, collect unique roots
     @rides = @rides.map { |r| r.walk_to_root }.uniq
+
+    # Use seconds_since_midnight b/c times in Rails are
+    # TimeWithZone objects with an arbitrary date, sorting would not work correctly
+    @rides = @rides.sort_by { |ride| ride.appointment_time ? ride.appointment_time.seconds_since_midnight : -1 }
   end
 
   # GET /shifts/new

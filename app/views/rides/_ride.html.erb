@@ -16,12 +16,14 @@
               <th class="border-0 text-filter">First Name</th>
               <th class="border-0 text-filter">Stops Info</th>
               <th class="border-0 text-filter">Origin</th>
+              <th class="border-0 text-filter">Appointment Time</th>
               <th class="border-0 text-filter">Destination(s)</th>
               <th class="border-0 text-filter">Ride Type</th>
               <th class="border-0 text-filter">Wheelchair</th>
               <th class="border-0 text-filter">Disabled</th>
               <th class="border-0 text-filter">Needs Caregiver</th>
               <th class="border-0 text-filter">Fare Type</th>
+              <th class="border-0 text-filter">Fare Amount</th>
               <th class="border-0 text-filter">Notes to Driver</th>
               <th class="border-0 text-filter">Notes</th>
               <th class="border-0 text-filter">Hours</th>
@@ -84,6 +86,9 @@
                   <% end %>
                 </td>
                 <td><%= ride.start_address&.full_address || 'N/A' %></td>
+                <td data-order="<%= ride.appointment_time.strftime('%H:%M') if ride.appointment_time %>">
+                  <%= ride.appointment_time&.strftime('%-I:%M %p') %>
+                </td>
                 <td>
                   <% if ride.next_ride_id? %>
                     <% addresses = [] %>
@@ -108,6 +113,7 @@
                 <% end %>
 
                 <td><%= ride.fare_type %></td>
+                <td><%= number_to_currency(ride.fare_amount) %></td>
                 <td><%= ride.notes_to_driver || 'N/A' %></td>
                 <td><%= ride.notes || 'N/A' %></td>
                 <td><%= ride.hours || 0 %></td>
@@ -118,7 +124,7 @@
           </tbody>
           <tfoot>
             <tr class="border-0">
-              <% 21.times do %>
+              <% 23.times do %>
                 <th class="border-0"></th>
               <% end %>
             </tr>
