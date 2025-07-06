@@ -6,7 +6,7 @@
       <h5 class="card-title">Info</h5>
       <ul class="list-group list-group-flush">
         <li class="list-group-item"><strong>Date:</strong> <%= @ride.date.strftime('%m/%d/%Y') %></li>
-        <li class="list-group-item"><strong>Appointment Time:</strong> <%= @ride.appointment_time.strftime('%-I:%M %p') %></li>
+        <li class="list-group-item"><strong>Appointment Time:</strong> <%= @ride.appointment_time&.strftime('%-I:%M %p') %></li>
         <li class="list-group-item"><strong>Van Number:</strong> <%= @ride.all_vans_numbers.present? ? @ride.all_vans_numbers : 'N/A' %></li>
         <li class="list-group-item"><strong>Driver:</strong> <%= @ride.all_drivers_names.present? ? @ride.all_drivers_names : "Driver Not Assigned" %></li>
         <li class="list-group-item"><strong>Hours:</strong> <%= @ride.hours %></li>
