@@ -30,19 +30,14 @@
               </div>
 
               <div class="mb-3">
-                <%= f.label :appointment_time, "Appointment Time" %>
-                <%= f.text_field :appointment_time, type: "time", value: f.object.appointment_time&.strftime("%H:%M"), class: "form-control" %>
-              </div>
-
-              <div class="mb-3">
                 <%= f.label :hours, "Hours" %>
                 <%= f.number_field :hours, step: 0.1, class: "form-control" %>
               </div>
 
               <div class="mb-3">
-                <%= f.label :fare_amount, "Fare Amount" %>
-                <%= f.number_field :fare_amount, step: 0.01 , class: "form-control", id: "fare_amount_field" %>
-              
+                <%= f.label :amount_paid, "Amount Paid" %>
+                <%= f.number_field :amount_paid, step: 0.01, class: "form-control", id: "amount_paid_field" %>
+
                 <!-- Quick Amount Selection Buttons -->
                 <div class="mt-2 mb-3">
                   <label class="form-label text-muted small">Quick Select:</label>
@@ -56,39 +51,8 @@
                   </div>
                   <script>
                     document.addEventListener('turbo:load', function() {
-                      const amountField = document.getElementById('fare_amount_field');
-                      const quickButtons = document.querySelectorAll('.fare-quick-select');
-
-                      quickButtons.forEach(button => {
-                        button.addEventListener('click', function() {
-                          amountField.value = this.getAttribute('data-amount');
-                        });
-                      });
-                    });
-                  </script>
-                </div>
-              </div>
-              
-
-              <div class="mb-3">
-                <%= f.label :amount_paid, "Amount Paid" %>
-                <%= f.number_field :amount_paid, step: 0.01, class: "form-control", id: "amount_paid_field" %>
-
-                <!-- Quick Amount Selection Buttons -->
-                <div class="mt-2 mb-3">
-                  <label class="form-label text-muted small">Quick Select:</label>
-                  <div class="btn-group">
-                    <% [0, 5, 10, 20].each do |amount| %>
-                      <button type="button" class="btn btn-sm btn-outline-secondary amtpd-quick-select" 
-                              data-amount="<%= amount %>">
-                        $<%= amount %>
-                      </button>
-                    <% end %>
-                  </div>
-                  <script>
-                    document.addEventListener('turbo:load', function() {
                       const amountField = document.getElementById('amount_paid_field');
-                      const quickButtons = document.querySelectorAll('.amtpd-quick-select');
+                      const quickButtons = document.querySelectorAll('.fare-quick-select');
 
                       quickButtons.forEach(button => {
                         button.addEventListener('click', function() {

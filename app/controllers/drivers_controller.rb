@@ -57,14 +57,10 @@ class DriversController < ApplicationController
                     end
 
     # Get all rides for the driver on the date
-    rides_for_driver = Ride.where(driver_id: @driver.id, date: @current_date).order(:appointment_time)
+    rides_for_driver = Ride.where(driver_id: @driver.id, date: @current_date)
 
     # Walk up to the root for each ride, collect unique roots
     @rides = rides_for_driver.map { |r| r.walk_to_root }.uniq
-
-    # Use seconds_since_midnight b/c times in Rails are
-    # TimeWithZone objects with an arbitrary date, sorting would not work correctly
-    @rides = @rides.sort_by { |ride| ride.appointment_time ? ride.appointment_time.seconds_since_midnight : -1 }
 
     @shift = @driver.shifts.where(shift_date: @current_date).first
 

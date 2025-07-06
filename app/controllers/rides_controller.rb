@@ -130,8 +130,6 @@ class RidesController < ApplicationController
       :notes,
       :notes_to_driver,
       :fare_type,
-      :fare_amount,
-      :appointment_time,
       :wheelchair,
       :disabled,
       :need_caregiver,
