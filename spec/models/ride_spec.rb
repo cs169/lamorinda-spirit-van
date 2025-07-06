@@ -134,8 +134,12 @@ RSpec.describe Ride, type: :model do
     it "parses addresses and converts Yes/No fields into booleans" do
       raw_params = {
         date: "2025-05-01",
+        appointment_time: "10:00",
         van: 2,
         hours: "3",
+        fare_type: "Default",
+        fare_amount: 20,
+        amount_paid: 15,
         passenger_id: 1,
         driver_id: 1,
         notes: "Sample ride",
@@ -145,6 +149,7 @@ RSpec.describe Ride, type: :model do
         wheelchair: "Yes",
         disabled: "Yes",
         need_caregiver: "No",
+        status: "Scheduled",
         addresses_attributes: [
           { name: "Origin", street: "123 Main", city: "Oakland", phone: "(123)456-7890" },
           { name: "Destination", street: "456 Elm", city: "Berkeley", phone: "(456)123-1234" }
@@ -152,9 +157,9 @@ RSpec.describe Ride, type: :model do
       }
 
       input_params = ActionController::Parameters.new(raw_params).permit(
-        :date, :van, :hours, :passenger_id, :driver_id, :notes, :notes_to_driver,
-        :ride_type, :fare_type, :wheelchair, :disabled, :need_caregiver,
-        addresses_attributes: [:name, :street, :city, :phone]
+        :date, :appointment_time, :van, :hours, :passenger_id, :driver_id, :notes, :notes_to_driver,
+        :ride_type, :fare_type, :fare_amount, :amount_paid, :wheelchair, :disabled, :need_caregiver,
+        :status, addresses_attributes: [:name, :street, :city, :phone]
       )
 
       attrs, addresses, _ = Ride.extract_attrs_from_params(input_params)
@@ -163,10 +168,14 @@ RSpec.describe Ride, type: :model do
       expect(attrs[:disabled]).to eq(true)
       expect(attrs[:need_caregiver]).to eq(false)
       expect(attrs[:date]).to eq("2025-05-01")
+      expect(attrs[:appointment_time]).to eq("10:00")
       expect(attrs[:notes]).to eq("Sample ride")
       expect(attrs[:notes_to_driver]).to eq("Sample ride")
       expect(attrs[:ride_type]).to eq("Default")
       expect(attrs[:fare_type]).to eq("Default")
+      expect(attrs[:fare_amount]).to eq(20)
+      expect(attrs[:amount_paid]).to eq(15)
+      expect(attrs[:status]).to eq("Scheduled")
       expect(addresses.length).to eq(2)
       expect(addresses.first[:city]).to eq("Oakland")
     end
