@@ -237,7 +237,7 @@
 
               <!-- Stops Container -->
               <div id="stops-container">
-                <%= render partial: "stop_fields", locals: {index: 1, address: nil, drivers: @drivers} %>
+                <%= render partial: "stop_fields", locals: {index: 1, address: nil, drivers: @drivers, selected_driver_id: @ride.driver_id} %>
               </div>
 
               <!-- Add/Delete Stop Buttons -->

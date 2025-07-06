@@ -26,6 +26,9 @@ class RidesController < ApplicationController
     # For driver dropdown list in creating / updating
     @drivers = Driver.order(:name)
 
+    # For autofilling first stop's driver
+    @ride.driver_id = params[:driver_id]
+
     # Load all passengers with their associations at once
     passengers_with_data = Passenger.includes(:address, :rides)
 
@@ -76,6 +79,10 @@ class RidesController < ApplicationController
     @ride = Ride.find(params[:id])
     @drivers = Driver.order(:name)
 
+    # Before destroying, copy feedback
+    @feedback = @ride.feedback
+    old_feedback_attrs = @feedback.attributes.except("id", "created_at", "updated_at", "ride_id") if @feedback
+
     ride_attrs, addresses, stops_data = Ride.extract_attrs_from_params(ride_params)
 
     # Destroy old ride chain
@@ -89,6 +96,9 @@ class RidesController < ApplicationController
 
     if success
       @ride = result_rides[0]
+      @ride.feedback.destroy if @ride.feedback && old_feedback_attrs
+      @ride.create_feedback!(old_feedback_attrs) if old_feedback_attrs
+      @ride.save!
       flash[:notice] = "Ride was successfully updated."
       redirect_to edit_ride_path(@ride)
     else
