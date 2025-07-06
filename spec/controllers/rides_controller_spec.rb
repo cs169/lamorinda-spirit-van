@@ -32,8 +32,12 @@ RSpec.describe RidesController, type: :controller do
       let(:valid_attributes) do
         {
           date: @ride1.date,
+          appointment_time: @ride1.appointment_time,
           van: @ride1.van,
           hours: @ride1.hours,
+          fare_type: @ride1.fare_type,
+          fare_amount: @ride1.fare_amount,
+          status: @ride1.status,
           amount_paid: @ride1.amount_paid,
           passenger_id: @ride1.passenger_id,
           driver_id: @ride1.driver_id,
