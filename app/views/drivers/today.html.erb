@@ -21,9 +21,10 @@
             <th>Phone:</th>
             <th>Stops Info</th>
             <th>Origin</th>
+            <th>Appointment Time</th>
             <th>Destination(s)</th>
             <th>Wheelchair</th>
-            <th>Fee</th>
+            <th>Fare Amount</th>
             <th>Feedback</th>
             <th></th>
           </tr>
@@ -55,6 +56,9 @@
                 <% end %>
               </td>
               <td><%= ride.start_address&.full_address %></td>
+              <td data-order="<%= ride.appointment_time ? ride.appointment_time.strftime('%H:%M') : '99:99' %>">
+                <%= ride.appointment_time&.strftime('%-I:%M %p') %>
+              </td>
               <td>
                 <% if ride.next_ride_id? %>
                   <% addresses = [] %>
@@ -75,7 +79,7 @@
                   <span>No</span>
                 <% end %>
               </td>
-              <td><%= number_to_currency(ride.amount_paid) %></td>
+              <td><%= number_to_currency(ride.fare_amount) %></td>
                <% if ride.feedback %>
                 <td><%= link_to "Feedback", edit_feedback_path(ride.feedback), class: "btn btn-primary" %></td>
               <% else %>
@@ -126,6 +130,10 @@
             </p>
 
             <p><strong>Origin:</strong> <%= ride.start_address&.name || ride.start_address&.full_address || 'N/A' %></p>
+            <p>
+              <strong>Appointment Time:</strong> 
+              <%= ride.appointment_time ? ride.appointment_time.strftime('%-I:%M %p') : 'N/A' %>
+            </p>
             <p>
               <strong>Destination(s):</strong> 
               <% if ride.next_ride_id? %>

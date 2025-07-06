@@ -101,7 +101,8 @@ function updateFilterIndicator(table, tableSelector) {
 const initiateDatatables = () => {
   const tables = [
     { selector: '#passengers-table', order: [[2, 'asc']]},
-    { selector: '#rides-table', order: [[3, 'desc']]}
+    { selector: '#rides-table', order: [[3, 'desc']]},
+    { selector: '#shift-rides-table', order: [[5, 'asc']]}
   ];
 
   tables.forEach(table => {
@@ -157,7 +158,8 @@ const initiateDatatables = () => {
 }
 
 document.addEventListener('turbo:load', () => {
-  if (document.querySelector('#passengers-table') || document.querySelector('#rides-table')) {
+  if (document.querySelector('#passengers-table') || document.querySelector('#rides-table') 
+    || document.querySelector('#shift-rides-table')) {
     initiateDatatables();
   }
 
@@ -175,7 +177,7 @@ document.addEventListener('turbo:load', () => {
 // For preventing DataTable from being initialized multiple times when user clicks browser's back arrow
 document.addEventListener('turbo:before-cache', () => {
   // Destroy all datatables before caching
-  ['#passengers-table', '#rides-table'].forEach(selector => {
+  ['#passengers-table', '#rides-table', '#shift-rides-table'].forEach(selector => {
     const tableElement = document.querySelector(selector);
     if (tableElement && $.fn.DataTable.isDataTable(tableElement)) {
       $(tableElement).DataTable().destroy();

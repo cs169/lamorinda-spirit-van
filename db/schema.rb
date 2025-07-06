@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_06_28_212856) do
+ActiveRecord::Schema[7.2].define(version: 2025_07_05_183229) do
   create_table "addresses", force: :cascade do |t|
     t.string "street"
     t.string "city"
@@ -145,6 +145,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_28_212856) do
     t.text "notes"
     t.string "source"
     t.text "fare_type"
+    t.time "appointment_time"
+    t.decimal "fare_amount", precision: 10, scale: 2
     t.index ["driver_id"], name: "index_rides_on_driver_id"
     t.index ["next_ride_id"], name: "index_rides_on_next_ride_id"
     t.index ["passenger_id"], name: "index_rides_on_passenger_id"
