@@ -57,13 +57,8 @@ class FeedbacksController < ApplicationController
   end
 
   # DELETE /feedbacks/1 or /feedbacks/1.json
+  # No need to destroy feedbacks currently
   def destroy
-    @feedback.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to feedbacks_path, status: :see_other, notice: "Feedback was successfully destroyed." }
-      format.json { head :no_content }
-    end
   end
 
   private
