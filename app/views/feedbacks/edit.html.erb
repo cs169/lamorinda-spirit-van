@@ -1,8 +1,43 @@
-<% content_for :title, "Editing feedback" %>
+<% content_for :title, "Editing Feedback" %>
 
-<h1>Feedback for <%= @passenger %>'s ride<br>
-  on <%= @current_date.strftime("%A %m/%d/%Y") %></h1>
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-lg-10 offset-lg-1">
 
-<%= render "form", feedback: @feedback %>
+      <div class="mb-4">
+        <h1 class="display-6 fw-bold">
+          Editing Feedback for <%= @passenger %>'s ride(s)<br>
+          <small class="text-muted">on <%= @current_date.strftime("%A %m/%d/%Y") %></small>
+        </h1>
+      </div>
 
-<br>
+      <% @rides.each_with_index do |ride, idx| %>
+        <div class="card mb-4 shadow-sm">
+          <div class="card-body">
+            <h2 class="h4 card-title mb-2">Ride <%= idx + 1 %></h2>
+            <h5 class="card-subtitle mb-2 text-primary">
+              Driver: <%= ride.driver.name %>
+            </h5>
+            <p class="mb-3">
+              <span class="fw-semibold">
+                <%= ride.start_address&.name || ride.start_address&.full_address %>
+              </span>
+              <span class="mx-2">➡️</span>
+              <span class="fw-semibold">
+                <%= ride.dest_address&.name || ride.dest_address&.full_address %>
+              </span>
+            </p>
+            <div class="mb-2">
+              <%= render "form", feedback: ride.feedback %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="text-center mt-4">
+        <button class="btn btn-secondary btn-lg" onclick="window.history.back(); return false;">Back</button>
+      </div>
+      
+    </div>
+  </div>
+</div>

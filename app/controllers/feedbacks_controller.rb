@@ -10,6 +10,9 @@ class FeedbacksController < ApplicationController
 
   # GET /feedbacks/1 or /feedbacks/1.json
   def show
+    @current_date = @feedback.ride.date
+    @passenger = @feedback.ride.passenger.name
+    @rides = @feedback.ride.get_all_linked_rides
   end
 
   # GET /feedbacks/new
@@ -21,6 +24,7 @@ class FeedbacksController < ApplicationController
   def edit
     @current_date = @feedback.ride.date
     @passenger = @feedback.ride.passenger.name
+    @rides = @feedback.ride.get_all_linked_rides
   end
 
   # POST /feedbacks or /feedbacks.json
@@ -42,11 +46,8 @@ class FeedbacksController < ApplicationController
   def update
     if @feedback.update(feedback_params)
       driver = @feedback.ride.driver
-      if driver.present?
-        redirect_to today_driver_path(driver.id, date: @feedback.ride.date), status: :see_other
-      else
-        redirect_to root_path, status: :see_other
-      end
+      flash[:notice] = "Feedback for #{driver.name} was successfully updated."
+      redirect_to edit_feedback_path(@feedback.ride.walk_to_root.feedback)
     else
       respond_to do |format|
         format.html { render :edit, status: :unprocessable_entity }

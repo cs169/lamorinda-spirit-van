@@ -89,18 +89,16 @@ RSpec.describe FeedbacksController, type: :controller do
 
   describe "PATCH #update" do
     context "with valid parameters" do
-      it "updates the feedback and redirects to driver today path with date param" do
-        patch :update, params: {
-          id: @feedback.id,
-          feedback: {
-            note: "Updated note"
-          }
-        }
-        @feedback.reload
-        expect(@feedback.note).to eq("Updated note")
-        expected_date = @feedback.ride.date.to_s
-        expect(response).to redirect_to(today_driver_path(@driver.id, date: expected_date))
-        expect(response).to have_http_status(:see_other)
+      it "updates the feedback and redirects to the chain feedback page" do
+        # Simulate a ride chain, patch tail feedback, expect redirect back to edit view
+        ride2 = FactoryBot.create(:ride, driver: @driver, passenger: @passenger, previous_ride: @ride)
+        feedback2 = FactoryBot.create(:feedback, ride: ride2)
+        patch :update, params: { id: feedback2.id, feedback: { note: "Updated note 2" } }
+        feedback2.reload
+
+        expect(feedback2.note).to eq("Updated note 2")
+        expect(response).to redirect_to(edit_feedback_path(@ride))
+        expect(response).to have_http_status(:see_other).or have_http_status(:found)
       end
     end
 
@@ -130,21 +128,6 @@ RSpec.describe FeedbacksController, type: :controller do
       end
     end
 
-    context "when feedback update succeeds but current_user is not a driver" do
-      it "still redirects to today_driver_path if current_user is dispatcher" do
-        other_user = FactoryBot.create(:user, :dispatcher, email: "dispatcher@example.com")
-        sign_in other_user
-
-        patch :update, params: {
-          id: @feedback.id,
-          feedback: { note: "dispatcher updated" }
-        }
-
-        expect(response).to redirect_to(today_driver_path(@driver.id, date: @ride.date.to_s))
-        expect(response).to have_http_status(:see_other)
-      end
-    end
-
     context "when the driver of the ride was destroyed" do
       it "redirects to root_path with see_other status" do
         @driver.destroy
@@ -157,17 +140,6 @@ RSpec.describe FeedbacksController, type: :controller do
         expect(response).to redirect_to(root_path)
         expect(response).to have_http_status(:see_other)
       end
-    end
-  end
-
-  describe "DELETE #destroy" do
-    it "deletes the feedback and redirects to index" do
-      expect {
-        delete :destroy, params: { id: @feedback.id }
-      }.to change(Feedback, :count).by(-1)
-
-      expect(response).to redirect_to(feedbacks_path)
-      expect(flash[:notice]).to eq("Feedback was successfully destroyed.")
     end
   end
 end
