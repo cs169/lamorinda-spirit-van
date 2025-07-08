@@ -23,8 +23,8 @@
       <h5 class="card-title">Passenger</h5>
       <ul class="list-group list-group-flush">
         <li class="list-group-item"><strong>Passenger:</strong> <%= @ride.passenger&.name || "Passenger Not Assigned" %></li>
-        <li class="list-group-item"><strong>Phone:</strong> <%= @ride.passenger&.phone || "Passenger Not Assigned" %></li>
-        <li class="list-group-item"><strong>Alt Phone:</strong> <%= @ride.passenger&.alternative_phone || "Passenger Not Assigned" %></li>
+        <li class="list-group-item"><strong>Phone:</strong> <%= @ride.passenger&.phone %></li>
+        <li class="list-group-item"><strong>Alt Phone:</strong> <%= @ride.passenger&.alternative_phone %></li>
       </ul>
     </div>
   </div>
