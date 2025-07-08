@@ -46,7 +46,7 @@ class FeedbacksController < ApplicationController
   def update
     if @feedback.update(feedback_params)
       driver = @feedback.ride.driver
-      flash[:notice] = "Feedback for #{driver.name} was successfully updated."
+      flash[:notice] = "Feedback for #{driver&.name || "Unknown"} was successfully updated."
       redirect_to edit_feedback_path(@feedback.ride.walk_to_root.feedback)
     else
       respond_to do |format|

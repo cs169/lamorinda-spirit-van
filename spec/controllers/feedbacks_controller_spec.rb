@@ -21,9 +21,32 @@ RSpec.describe FeedbacksController, type: :controller do
   end
 
   describe "GET #show" do
+    before do
+      # Create a ride chain: @ride -> ride2 -> ride3
+      @ride2 = FactoryBot.create(:ride, driver: @driver, passenger: @passenger, previous_ride: @ride)
+      @ride3 = FactoryBot.create(:ride, driver: @driver, passenger: @passenger, previous_ride: @ride2)
+
+      # Destroy any auto-created feedbacks for these rides
+      @ride2.feedback&.destroy
+      @ride3.feedback&.destroy
+      @feedback2 = FactoryBot.create(:feedback, ride: @ride2)
+      @feedback3 = FactoryBot.create(:feedback, ride: @ride3)
+    end
+
     it "returns a successful response" do
       get :show, params: { id: @feedback.id }
       expect(response).to be_successful
+    end
+
+    it "assigns all rides in the chain to @rides" do
+      get :show, params: { id: @feedback.id }
+      expect(assigns(:rides)).to match_array([@ride, @ride2, @ride3])
+    end
+
+    it "assigns feedbacks for all rides in the chain" do
+      get :show, params: { id: @feedback.id }
+      chain_feedbacks = assigns(:rides).map(&:feedback)
+      expect(chain_feedbacks).to match_array([@feedback, @feedback2, @feedback3])
     end
   end
 
@@ -35,9 +58,31 @@ RSpec.describe FeedbacksController, type: :controller do
   end
 
   describe "GET #edit" do
+    before do
+      @ride2 = FactoryBot.create(:ride, driver: @driver, passenger: @passenger, previous_ride: @ride)
+      @ride3 = FactoryBot.create(:ride, driver: @driver, passenger: @passenger, previous_ride: @ride2)
+      # Destroy any auto-created feedbacks for these rides
+      @ride2.feedback&.destroy
+      @ride3.feedback&.destroy
+
+      @feedback2 = FactoryBot.create(:feedback, ride: @ride2)
+      @feedback3 = FactoryBot.create(:feedback, ride: @ride3)
+    end
+
     it "returns a successful response" do
       get :edit, params: { id: @feedback.id }
       expect(response).to be_successful
+    end
+
+    it "assigns all rides in the chain to @rides" do
+      get :edit, params: { id: @feedback.id }
+      expect(assigns(:rides)).to match_array([@ride, @ride2, @ride3])
+    end
+
+    it "assigns feedbacks for all rides in the chain" do
+      get :edit, params: { id: @feedback.id }
+      chain_feedbacks = assigns(:rides).map(&:feedback)
+      expect(chain_feedbacks).to match_array([@feedback, @feedback2, @feedback3])
     end
   end
 
@@ -129,16 +174,20 @@ RSpec.describe FeedbacksController, type: :controller do
     end
 
     context "when the driver of the ride was destroyed" do
-      it "redirects to root_path with see_other status" do
+      it "displays them as 'Unknown' and feedback can still be updated successfully" do
         @driver.destroy
 
         patch :update, params: {
           id: @feedback.id,
-          feedback: { note: "invalid driver update" }
+          feedback: { note: "deleted driver" }
         }
 
-        expect(response).to redirect_to(root_path)
-        expect(response).to have_http_status(:see_other)
+        @feedback.reload
+
+        expect(@feedback.note).to eq("deleted driver")
+        expect(@feedback.ride.driver).to be_nil
+        expect(response).to redirect_to(edit_feedback_path(@feedback))
+        expect(response).to have_http_status(:see_other).or have_http_status(:found)
       end
     end
   end

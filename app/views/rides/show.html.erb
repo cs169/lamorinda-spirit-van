@@ -74,7 +74,7 @@
     <% end %>
     
     <div class="col-12 mb-2 col-md-auto">
-      <%= link_to "Back", today_driver_path(@ride.driver_id, date: @ride.date), class: "btn btn-outline-secondary w-100" %>
+      <%= link_to "Back", request.referer, class: "btn btn-outline-secondary w-100" %>
     </div>
   </div>
 </div>

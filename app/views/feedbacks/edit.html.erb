@@ -16,15 +16,15 @@
           <div class="card-body">
             <h2 class="h4 card-title mb-2">Ride <%= idx + 1 %></h2>
             <h5 class="card-subtitle mb-2 text-primary">
-              Driver: <%= ride.driver.name %>
+              Driver: <%= ride.driver&.name || "Unknown" %>
             </h5>
             <p class="mb-3">
               <span class="fw-semibold">
-                <%= ride.start_address&.name || ride.start_address&.full_address %>
+                <%= ride.start_address&.full_address %>
               </span>
               <span class="mx-2">➡️</span>
               <span class="fw-semibold">
-                <%= ride.dest_address&.name || ride.dest_address&.full_address %>
+                <%= ride.dest_address&.address_no_zip %>
               </span>
             </p>
             <div class="mb-2">
@@ -37,7 +37,7 @@
       <div class="text-center mt-4">
         <button class="btn btn-secondary btn-lg" onclick="window.history.back(); return false;">Back</button>
       </div>
-      
+
     </div>
   </div>
 </div>
