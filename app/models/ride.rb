@@ -81,7 +81,7 @@ class Ride < ApplicationRecord
   end
 
   def all_drivers_names
-    get_all_linked_rides.map { |ride| ride.driver.name }.uniq.join(", ")
+    get_all_linked_rides.map { |ride| (ride.driver&.name || "Unknown") }.uniq.join(", ")
   end
 
   def all_vans_numbers

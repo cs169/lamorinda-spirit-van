@@ -53,7 +53,7 @@
                     <span class="badge bg-secondary">One-way</span>
                   <% end %>
                 </td>
-                <td><%= ride.start_address&.name || ride.start_address&.full_address || 'N/A' %></td>
+                <td><%= ride.start_address&.full_address || 'N/A' %></td>
                 <td data-order="<%= ride.appointment_time ? ride.appointment_time.strftime('%H:%M') : '99:99' %>">
                   <%= ride.appointment_time&.strftime('%-I:%M %p') %>
                 </td>
@@ -62,10 +62,10 @@
                     <% addresses = [] %>
                     <% current_ride = ride %>
                     <% while current_ride do %>
-                      <% addresses << (current_ride.dest_address&.address_no_zip || 'N/A') %>
+                      <% addresses << current_ride.dest_address&.address_no_zip %>
                       <% current_ride = current_ride.next_ride %>
                     <% end %>
-                    <%= addresses.join(' ➡️ </br>').html_safe %>
+                    <%= addresses.join(' </br> ➡️ ').html_safe %>
                   <% else %>
                     <%= ride.dest_address&.full_address || 'N/A' %>
                   <% end %>

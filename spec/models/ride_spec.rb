@@ -137,7 +137,6 @@ RSpec.describe Ride, type: :model do
         appointment_time: "10:00",
         van: 2,
         hours: "3",
-        fare_type: "Default",
         fare_amount: 20,
         amount_paid: 15,
         passenger_id: 1,

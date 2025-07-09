@@ -94,10 +94,10 @@
                     <% addresses = [] %>
                     <% current_ride = ride %>
                     <% while current_ride do %>
-                      <% addresses << (current_ride.dest_address&.address_no_zip || 'N/A') %>
+                      <% addresses << current_ride.dest_address&.address_no_zip %>
                       <% current_ride = current_ride.next_ride %>
                     <% end %>
-                    <%= addresses.join(' ➡️ ') %>
+                    <%= addresses.join(' <br> ➡️ ').html_safe %>
                   <% else %>
                     <%= ride.dest_address&.full_address || 'N/A' %>
                   <% end %>
