@@ -18,5 +18,6 @@ FactoryBot.define do
     hours { 1.0 }
     amount_paid { 0 }
     fare_amount { 10 }
+    status { "Scheduled" }
   end
 end

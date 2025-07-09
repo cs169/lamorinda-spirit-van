@@ -189,24 +189,35 @@ RSpec.describe DriversController, type: :controller do
   end
 
   describe "GET #today" do
-    it "returns all rides when no date is applied" do
-      get :today, params: { id: @driver1.id }
-      expect(assigns(:rides)).to match_array([ @ride1, @ride3 ])
+    before do
+      @ride_cancelled = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1, status: "Cancelled", date: Time.zone.today)
+      @ride_waitlisted = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger2, status: "Waitlisted", date: Time.zone.today)
     end
 
-    it "returns today's rides when no date is applied" do
+    it "returns all rides except Cancelled/Waitlisted for today" do
       get :today, params: { id: @driver1.id }
-      expect(assigns(:rides)).to match_array([ @ride1, @ride3 ])
+      expect(assigns(:rides)).to match_array([@ride1, @ride3])
+      expect(assigns(:rides)).not_to include(@ride_cancelled, @ride_waitlisted)
     end
 
-    it "returns yesterday's rides" do
+    it "returns today's rides only (excluding Cancelled/Waitlisted)" do
+      get :today, params: { id: @driver1.id }
+      expect(assigns(:rides)).to match_array([@ride1, @ride3])
+      expect(assigns(:rides)).not_to include(@ride_cancelled, @ride_waitlisted)
+    end
+
+    it "returns yesterday's rides (excluding Cancelled/Waitlisted)" do
+      @ride_yesterday_cancelled = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1, date: Time.zone.yesterday, status: "Cancelled")
       get :today, params: { id: @driver1.id, date: Time.zone.today - 1 }
-      expect(assigns(:rides)).to match_array([ @ride5 ])
+      expect(assigns(:rides)).to match_array([@ride5])
+      expect(assigns(:rides)).not_to include(@ride_yesterday_cancelled)
     end
 
-    it "returns tomorrow's rides" do
+    it "returns tomorrow's rides (excluding Cancelled/Waitlisted)" do
+      @ride_tomorrow_waitlisted = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1, date: Time.zone.tomorrow, status: "Waitlisted")
       get :today, params: { id: @driver1.id, date: Time.zone.today + 1 }
-      expect(assigns(:rides)).to match_array([ @ride4 ])
+      expect(assigns(:rides)).to match_array([@ride4])
+      expect(assigns(:rides)).not_to include(@ride_tomorrow_waitlisted)
     end
   end
 

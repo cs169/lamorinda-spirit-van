@@ -57,7 +57,9 @@ class DriversController < ApplicationController
                     end
 
     # Get all rides for the driver on the date
-    rides_for_driver = Ride.where(driver_id: @driver.id, date: @current_date).order(:appointment_time)
+    rides_for_driver = Ride.where(driver_id: @driver.id, date: @current_date)
+                                  .where.not(status: ["Cancelled", "Waitlisted"])
+                                  .order(:appointment_time)
 
     # Walk up to the root for each ride, collect unique roots
     @rides = rides_for_driver.map { |r| r.walk_to_root }.uniq
