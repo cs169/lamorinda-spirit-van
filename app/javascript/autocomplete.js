@@ -27,6 +27,12 @@ document.addEventListener("turbo:load", function() {
         document.getElementById("ride_start_address_attributes_street").value = ui.item.street;
         document.getElementById("ride_start_address_attributes_city").value = ui.item.city;
 
+        // Sets the street and city of passenger's home address in edit view
+        const passengerHomeAddress = document.getElementById("ride_passenger_home_address");
+        if (passengerHomeAddress) {
+          passengerHomeAddress.value = ui.item.street + ', ' + ui.item.city;
+        };
+
         // Update passenger overview card
         document.querySelector('#name_display').value = ui.item.label || 'No passenger selected';
         
