@@ -33,7 +33,7 @@ class RidesController < ApplicationController
     passengers_with_data = Passenger.includes(:address, :rides)
 
     gon.passengers = passengers_with_data.map { |p| {
-      label: p.name, id: p.id, phone: p.phone, wheelchair: p.wheelchair,
+      label: p.name, id: p.id, phone: p.phone, alt_phone: p.alternative_phone, wheelchair: p.wheelchair,
       disabled: p.disabled, need_caregiver: p.need_caregiver,
       notes: p.notes, ride_count: p.rides.length, # Use .length instead of .count for loaded association
       street: p.address&.street, city: p.address&.city
@@ -70,7 +70,7 @@ class RidesController < ApplicationController
 
     # Mapping data for autocomplete
     gon.passengers = passengers_with_data.map { |p| {
-      label: p.name, id: p.id, phone: p.phone, wheelchair: p.wheelchair,
+      label: p.name, id: p.id, phone: p.phone, alt_phone: p.alternative_phone, wheelchair: p.wheelchair,
       disabled: p.disabled, need_caregiver: p.need_caregiver,
       notes: p.notes, ride_count: p.rides.length, # Use .length instead of .count for loaded association
       street: p.address&.street, city: p.address&.city

@@ -262,6 +262,16 @@
                            id="phone_display"
                            value="<%= @ride.passenger&.phone || 'No phone number available' %>">
                   </div>
+
+                  <!-- Passenger Alt Phone -->
+                  <div class="mt-3">
+                    <label class="form-label">Alt Phone Number:</label>
+                    <textarea type="text" 
+                           class="form-control bg-light" 
+                           disabled
+                           id="alt_phone_display"
+                           rows="2"><%= @ride.passenger&.alternative_phone || "No alt phone available" %></textarea>
+                  </div>
                 </div>
               </div>
             </div>

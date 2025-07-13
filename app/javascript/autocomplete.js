@@ -58,6 +58,7 @@ document.addEventListener("turbo:load", function() {
 
         document.querySelector('#notes_display').value = ui.item.notes || 'No notes available';
         document.querySelector('#phone_display').value = ui.item.phone || 'No number available';
+        document.querySelector('#alt_phone_display').value = ui.item.alt_phone || 'No number available';
 
         // Show/hide new passenger badge based on ride count
         const newPassengerBadge = document.getElementById('new_passenger_badge');
