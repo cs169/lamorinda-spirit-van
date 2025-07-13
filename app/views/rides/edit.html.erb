@@ -241,6 +241,42 @@
                           <label class="form-check-label" for="need_caregiver_display">Caregiver</label>
                         <% end %>
                       </div>
+
+                      <div class="form-check mb-2">
+                        <% if @ride.passenger&.low_income %>
+                          <input type="checkbox" 
+                                 class="form-check-input bg-primary"
+                                 checked
+                                 disabled
+                                 id="low_income_display">
+                          <label class="form-check-label fw-bold" for="low_income_display">Low-Income</label>
+                        <% else %>
+                          <input type="checkbox" 
+                                 class="form-check-input bg-secondary opacity-50"
+                                 disabled
+                                 id="low_income_display">
+                          <label class="form-check-label" for="low_income_display">Low-Income</label>
+                        <% end %>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="form-check mb-2">
+                        <% if @ride.passenger&.lmv_member %>
+                          <input type="checkbox" 
+                                 class="form-check-input bg-primary"
+                                 checked
+                                 disabled
+                                 id="lmv_member_display">
+                          <label class="form-check-label fw-bold" for="lmv_member_display">LMV Member</label>
+                        <% else %>
+                          <input type="checkbox" 
+                                 class="form-check-input bg-secondary opacity-50"
+                                 disabled
+                                 id="lmv_member_display">
+                          <label class="form-check-label" for="lmv_member_display">LMV Member</label>
+                        <% end %>
+                      </div>
                     </div>
                   </div>
 

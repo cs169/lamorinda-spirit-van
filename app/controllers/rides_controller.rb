@@ -34,7 +34,7 @@ class RidesController < ApplicationController
 
     gon.passengers = passengers_with_data.map { |p| {
       label: p.name, id: p.id, phone: p.phone, alt_phone: p.alternative_phone, wheelchair: p.wheelchair,
-      disabled: p.disabled, need_caregiver: p.need_caregiver,
+      disabled: p.disabled, need_caregiver: p.need_caregiver, low_income: p.low_income, lmv_member: p.lmv_member,
       notes: p.notes, ride_count: p.rides.length, # Use .length instead of .count for loaded association
       street: p.address&.street, city: p.address&.city
     } }
@@ -71,7 +71,7 @@ class RidesController < ApplicationController
     # Mapping data for autocomplete
     gon.passengers = passengers_with_data.map { |p| {
       label: p.name, id: p.id, phone: p.phone, alt_phone: p.alternative_phone, wheelchair: p.wheelchair,
-      disabled: p.disabled, need_caregiver: p.need_caregiver,
+      disabled: p.disabled, need_caregiver: p.need_caregiver, low_income: p.low_income, lmv_member: p.lmv_member,
       notes: p.notes, ride_count: p.rides.length, # Use .length instead of .count for loaded association
       street: p.address&.street, city: p.address&.city
     } }

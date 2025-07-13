@@ -55,6 +55,8 @@ document.addEventListener("turbo:load", function() {
         updateCheckbox('wheelchair', ui.item.wheelchair);
         updateCheckbox('disabled', ui.item.disabled);
         updateCheckbox('need_caregiver', ui.item.need_caregiver);
+        updateCheckbox('low_income', ui.item.low_income);
+        updateCheckbox('lmv_member', ui.item.lmv_member);
 
         document.querySelector('#notes_display').value = ui.item.notes || 'No notes available';
         document.querySelector('#phone_display').value = ui.item.phone || 'No number available';
