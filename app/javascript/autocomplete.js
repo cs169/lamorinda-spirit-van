@@ -27,6 +27,12 @@ document.addEventListener("turbo:load", function() {
         document.getElementById("ride_start_address_attributes_street").value = ui.item.street;
         document.getElementById("ride_start_address_attributes_city").value = ui.item.city;
 
+        // Sets the street and city of passenger's home address in edit view
+        const passengerHomeAddress = document.getElementById("ride_passenger_home_address");
+        if (passengerHomeAddress) {
+          passengerHomeAddress.value = ui.item.street + ', ' + ui.item.city;
+        };
+
         // Update passenger overview card
         document.querySelector('#name_display').value = ui.item.label || 'No passenger selected';
         
@@ -49,9 +55,12 @@ document.addEventListener("turbo:load", function() {
         updateCheckbox('wheelchair', ui.item.wheelchair);
         updateCheckbox('disabled', ui.item.disabled);
         updateCheckbox('need_caregiver', ui.item.need_caregiver);
+        updateCheckbox('low_income', ui.item.low_income);
+        updateCheckbox('lmv_member', ui.item.lmv_member);
 
         document.querySelector('#notes_display').value = ui.item.notes || 'No notes available';
         document.querySelector('#phone_display').value = ui.item.phone || 'No number available';
+        document.querySelector('#alt_phone_display').value = ui.item.alt_phone || 'No number available';
 
         // Show/hide new passenger badge based on ride count
         const newPassengerBadge = document.getElementById('new_passenger_badge');
