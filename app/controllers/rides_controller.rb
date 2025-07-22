@@ -33,8 +33,8 @@ class RidesController < ApplicationController
     passengers_with_data = Passenger.includes(:address, :rides)
 
     gon.passengers = passengers_with_data.map { |p| {
-      label: p.name, id: p.id, phone: p.phone, wheelchair: p.wheelchair,
-      disabled: p.disabled, need_caregiver: p.need_caregiver,
+      label: p.name, id: p.id, phone: p.phone, alt_phone: p.alternative_phone, wheelchair: p.wheelchair,
+      disabled: p.disabled, need_caregiver: p.need_caregiver, low_income: p.low_income, lmv_member: p.lmv_member,
       notes: p.notes, ride_count: p.rides.length, # Use .length instead of .count for loaded association
       street: p.address&.street, city: p.address&.city
     } }
@@ -65,7 +65,16 @@ class RidesController < ApplicationController
     @all_rides = @ride.get_all_linked_rides
     @drivers = Driver.order(:name)
 
+    # Load all passengers with their associations at once
+    passengers_with_data = Passenger.includes(:address, :rides)
+
     # Mapping data for autocomplete
+    gon.passengers = passengers_with_data.map { |p| {
+      label: p.name, id: p.id, phone: p.phone, alt_phone: p.alternative_phone, wheelchair: p.wheelchair,
+      disabled: p.disabled, need_caregiver: p.need_caregiver, low_income: p.low_income, lmv_member: p.lmv_member,
+      notes: p.notes, ride_count: p.rides.length, # Use .length instead of .count for loaded association
+      street: p.address&.street, city: p.address&.city
+    } }
     gon.addresses = Address.all.map { |a| { name: a.name, street: a.street, city: a.city, phone: a.phone } }
     gon.drivers = @drivers.map { |d| { id: d.id, name: d.name } }
 

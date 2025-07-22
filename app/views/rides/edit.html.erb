@@ -137,12 +137,6 @@
             <div class="card-header bg-info text-white">
               <h5 class="mb-0 fw-bold">
                 Passenger Details
-                <% if @ride.passenger && @ride.passenger.rides.count <= 1 %>
-                  <span class="badge bg-warning text-dark" data-bs-toggle="tooltip" data-bs-placement="top" 
-                        title="This is a new passenger with no previous ride history">
-                    First Time Rider <i class="bi bi-exclamation-triangle"></i>
-                  </span>
-                <% end %>
               </h5>
             </div>
             <div class="card-body">
@@ -152,29 +146,47 @@
               <%= f.hidden_field :need_caregiver, class: "form-control", value: @ride.need_caregiver ? "Yes" : "No" %>
 
               <div class="mb-3">
-                <%= f.label :passenger_name, "Passenger Name" %>
-                <input type="text" 
-                       class="form-control bg-secondary text-white opacity-50"
-                       style="cursor: not-allowed"
-                       value="<%= @ride.passenger&.name || 'N/A' %>" 
-                       readonly>
-              </div>
+                <%= f.label :passenger_name, "Passenger" %>
+                  <div class="input-group">
+                    <%= f.text_field :passenger_name, class: "form-control", value: @ride.passenger&.name %>
+                  </div>
+                    <small class="form-text text-muted">Type to search existing passengers</small>
+                  </div>
 
               <div class="mb-3">
-                <%= f.label :passenger_home_address, "Home Address" %>
+                <%= f.label :passenger_home_address, "Home Address " %>
                 <input type="text" 
                        class="form-control bg-secondary text-white opacity-50"
-                       style="cursor: not-allowed"
                        value="<%= @ride.passenger&.full_address || 'N/A' %>"
-                       readonly>
+                       id="ride_passenger_home_address"
+                       style="cursor: not-allowed"
+                       disabled>
               </div>
 
-              <!-- Accessibility Information -->
+              <!-- Selected Passenger Overview -->
               <div class="card mb-3">
-                <div class="card-header bg-success text-white py-2">
-                  <h6 class="mb-0">Accessibility Needs</h6>
+                <div class="card-header bg-success text-white py-2 d-flex justify-content-between align-items-center">
+                  <h6 class="mb-0">Selected Passenger Overview</h6>
+                  <!-- First Time Rider Badge -->
+                  <div id="new_passenger_badge" style="display: none;">
+                    <span class="badge bg-warning text-dark" data-bs-toggle="tooltip" data-bs-placement="top" 
+                          title="This is a new passenger with no previous ride history">
+                      First Time Rider <i class="bi bi-exclamation-triangle"></i>
+                    </span>
+                  </div>
                 </div>
+
                 <div class="card-body">
+                  <!-- Selected Passenger Name -->
+                  <div class="mb-3">
+                    <label class="form-label">Passenger:</label>
+                    <input type="text" 
+                           class="form-control bg-light" 
+                           disabled
+                           id="name_display"
+                           value="<%= @ride.passenger&.name || 'No passenger selected' %>">
+                  </div>
+
                   <div class="row">
                     <div class="col-md-6">
                       <div class="form-check mb-2">
@@ -229,6 +241,42 @@
                           <label class="form-check-label" for="need_caregiver_display">Caregiver</label>
                         <% end %>
                       </div>
+
+                      <div class="form-check mb-2">
+                        <% if @ride.passenger&.low_income %>
+                          <input type="checkbox" 
+                                 class="form-check-input bg-primary"
+                                 checked
+                                 disabled
+                                 id="low_income_display">
+                          <label class="form-check-label fw-bold" for="low_income_display">Low-Income</label>
+                        <% else %>
+                          <input type="checkbox" 
+                                 class="form-check-input bg-secondary opacity-50"
+                                 disabled
+                                 id="low_income_display">
+                          <label class="form-check-label" for="low_income_display">Low-Income</label>
+                        <% end %>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="form-check mb-2">
+                        <% if @ride.passenger&.lmv_member %>
+                          <input type="checkbox" 
+                                 class="form-check-input bg-primary"
+                                 checked
+                                 disabled
+                                 id="lmv_member_display">
+                          <label class="form-check-label fw-bold" for="lmv_member_display">LMV Member</label>
+                        <% else %>
+                          <input type="checkbox" 
+                                 class="form-check-input bg-secondary opacity-50"
+                                 disabled
+                                 id="lmv_member_display">
+                          <label class="form-check-label" for="lmv_member_display">LMV Member</label>
+                        <% end %>
+                      </div>
                     </div>
                   </div>
 
@@ -236,7 +284,8 @@
                   <div class="mt-3">
                     <label class="form-label">Accessibility Notes:</label>
                     <textarea class="form-control bg-light" 
-                              readonly
+                              disabled
+                              id="notes_display"
                               rows="2"><%= @ride.passenger&.notes || 'No notes available' %></textarea>
                   </div>
 
@@ -245,8 +294,19 @@
                     <label class="form-label">Phone Number:</label>
                     <input type="text" 
                            class="form-control bg-light" 
-                           readonly
-                           value="<%= @ride.passenger&.phone || 'No phone available' %>">
+                           disabled
+                           id="phone_display"
+                           value="<%= @ride.passenger&.phone || 'No phone number available' %>">
+                  </div>
+
+                  <!-- Passenger Alt Phone -->
+                  <div class="mt-3">
+                    <label class="form-label">Alt Phone Number:</label>
+                    <textarea type="text" 
+                           class="form-control bg-light" 
+                           disabled
+                           id="alt_phone_display"
+                           rows="2"><%= @ride.passenger&.alternative_phone || "No alt phone available" %></textarea>
                   </div>
                 </div>
               </div>
