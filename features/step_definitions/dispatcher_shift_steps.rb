@@ -56,7 +56,7 @@ When("I click on a shift type") do
 end
 
 Then("I should see the details of that shift") do
-  expect(page).to have_content("Shift date")
-  expect(page).to have_content("Driver name")
-  expect(page).to have_content("Shift type")
+  expect(page).to have_content("Shift Info")
+  expect(page).to have_content("Van & Time")
+  expect(page).to have_content("Odometer & Notes")
 end
