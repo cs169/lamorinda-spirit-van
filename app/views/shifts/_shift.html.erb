@@ -1,45 +1,60 @@
-<div id="<%= dom_id shift %>">
+<div id="<%= dom_id shift %>" class="card mb-4 shadow rounded-4 border-0">
+  <div class="card-body p-4">
+    <div class="row gy-4">
+      <!-- Shift Info -->
+      <div class="col-md-4">
+        <div class="p-3 bg-light rounded-3 h-100 border">
+          <div class="mb-3 text-primary fw-semibold border-bottom pb-2">
+            <i class="bi bi-person-badge me-2"></i> Shift Info
+          </div>
+          <p class="mb-2">
+            <strong>Date:</strong> <%= shift.shift_date %>
+          </p>
+          <p class="mb-2">
+            <strong>Driver:</strong> <%= shift.driver.name %>
+          </p>
+          <p class="mb-0">
+            <strong>Type:</strong> <%= shift.shift_type %>
+          </p>
+        </div>
+      </div>
 
-  <div class="van-col">
-    <p>
-      <strong>Shift date:</strong>
-      <%= shift.shift_date %>
-    </p>
-    <p>
-      <strong>Driver name:</strong>
-      <%= shift.driver.name %>
-    </p>
-    <p>
-      <strong>Shift type:</strong>
-      <%= shift.shift_type %>
-    </p>
+      <!-- Van Info -->
+      <div class="col-md-4">
+        <div class="p-3 bg-light rounded-3 h-100 border">
+          <div class="mb-3 text-success fw-semibold border-bottom pb-2">
+            <i class="bi bi-truck-front me-2"></i> Van & Time
+          </div>
+          <p class="mb-2">
+            <strong>Van:</strong> <%= shift.van %>
+          </p>
+          <p class="mb-2">
+            <strong>Pick-up Time:</strong> <%= shift.pick_up_time %>
+          </p>
+          <p class="mb-0">
+            <strong>Drop-off Time:</strong> <%= shift.drop_off_time %>
+          </p>
+        </div>
+      </div>
+
+      <!-- Odometer & Notes -->
+      <div class="col-md-4">
+        <div class="p-3 bg-light rounded-3 h-100 border">
+          <div class="mb-3 text-warning fw-semibold border-bottom pb-2">
+            <i class="bi bi-speedometer2 me-2"></i> Odometer & Notes
+          </div>
+          <p class="mb-2">
+            <strong>Pre-ride:</strong> <%= shift.odometer_pre %>
+          </p>
+          <p class="mb-2">
+            <strong>Post-ride:</strong> <%= shift.odometer_post %>
+          </p>
+          <p class="mb-0">
+            <strong>Notes:</strong> <span class="text-muted"><%= shift.feedback_notes %></span>
+          </p>
+        </div>
+      </div>
+    </div>
+
   </div>
-
-  <div class="van-col">
-    <p>
-      <strong>Van number:</strong>
-      <%= shift.van %>
-    </p>
-
-    <p>
-      <strong>Van pick-up time:</strong>
-      <%= shift.pick_up_time %>
-    </p>
-    <p>
-      <strong>Van drop-off time:</strong>
-      <%= shift.drop_off_time %>
-    </p>
-  </div>
-
-  <div class="van-col">
-    <p>
-      <strong>Odometer pre-ride:</strong>
-      <%= shift.odometer_pre %>
-    </p>
-    <p>
-      <strong>Odometer post-ride:</strong>
-      <%= shift.odometer_post %>
-    </p>
-  </div>
-
 </div>

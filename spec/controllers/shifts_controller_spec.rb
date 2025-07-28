@@ -129,7 +129,8 @@ RSpec.describe ShiftsController, type: :controller do
             pick_up_time: "08:00",
             drop_off_time: "10:00",
             odometer_pre: "12345",
-            odometer_post: "12400"
+            odometer_post: "12400",
+            feedback_notes: "test feedback note"
           },
           commit_type: "feedback"
         }
@@ -139,6 +140,7 @@ RSpec.describe ShiftsController, type: :controller do
         expect(@shift.drop_off_time).to eq("10:00")
         expect(@shift.odometer_pre).to eq("12345")
         expect(@shift.odometer_post).to eq("12400")
+        expect(@shift.feedback_notes).to eq("test feedback note")
         expect(response).to redirect_to(today_driver_path(id: @shift.driver_id, date: @shift.shift_date))
       end
     end
