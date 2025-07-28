@@ -45,6 +45,11 @@
           <%= form.text_field :odometer_post, class: "form-control" %>
         </div>
 
+        <div class="mb-3">
+          <%= form.label :feedback_notes, "Notes", class: "form-label" %>
+          <%= form.text_area :feedback_notes, class: "form-control", rows: 4 %>
+        </div>
+
         <div class="mt-4 text-center text-sm-start d-flex flex-column align-items-center align-items-sm-start gap-3">
           <%= form.button "Save Shift Feedback", type: :submit, name: "commit_type", value: "feedback",
               class: "btn btn-primary shift-feedback-btn" %>
