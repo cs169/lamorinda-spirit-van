@@ -37,28 +37,168 @@ const initiateSearchbars = table => {
   table.columns('.text-filter').every(function () {
     const column = this;
     const $footerCell = $(column.footer()).empty();
+    const columnHeader = column.header().textContent.trim();
 
-    // Use the saved search term (if any) for this column
-    const searchValue = column.search() || '';
-
-    $('<input type="text"/>')
-      .attr('placeholder', `${column.header().textContent.trim()}...`)
-      .val(searchValue)
-      .css({
-        'width':        '100%',
-        'box-sizing':   'border-box',
-        'margin':       '0',
-        'padding':      '2px 4px',
-        'font-size':    '0.8rem'
-      })
-      .appendTo($footerCell)
-      .on('keyup change clear', function () {
-        if (column.search() !== this.value) {
-          column.search(this.value).draw();
-          // update filter indicator after table redraw
-          updateFilterIndicator(table, '#' + table.table().node().id);
+    // Special handling for Date column
+    if (columnHeader === 'Date') {
+      // Create date range inputs
+      const $dateContainer = $('<div style="display: flex; flex-direction: column; gap: 2px;"></div>');
+      
+      // Get saved state for this table and column
+      const tableId = table.table().node().id;
+      const savedState = localStorage.getItem(`${tableId}_dateFilter`);
+      let fromDateValue = '';
+      let toDateValue = '';
+      
+      if (savedState) {
+        try {
+          const parsedState = JSON.parse(savedState);
+          fromDateValue = parsedState.fromDate || '';
+          toDateValue = parsedState.toDate || '';
+        } catch (e) {
+          console.log('Error parsing saved date filter state:', e);
         }
-      });
+      }
+      
+      // From date input
+      const $fromDate = $('<input type="date" placeholder="From date" title="From date"/>')
+        .css({
+          'width': '100%',
+          'box-sizing': 'border-box',
+          'margin': '0',
+          'padding': '2px 4px',
+          'font-size': '0.8rem'
+        })
+        .val(fromDateValue);
+      
+      // To date input  
+      const $toDate = $('<input type="date" placeholder="To date" title="To date"/>')
+        .css({
+          'width': '100%',
+          'box-sizing': 'border-box',
+          'margin': '0',
+          'padding': '2px 4px',
+          'font-size': '0.8rem'
+        })
+        .val(toDateValue);
+
+      $dateContainer.append($fromDate).append($toDate);
+      $footerCell.append($dateContainer);
+
+      // Custom filtering function for date range
+      const filterByDateRange = () => {
+        const fromDate = $fromDate.val();
+        const toDate = $toDate.val();
+        
+        // Save the date filter state
+        const dateFilterState = {
+          fromDate: fromDate,
+          toDate: toDate
+        };
+        localStorage.setItem(`${tableId}_dateFilter`, JSON.stringify(dateFilterState));
+        
+        // Remove any existing custom search for this column
+        column.search('').draw(false);
+        
+        // Remove any existing date filters for this table
+        $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter(function(fn) {
+          return fn.toString().indexOf(tableId) === -1;
+        });
+        
+        // Apply custom filter only if we have date values
+        if (fromDate || toDate) {
+          $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+            // Only apply to our specific table
+            if (settings.nTable.id !== tableId) {
+              return true;
+            }
+            
+            const dateColumnIndex = column.index();
+            const cellData = data[dateColumnIndex];
+            
+            // Extract date from the cell (it's in MM/DD/YYYY format)
+            if (!cellData) return true;
+            
+            // Parse the displayed date (MM/DD/YYYY format)
+            const dateParts = cellData.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+            if (!dateParts) return true;
+            
+            const cellDate = new Date(dateParts[3], dateParts[1] - 1, dateParts[2]); // Year, Month (0-based), Day
+            
+            // Check date range
+            if (fromDate && toDate) {
+              const from = new Date(fromDate);
+              const to = new Date(toDate);
+              return cellDate >= from && cellDate <= to;
+            } else if (fromDate) {
+              const from = new Date(fromDate);
+              return cellDate >= from;
+            } else if (toDate) {
+              const to = new Date(toDate);
+              return cellDate <= to;
+            }
+            
+            return true;
+          });
+        }
+        
+        table.draw();
+        updateFilterIndicator(table, '#' + table.table().node().id);
+      };
+
+      // Clear date range filter
+      const clearDateRangeFilter = () => {
+        // Remove our custom filter
+        $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter(function(fn) {
+          return fn.toString().indexOf(tableId) === -1;
+        });
+        
+        // Clear saved state
+        localStorage.removeItem(`${tableId}_dateFilter`);
+        
+        $fromDate.val('');
+        $toDate.val('');
+        table.draw();
+        updateFilterIndicator(table, '#' + table.table().node().id);
+      };
+
+      // Event handlers
+      $fromDate.on('change', filterByDateRange);
+      $toDate.on('change', filterByDateRange);
+      
+      // Clear button
+      const $clearBtn = $('<button type="button" title="Clear date filter" style="width: 100%; margin-top: 2px; padding: 2px; font-size: 0.7rem; background: #f8f9fa; border: 1px solid #ddd; border-radius: 3px;">Clear</button>');
+      $clearBtn.on('click', clearDateRangeFilter);
+      $dateContainer.append($clearBtn);
+      
+      // Apply saved filter on page load
+      if (fromDateValue || toDateValue) {
+        filterByDateRange();
+      }
+      
+    } else {
+      // Regular text search for other columns
+      const searchValue = column.search() || '';
+
+      $('<input type="text"/>')
+        .attr('placeholder', `${columnHeader}...`)
+        .val(searchValue)
+        .css({
+          'width': '100%',
+          'box-sizing': 'border-box',
+          'margin': '0',
+          'padding': '2px 4px',
+          'font-size': '0.8rem'
+        })
+        .appendTo($footerCell)
+        .on('keyup change clear', function () {
+          if (column.search() !== this.value) {
+            column.search(this.value).draw();
+            // update filter indicator after table redraw
+            updateFilterIndicator(table, '#' + table.table().node().id);
+          }
+        });
+    }
   });
 };
 
@@ -70,8 +210,15 @@ function updateFilterIndicator(table, tableSelector) {
     if (this.search() !== '') columnFiltered = true;
   });
 
+  // Check if any custom date range filters are applied
+  let dateRangeFiltered = false;
+  const dateInputs = $(table.table().footer()).find('input[type="date"]');
+  dateInputs.each(function() {
+    if ($(this).val() !== '') dateRangeFiltered = true;
+  });
+
   const indicatorDiv = document.querySelector(`${tableSelector}-filter-indicator`);
-  if (columnFiltered) {
+  if (columnFiltered || dateRangeFiltered) {
     indicatorDiv.innerHTML = `
       <div style="
         background: #ffe066;
