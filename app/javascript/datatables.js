@@ -1,66 +1,60 @@
-// Generates checkboxes for showing/hiding DataTable columns
+// Generates checkboxes for showing/hiding columns
 const initiateCheckboxes = (table) => {
-    const columnToggleContainer = document.getElementById('column-toggle-container');
-    columnToggleContainer.innerHTML = '';
+  const columnToggleContainer = document.getElementById('column-toggle-container');
+  columnToggleContainer.innerHTML = '';
 
-    table.columns().every(function () {
-      const index = this.index();
-      const headerText = this.header().textContent.trim();
-  
-      // Only add checkbox if header text is not empty
-      if (headerText) {
-        columnToggleContainer.innerHTML += `
+  table.columns().every(function () {
+    const index = this.index();
+    const headerText = this.header().textContent.trim();
+
+    // Only add checkbox if header text is not empty
+    if (headerText) {
+      columnToggleContainer.innerHTML += `
           <div class="form-check form-check-inline">
             <input type="checkbox" class="form-check-input" id="col-${index}" ${this.visible() ? 'checked' : ''}>
             <label class="form-check-label" for="col-${index}">${headerText}</label>
           </div>`;
-      }
-    });
-  
-    // on change event for checkboxes
-    document.addEventListener('change', (event) => {
-      if (event.target.matches('.form-check-input')) {
-        const index = event.target.id.replace('col-', '');
-        table.column(index).visible(event.target.checked);
-      }
-    });
-  };
-  
-// Generates search bars for searching of each column of datatables
+    }
+  });
+
+  // on change event for checkboxes
+  document.addEventListener('change', (event) => {
+    if (event.target.matches('.form-check-input')) {
+      const index = event.target.id.replace('col-', '');
+      table.column(index).visible(event.target.checked);
+    }
+  });
+};
+
+// Generates search bars for searching each column
 const initiateSearchbars = table => {
   // Clear existing search bars
   $(table.table().footer()).find('th').each(function () {
     $(this).empty();
   });
-  
+
   // Create new search bars for each column with class 'text-filter'
   table.columns('.text-filter').every(function () {
     const column = this;
     const $footerCell = $(column.footer()).empty();
     const columnHeader = column.header().textContent.trim();
 
-    // Special handling for Date column
+    // For "Date" column in Rides, we want a date range search
+    // Caution: This code is heavily Ai-generated and complicated
     if (columnHeader === 'Date') {
-      // Create date range inputs
       const $dateContainer = $('<div style="display: flex; flex-direction: column; gap: 2px;"></div>');
-      
-      // Get saved state for this table and column
+
       const tableId = table.table().node().id;
       const savedState = localStorage.getItem(`${tableId}_dateFilter`);
       let fromDateValue = '';
       let toDateValue = '';
-      
+
       if (savedState) {
-        try {
-          const parsedState = JSON.parse(savedState);
-          fromDateValue = parsedState.fromDate || '';
-          toDateValue = parsedState.toDate || '';
-        } catch (e) {
-          console.log('Error parsing saved date filter state:', e);
-        }
+        const parsedState = JSON.parse(savedState);
+        fromDateValue = parsedState.fromDate || '';
+        toDateValue = parsedState.toDate || '';
       }
-      
-      // From date input
+
       const $fromDate = $('<input type="date" placeholder="From date" title="From date"/>')
         .css({
           'width': '100%',
@@ -70,8 +64,7 @@ const initiateSearchbars = table => {
           'font-size': '0.8rem'
         })
         .val(fromDateValue);
-      
-      // To date input  
+
       const $toDate = $('<input type="date" placeholder="To date" title="To date"/>')
         .css({
           'width': '100%',
@@ -85,99 +78,81 @@ const initiateSearchbars = table => {
       $dateContainer.append($fromDate).append($toDate);
       $footerCell.append($dateContainer);
 
-      // Custom filtering function for date range
+      // filtering function for date range
       const filterByDateRange = () => {
-        const fromDate = $fromDate.val();
-        const toDate = $toDate.val();
-        
-        // Save the date filter state
-        const dateFilterState = {
-          fromDate: fromDate,
-          toDate: toDate
-        };
-        localStorage.setItem(`${tableId}_dateFilter`, JSON.stringify(dateFilterState));
-        
-        // Remove any existing custom search for this column
-        column.search('').draw(false);
-        
-        // Remove any existing date filters for this table
-        $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter(function(fn) {
-          return fn.toString().indexOf(tableId) === -1;
-        });
-        
-        // Apply custom filter only if we have date values
-        if (fromDate || toDate) {
-          $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-            // Only apply to our specific table
-            if (settings.nTable.id !== tableId) {
-              return true;
-            }
-            
-            const dateColumnIndex = column.index();
-            const cellData = data[dateColumnIndex];
-            
-            // Extract date from the cell (it's in MM/DD/YYYY format)
-            if (!cellData) return true;
-            
-            // Parse the displayed date (MM/DD/YYYY format)
-            const dateParts = cellData.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-            if (!dateParts) return true;
-            
-            const cellDate = new Date(dateParts[3], dateParts[1] - 1, dateParts[2]); // Year, Month (0-based), Day
-            
-            // Check date range
-            if (fromDate && toDate) {
-              const from = new Date(fromDate);
-              const to = new Date(toDate);
-              return cellDate >= from && cellDate <= to;
-            } else if (fromDate) {
-              const from = new Date(fromDate);
-              return cellDate >= from;
-            } else if (toDate) {
-              const to = new Date(toDate);
-              return cellDate <= to;
-            }
-            
+        const fromVal = $fromDate.val();
+        const toVal = $toDate.val();
+
+        // remove any existing date-filters for this table
+        $.fn.dataTable.ext.search = $.fn.dataTable.ext.search
+          .filter(fn => fn._tableId !== tableId);
+
+        // save state
+        localStorage.setItem(
+          `${tableId}_dateFilter`,
+          JSON.stringify({ fromDate: fromVal, toDate: toVal })
+        );
+
+        // only push a new filter if the user has actually selected a date
+        if (fromVal || toVal) {
+          const from = fromVal ? new Date(fromVal) : null;
+          const to = toVal ? new Date(toVal) : null;
+
+          // create & tag the callback
+          const cb = function (settings, data) {
+            // ignore other tables
+            if (settings.nTable.id !== tableId) return true;
+
+            const cell = data[column.index()] || '';
+            const parts = cell.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+            if (!parts) return true;
+
+            const [_, M, D, Y] = parts;
+            const cd = new Date(Y, M - 1, D);
+
+            if (from && to) return cd >= from && cd <= to;
+            if (from) return cd >= from;
+            if (to) return cd <= to;
             return true;
-          });
+          };
+          cb._tableId = tableId;
+
+          $.fn.dataTable.ext.search.push(cb);
         }
-        
-        table.draw();
-        updateFilterIndicator(table, '#' + table.table().node().id);
+
+        table.draw(false);
+        updateFilterIndicator(table, `#${tableId}`);
       };
 
-      // Clear date range filter
       const clearDateRangeFilter = () => {
-        // Remove our custom filter
-        $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter(function(fn) {
-          return fn.toString().indexOf(tableId) === -1;
-        });
-        
-        // Clear saved state
+        // strip out *all* callbacks tagged for this table
+        $.fn.dataTable.ext.search = $.fn.dataTable.ext.search
+          .filter(fn => fn._tableId !== tableId);
+
+        // clear storage and inputs
         localStorage.removeItem(`${tableId}_dateFilter`);
-        
         $fromDate.val('');
         $toDate.val('');
-        table.draw();
-        updateFilterIndicator(table, '#' + table.table().node().id);
+
+        // redraw to show everything again
+        table.draw(false);
+        updateFilterIndicator(table, `#${tableId}`);
       };
 
-      // Event handlers
       $fromDate.on('change', filterByDateRange);
       $toDate.on('change', filterByDateRange);
-      
+
       // Clear button
       const $clearBtn = $('<button type="button" title="Clear date filter" style="width: 100%; margin-top: 2px; padding: 2px; font-size: 0.7rem; background: #f8f9fa; border: 1px solid #ddd; border-radius: 3px;">Clear</button>');
       $clearBtn.on('click', clearDateRangeFilter);
       $dateContainer.append($clearBtn);
-      
-      // Apply saved filter on page load
+
       if (fromDateValue || toDateValue) {
         filterByDateRange();
       }
-      
+
+    // Regular text search for other columns
     } else {
-      // Regular text search for other columns
       const searchValue = column.search() || '';
 
       $('<input type="text"/>')
@@ -213,7 +188,7 @@ function updateFilterIndicator(table, tableSelector) {
   // Check if any custom date range filters are applied
   let dateRangeFiltered = false;
   const dateInputs = $(table.table().footer()).find('input[type="date"]');
-  dateInputs.each(function() {
+  dateInputs.each(function () {
     if ($(this).val() !== '') dateRangeFiltered = true;
   });
 
@@ -243,13 +218,13 @@ function updateFilterIndicator(table, tableSelector) {
   }
 }
 
-  
+
 // Creates the Datatables
 const initiateDatatables = () => {
   const tables = [
-    { selector: '#passengers-table', order: [[2, 'asc']]},
-    { selector: '#rides-table', order: [[3, 'desc']]},
-    { selector: '#shift-rides-table', order: [[5, 'asc']]}
+    { selector: '#passengers-table', order: [[2, 'asc']] },
+    { selector: '#rides-table', order: [[3, 'desc']] },
+    { selector: '#shift-rides-table', order: [[5, 'asc']] }
   ];
 
   tables.forEach(table => {
@@ -260,8 +235,8 @@ const initiateDatatables = () => {
       }
 
       const newTable = $(tableElement).DataTable({
-        colReorder: true,    
-        stateSave: true,    
+        colReorder: true,
+        stateSave: true,
         autoWidth: false,
         paging: true,
         searching: true,
@@ -269,15 +244,15 @@ const initiateDatatables = () => {
         pageLength: 10,
         order: table.order,
         dom: "<'row'<'col-md-6'l><'col-md-6'Bp>>" +
-             "<'row'<'col-md-12'tr>>" +
-             "<'row'<'col-md-6'i><'col-md-6'>>",
+          "<'row'<'col-md-12'tr>>" +
+          "<'row'<'col-md-6'i><'col-md-6'>>",
         buttons: [
-           'excel', 'csv', 'print'
+          'excel', 'csv', 'print'
         ],
         columnDefs: [
           {
             targets: '_all',
-            render: function(data, type, row, meta) {
+            render: function (data, type, row, meta) {
               if (type === 'sort' || type === 'type') {
                 // Only apply custom sorting if the cell has a data-sort attribute
                 if (typeof data === 'string' && data.includes('data-sort=')) {
@@ -305,7 +280,7 @@ const initiateDatatables = () => {
 }
 
 document.addEventListener('turbo:load', () => {
-  if (document.querySelector('#passengers-table') || document.querySelector('#rides-table') 
+  if (document.querySelector('#passengers-table') || document.querySelector('#rides-table')
     || document.querySelector('#shift-rides-table')) {
     initiateDatatables();
   }
