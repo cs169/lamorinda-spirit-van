@@ -26,156 +26,153 @@ const initiateCheckboxes = (table) => {
   });
 };
 
-// Generates search bars for searching each column
-const initiateSearchbars = table => {
-  // Clear existing search bars
-  $(table.table().footer()).find('th').each(function () {
-    $(this).empty();
-  });
+// this parses as UTC, while new Date(y, m-1, d) is local midnight. 
+// In PDT, "2025-08-08" becomes 2025-08-08T00:00:00.000Z → 5pm on 8/7 local, 
+// so <= to fails for the selected “to” day.
+// Heavily AI generated
+const parseYMDLocal = (s) => {
+  if (!s) return null;
+  const [Y, M, D] = s.split('-').map(Number);
+  return new Date(Y, M - 1, D);                 
+};
+// to fix parseYMDLocal
+const startOfDay = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
+const endOfDay   = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999);
 
-  // Create new search bars for each column with class 'text-filter'
+const loadDateState = (tableId) => {
+  try {
+    return JSON.parse(localStorage.getItem(`${tableId}_dateFilter`)) || { fromDate: '', toDate: '' };
+  } catch {
+    return { fromDate: '', toDate: '' };
+  }
+};
+
+const saveDateState = (tableId, state) =>
+  localStorage.setItem(`${tableId}_dateFilter`, JSON.stringify(state));
+
+const removeDateFiltersFor = (tableId) => {
+  $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter(fn => fn._tableId !== tableId);
+};
+
+// Heavily AI generated
+const buildDateFilter = (tableId, colIndex, fromVal, toVal) => {
+  const from = fromVal ? startOfDay(parseYMDLocal(fromVal)) : null;
+  const to   = toVal   ? endOfDay(parseYMDLocal(toVal))     : null;
+
+  const cb = function (settings, data) {
+    if (settings.nTable.id !== tableId) return true;
+
+    const cell = data[colIndex] || '';
+    const match = cell.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+    if (!match) return true;
+
+    const [, M, D, Y] = match;
+    const cd = new Date(Y, M - 1, D);           // local midnight
+
+    if (from && to) return cd >= from && cd <= to;
+    if (from)       return cd >= from;
+    if (to)         return cd <= to;
+    return true;
+  };
+
+  cb._tableId = tableId; // tag so we can remove later
+  return cb;
+};
+
+// CSS for textInput and dateInput
+const INPUT_CSS = {
+  width: '100%',
+  boxSizing: 'border-box',
+  margin: 0,
+  padding: '2px 4px',
+  fontSize: '0.8rem',
+};
+
+const textInput = (placeholder, value = '') =>
+  $('<input type="text"/>').attr('placeholder', placeholder).val(value).css(INPUT_CSS);
+
+const dateInput = (value = '') =>
+  $('<input type="date" title="Date"/>').val(value).css(INPUT_CSS);
+
+
+// Creates search bars for date column and every other column
+// Heavily AI generated
+const initiateSearchbars = (table) => {
+  // clear footer cells
+  $(table.table().footer()).find('th').empty();
+
   table.columns('.text-filter').every(function () {
     const column = this;
-    const $footerCell = $(column.footer()).empty();
-    const columnHeader = column.header().textContent.trim();
+    const $cell = $(column.footer()).empty();
+    const header = column.header().textContent.trim();
+    const tableId = table.table().node().id;
 
-    // For "Date" column in Rides, we want a date range search
-    // Caution: This code is heavily Ai-generated and complicated
-    if (columnHeader === 'Date') {
-      const $dateContainer = $('<div style="display: flex; flex-direction: column; gap: 2px;"></div>');
+    // Date column => range filter
+    if (header === 'Date') {
+      const { fromDate, toDate } = loadDateState(tableId);
 
-      const tableId = table.table().node().id;
-      const savedState = localStorage.getItem(`${tableId}_dateFilter`);
-      let fromDateValue = '';
-      let toDateValue = '';
+      const $wrap = $('<div style="display:flex;flex-direction:column;gap:2px;"></div>');
+      const $from = dateInput(fromDate);
+      const $to   = dateInput(toDate);
+      $wrap.append($from, $to);
 
-      if (savedState) {
-        const parsedState = JSON.parse(savedState);
-        fromDateValue = parsedState.fromDate || '';
-        toDateValue = parsedState.toDate || '';
-      }
+      const redraw = () => {
+        table.draw(false);
+        updateFilterIndicator(table, `#${tableId}`);
+      };
 
-      const $fromDate = $('<input type="date" placeholder="From date" title="From date"/>')
-        .css({
-          'width': '100%',
-          'box-sizing': 'border-box',
-          'margin': '0',
-          'padding': '2px 4px',
-          'font-size': '0.8rem'
-        })
-        .val(fromDateValue);
+      const applyDateFilter = () => {
+        removeDateFiltersFor(tableId);
+        const fromVal = $from.val();
+        const toVal   = $to.val();
 
-      const $toDate = $('<input type="date" placeholder="To date" title="To date"/>')
-        .css({
-          'width': '100%',
-          'box-sizing': 'border-box',
-          'margin': '0',
-          'padding': '2px 4px',
-          'font-size': '0.8rem'
-        })
-        .val(toDateValue);
+        saveDateState(tableId, { fromDate: fromVal, toDate: toVal });
 
-      $dateContainer.append($fromDate).append($toDate);
-      $footerCell.append($dateContainer);
-
-      // filtering function for date range
-      const filterByDateRange = () => {
-        const fromVal = $fromDate.val();
-        const toVal = $toDate.val();
-
-        // remove any existing date-filters for this table
-        $.fn.dataTable.ext.search = $.fn.dataTable.ext.search
-          .filter(fn => fn._tableId !== tableId);
-
-        // save state
-        localStorage.setItem(
-          `${tableId}_dateFilter`,
-          JSON.stringify({ fromDate: fromVal, toDate: toVal })
-        );
-
-        // only push a new filter if the user has actually selected a date
         if (fromVal || toVal) {
-          const from = fromVal ? new Date(fromVal) : null;
-          const to = toVal ? new Date(toVal) : null;
-
-          // create & tag the callback
-          const cb = function (settings, data) {
-            // ignore other tables
-            if (settings.nTable.id !== tableId) return true;
-
-            const cell = data[column.index()] || '';
-            const parts = cell.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-            if (!parts) return true;
-
-            const [_, M, D, Y] = parts;
-            const cd = new Date(Y, M - 1, D);
-
-            if (from && to) return cd >= from && cd <= to;
-            if (from) return cd >= from;
-            if (to) return cd <= to;
-            return true;
-          };
-          cb._tableId = tableId;
-
-          $.fn.dataTable.ext.search.push(cb);
+          $.fn.dataTable.ext.search.push(
+            buildDateFilter(tableId, column.index(), fromVal, toVal)
+          );
         }
-
-        table.draw(false);
-        updateFilterIndicator(table, `#${tableId}`);
+        redraw();
       };
 
-      const clearDateRangeFilter = () => {
-        // strip out *all* callbacks tagged for this table
-        $.fn.dataTable.ext.search = $.fn.dataTable.ext.search
-          .filter(fn => fn._tableId !== tableId);
-
-        // clear storage and inputs
-        localStorage.removeItem(`${tableId}_dateFilter`);
-        $fromDate.val('');
-        $toDate.val('');
-
-        // redraw to show everything again
-        table.draw(false);
-        updateFilterIndicator(table, `#${tableId}`);
+      const clearDateFilter = () => {
+        removeDateFiltersFor(tableId);
+        saveDateState(tableId, { fromDate: '', toDate: '' });
+        $from.val('');
+        $to.val('');
+        redraw();
       };
 
-      $fromDate.on('change', filterByDateRange);
-      $toDate.on('change', filterByDateRange);
+      $from.on('change', applyDateFilter);
+      $to.on('change', applyDateFilter);
 
-      // Clear button
-      const $clearBtn = $('<button type="button" title="Clear date filter" style="width: 100%; margin-top: 2px; padding: 2px; font-size: 0.7rem; background: #f8f9fa; border: 1px solid #ddd; border-radius: 3px;">Clear</button>');
-      $clearBtn.on('click', clearDateRangeFilter);
-      $dateContainer.append($clearBtn);
+      const $clearBtn = $('<button type="button" title="Clear date filter" ' +
+        'style="width:100%;margin-top:2px;padding:2px;font-size:0.7rem;' +
+        'background:#f8f9fa;border:1px solid #ddd;border-radius:3px;">Clear</button>')
+        .on('click', clearDateFilter);
 
-      if (fromDateValue || toDateValue) {
-        filterByDateRange();
-      }
+      $cell.append($wrap, $clearBtn);
 
-    // Regular text search for other columns
+      // re-apply on load if state exists
+      if (fromDate || toDate) applyDateFilter();
+
     } else {
-      const searchValue = column.search() || '';
-
-      $('<input type="text"/>')
-        .attr('placeholder', `${columnHeader}...`)
-        .val(searchValue)
-        .css({
-          'width': '100%',
-          'box-sizing': 'border-box',
-          'margin': '0',
-          'padding': '2px 4px',
-          'font-size': '0.8rem'
-        })
-        .appendTo($footerCell)
-        .on('keyup change clear', function () {
+      // Plain text filter for all other columns
+      const initial = column.search() || '';
+      const $input = textInput(`${header}...`, initial)
+        .on('input change', function () {
           if (column.search() !== this.value) {
             column.search(this.value).draw();
-            // update filter indicator after table redraw
-            updateFilterIndicator(table, '#' + table.table().node().id);
+            updateFilterIndicator(table, `#${tableId}`);
           }
         });
+
+      $cell.append($input);
     }
   });
 };
+
 
 // Visual for when search has been applied
 function updateFilterIndicator(table, tableSelector) {
