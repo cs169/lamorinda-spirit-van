@@ -46,6 +46,16 @@
         </div>
 
         <div class="mb-3">
+          <%= form.label :second_odometer_pre, "Second Odometer reading pre-trip", class: "form-label" %>
+          <%= form.text_field :second_odometer_pre, class: "form-control" %>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :second_odometer_post, "Second Odometer reading post-trip", class: "form-label" %>
+          <%= form.text_field :second_odometer_post, class: "form-control" %>
+        </div>
+
+        <div class="mb-3">
           <%= form.label :feedback_notes, "Notes", class: "form-label" %>
           <%= form.text_area :feedback_notes, class: "form-control", rows: 4 %>
         </div>

@@ -37,7 +37,7 @@
         </div>
       </div>
 
-      <!-- Odometer & Notes -->
+      <!-- Odometers & Notes -->
       <div class="col-md-4">
         <div class="p-3 bg-light rounded-3 h-100 border">
           <div class="mb-3 text-warning fw-semibold border-bottom pb-2">
@@ -48,6 +48,12 @@
           </p>
           <p class="mb-2">
             <strong>Post-ride:</strong> <%= shift.odometer_post %>
+          </p>
+          <p class="mb-2">
+            <strong>Second Pre-ride:</strong> <%= shift.second_odometer_pre %>
+          </p>
+          <p class="mb-2">
+            <strong>Second Post-ride:</strong> <%= shift.second_odometer_post %>
           </p>
           <p class="mb-0">
             <strong>Notes:</strong> <span class="text-muted"><%= shift.feedback_notes %></span>
