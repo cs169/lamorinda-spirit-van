@@ -36,6 +36,16 @@
         </div>
 
         <div class="mb-3">
+          <%= form.label :second_pick_up_time, "Second Van pick up time from base", class: "form-label" %>
+          <%= form.text_field :second_pick_up_time, class: "form-control" %>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :second_drop_off_time, "Second Van drop off time from base", class: "form-label" %>
+          <%= form.text_field :second_drop_off_time, class: "form-control" %>
+        </div>
+
+        <div class="mb-3">
           <%= form.label :odometer_pre, "Odometer reading pre-trip", class: "form-label" %>
           <%= form.text_field :odometer_pre, class: "form-control" %>
         </div>
@@ -43,16 +53,6 @@
         <div class="mb-3">
           <%= form.label :odometer_post, "Odometer reading post-trip", class: "form-label" %>
           <%= form.text_field :odometer_post, class: "form-control" %>
-        </div>
-
-        <div class="mb-3">
-          <%= form.label :second_odometer_pre, "Second Odometer reading pre-trip", class: "form-label" %>
-          <%= form.text_field :second_odometer_pre, class: "form-control" %>
-        </div>
-
-        <div class="mb-3">
-          <%= form.label :second_odometer_post, "Second Odometer reading post-trip", class: "form-label" %>
-          <%= form.text_field :second_odometer_post, class: "form-control" %>
         </div>
 
         <div class="mb-3">
