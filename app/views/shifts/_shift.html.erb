@@ -31,8 +31,14 @@
           <p class="mb-2">
             <strong>Pick-up Time:</strong> <%= shift.pick_up_time %>
           </p>
-          <p class="mb-0">
+          <p class="mb-2">
             <strong>Drop-off Time:</strong> <%= shift.drop_off_time %>
+          </p>
+          <p class="mb-2">
+            <strong>Second Pick-up Time:</strong> <%= shift.second_pick_up_time %>
+          </p>
+          <p class="mb-2">
+            <strong>Second Drop-off Time:</strong> <%= shift.second_drop_off_time %>
           </p>
         </div>
       </div>
@@ -48,12 +54,6 @@
           </p>
           <p class="mb-2">
             <strong>Post-ride:</strong> <%= shift.odometer_post %>
-          </p>
-          <p class="mb-2">
-            <strong>Second Pre-ride:</strong> <%= shift.second_odometer_pre %>
-          </p>
-          <p class="mb-2">
-            <strong>Second Post-ride:</strong> <%= shift.second_odometer_post %>
           </p>
           <p class="mb-0">
             <strong>Notes:</strong> <span class="text-muted"><%= shift.feedback_notes %></span>

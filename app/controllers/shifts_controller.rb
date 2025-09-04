@@ -131,6 +131,6 @@ class ShiftsController < ApplicationController
   def shift_params
     params.require(:shift).permit(:shift_date, :shift_type, :driver_id, :van, :notes,
     :feedback_notes, :pick_up_time, :drop_off_time, :odometer_pre, :odometer_post,
-    :second_odometer_pre, :second_odometer_post)
+    :second_pick_up_time, :second_drop_off_time)
   end
 end
