@@ -11,6 +11,9 @@
                 <th class="border-0 text-filter">Last Name</th>
                 <th class="border-0 text-filter">First Name</th>
                 <th class="border-0 text-filter">Address</th>
+                <th class="border-0 text-filter">Street</th>
+                <th class="border-0 text-filter">City</th>
+                <th class="border-0 text-filter">Zip</th>
                 <th class="border-0 text-filter">Phone</th>
                 <th class="border-0 text-filter">Alternative Phone</th>
                 <th class="border-0 text-filter">Birthday</th>
@@ -43,6 +46,9 @@
                   <td><%= last_name || 'N/A' %></td>
                   <td><%= first_name || 'N/A' %></td>
                   <td><%= passenger.full_address %></td>
+                  <td><%= passenger.address&.street %></td>
+                  <td><%= passenger.address&.city %></td>
+                  <td><%= passenger.address&.zip_code || "" %></td>
                   <td><%= passenger.phone %></td>
                   <td><%= passenger.alternative_phone %></td>
                   <td data-sort="<%= passenger.birthday&.to_i || 0 %>"><%= passenger.birthday&.to_date || "" %></td>
@@ -105,7 +111,7 @@
 
             <tfoot>
               <tr class="border-0">
-                <% 20.times do %>
+                <% 23.times do %>
                   <th class="border-0" id = "custom-search-bars"></th>
                 <% end %>
               </tr>
