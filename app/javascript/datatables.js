@@ -246,24 +246,13 @@ const initiateDatatables = () => {
         buttons: [
           'excel', 'csv', 'print'
         ],
-        columnDefs: [
-          {
-            targets: '_all',
-            render: function (data, type, row, meta) {
-              if (type === 'sort' || type === 'type') {
-                // Only apply custom sorting if the cell has a data-sort attribute
-                if (typeof data === 'string' && data.includes('data-sort=')) {
-                  const match = data.match(/data-sort="(\d+)"/);
-                  if (match) {
-                    return parseInt(match[1]) || 0;
-                  }
-                }
-              }
-              return data;
-            }
-          }
-        ]
       });
+
+      // Hide (Street, City, Zip) cols after initialization for passenger table
+      if (table.selector == '#passengers-table') {
+        [5, 6, 7].forEach(idx => newTable.column(idx).visible(false));
+      }
+
       initiateCheckboxes(newTable);
       initiateSearchbars(newTable);
       updateFilterIndicator(newTable, table.selector);
