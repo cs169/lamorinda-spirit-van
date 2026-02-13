@@ -3,18 +3,11 @@
 
 [Help & Documentation](https://cs169.github.io/lamorinda-spirit-van)
 
-## SP25 Badges
-[![All Specs](https://github.com/cs169/lamorinda-spirit-van/actions/workflows/ci.yml/badge.svg)](https://github.com/cs169/lamorinda-spirit-van/actions/workflows/ci.yml)
-[![Rubocop](https://github.com/cs169/lamorinda-spirit-van/actions/workflows/rubocop.yml/badge.svg)](https://github.com/cs169/lamorinda-spirit-van/actions/workflows/rubocop.yml)
-[![Code Climate](https://codeclimate.com/github/cs169/lamorinda-spirit-van.png)](https://codeclimate.com/github/cs169/lamorinda-spirit-van)
-[![codecov](https://codecov.io/gh/cs169/lamorinda-spirit-van/graph/badge.svg?token=QOaGQgsitu)](https://codecov.io/gh/cs169/lamorinda-spirit-van)
-
 ## SP26 Badges
 [![All Specs](https://github.com/cs169/lamorinda-spirit-van/actions/workflows/ci.yml/badge.svg)](https://github.com/cs169/lamorinda-spirit-van/actions/workflows/ci.yml)
 [![Rubocop](https://github.com/cs169/lamorinda-spirit-van/actions/workflows/rubocop.yml/badge.svg)](https://github.com/cs169/lamorinda-spirit-van/actions/workflows/rubocop.yml)
 [![CodeQL](https://github.com/cs169/lamorinda-spirit-van/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/cs169/lamorinda-spirit-van/actions/workflows/github-code-scanning/codeql)
 [![codecov](https://codecov.io/gh/cs169/lamorinda-spirit-van/graph/badge.svg?token=QOaGQgsitu)](https://codecov.io/gh/cs169/lamorinda-spirit-van)
-
 
 ## saasbook/lamorinda-spirit-van Badges
 
@@ -25,10 +18,11 @@ The [Lamorinda Spirit Van](https://www.lovelafayette.org/city-hall/city-departme
 Currently under development. Source Repo: [saasbook/lamorinda-spirit-van](https://github.com/saasbook/lamorinda-spirit-van)
 
 ## Team
-Spring 2025 team members:
-
-Daniel Tan / Chang Lu / Zhixia Lin / Athena Jenkins / XueZhao Fang / Wilson Lai
 
 Spring 2026 team members:
 
- [Jiajun Liu](https://github.com/jliu6184), [Merlin Mo](https://github.com/mmmmerlin), [Ariel Shehter](https://github.com/AlisaIsGodly), [Ryan Tran](https://github.com/rytradmin1), [Nick Yin](https://github.com/n1qqq)
+ [Jiajun Liu](https://github.com/jliu6184) / [Merlin Mo](https://github.com/mmmmerlin) / [Ariel Shehter](https://github.com/AlisaIsGodly) / [Ryan Tran](https://github.com/rytradmin1) / [Nick Yin](https://github.com/n1qqq)
+
+Spring 2025 team members:
+
+Daniel Tan / Chang Lu / Zhixia Lin / Athena Jenkins / XueZhao Fang / Wilson Lai
