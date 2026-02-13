@@ -12,6 +12,7 @@
 ## SP26 Badges
 [![All Specs](https://github.com/cs169/lamorinda-spirit-van/actions/workflows/ci.yml/badge.svg)](https://github.com/cs169/lamorinda-spirit-van/actions/workflows/ci.yml)
 [![Rubocop](https://github.com/cs169/lamorinda-spirit-van/actions/workflows/rubocop.yml/badge.svg)](https://github.com/cs169/lamorinda-spirit-van/actions/workflows/rubocop.yml)
+[![CodeQL](https://github.com/cs169/lamorinda-spirit-van/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/cs169/lamorinda-spirit-van/actions/workflows/github-code-scanning/codeql)
 [![codecov](https://codecov.io/gh/cs169/lamorinda-spirit-van/graph/badge.svg?token=QOaGQgsitu)](https://codecov.io/gh/cs169/lamorinda-spirit-van)
 
 
