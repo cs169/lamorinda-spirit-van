@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class RidesController < ApplicationController
-  before_action :set_ride, only: [ :show, :edit, :update, :destroy ]
-  before_action -> { require_role("admin", "dispatcher") }, only: [:index, :new, :edit, :create, :update, :destroy]
+  before_action :set_ride, only: %i[ show edit update destroy ]
+  before_action -> { require_role("admin", "dispatcher") }, only: %i[ index new edit create update destroy ]
 
   # Have only rides without previous rides (HEAD rides) be displayed
   # "Give me all rides whose id is not someone else's next_ride_id
@@ -30,16 +30,7 @@ class RidesController < ApplicationController
     @ride.driver_id = params[:driver_id]
 
     # Load all passengers with their associations at once
-    passengers_with_data = Passenger.includes(:address, :rides)
-
-    gon.passengers = passengers_with_data.map { |p| {
-      label: p.name, id: p.id, phone: p.phone, alt_phone: p.alternative_phone, wheelchair: p.wheelchair,
-      disabled: p.disabled, need_caregiver: p.need_caregiver, low_income: p.low_income, lmv_member: p.lmv_member,
-      notes: p.notes, ride_count: p.rides.length, # Use .length instead of .count for loaded association
-      street: p.address&.street, city: p.address&.city
-    } }
-    gon.addresses = Address.all.map { |a| { name: a.name, street: a.street, city: a.city, phone: a.phone } }
-    gon.drivers = @drivers.map { |d| { id: d.id, name: d.name } }
+    load_gon_data
   end
 
   def create
@@ -63,25 +54,12 @@ class RidesController < ApplicationController
     # For driver dropdown list in creating / updating
     @ride = Ride.find(params[:id])
     @all_rides = @ride.get_all_linked_rides
-    @drivers = Driver.order(:name)
 
     # Load all passengers with their associations at once
-    passengers_with_data = Passenger.includes(:address, :rides)
-
-    # Mapping data for autocomplete
-    gon.passengers = passengers_with_data.map { |p| {
-      label: p.name, id: p.id, phone: p.phone, alt_phone: p.alternative_phone, wheelchair: p.wheelchair,
-      disabled: p.disabled, need_caregiver: p.need_caregiver, low_income: p.low_income, lmv_member: p.lmv_member,
-      notes: p.notes, ride_count: p.rides.length, # Use .length instead of .count for loaded association
-      street: p.address&.street, city: p.address&.city
-    } }
-    gon.addresses = Address.all.map { |a| { name: a.name, street: a.street, city: a.city, phone: a.phone } }
-    gon.drivers = @drivers.map { |d| { id: d.id, name: d.name } }
+    load_gon_data
 
     # Accessibility info is retrieved from the passenger
-    @ride.wheelchair      = @ride.passenger&.wheelchair
-    @ride.disabled        = @ride.passenger&.disabled
-    @ride.need_caregiver  = @ride.passenger&.need_caregiver
+    sync_passenger_health_data
   end
 
   def update
@@ -132,9 +110,85 @@ class RidesController < ApplicationController
     redirect_to rides_url, status: :unprocessable_entity
   end
 
-    private
+  # duplicate (GET request, pre-fills new form with existing ride data)
+  def duplicate
+    @original_ride = Ride.find(params[:id])
+
+    # 1. Create a memory-only copy of the ride and fetch the full ride chain
+    original_chain = @original_ride.get_all_linked_rides
+    @ride = @original_ride.dup
+
+    # 2. Reset fields that shouldn't be copied
+    @ride.status = "Pending"           # Reset status
+
+    # Clear IDs so Rails treats these as new associations
+    @ride.start_address_id = nil
+    @ride.dest_address_id = nil
+
+    # 3. DATA FOR STOP 1 & PASSENGER (The Fix)
+    # We send this to JS to simulate the user typing/selecting
+    gon.duplicate_info = {
+      passenger_id: @original_ride.passenger_id,
+      start_address: {
+        name:   @original_ride.start_address&.name,
+        street: @original_ride.start_address&.street,
+        city:   @original_ride.start_address&.city,
+        phone:  @original_ride.start_address&.phone
+      }
+    }
+
+    # 4. Prepare "Extra Stops" (Stop 2, Stop 3, ...)
+    # We skip the first ride (drop(1)) because its destination is already
+    # handled by @ride.dest_address above
+    gon.duplicated_stops = original_chain.drop(1).map do |linked_ride|
+      dest = linked_ride.dest_address
+      {
+        name:      dest&.name,
+        phone:     dest&.phone,
+        street:    dest&.street,
+        city:      dest&.city,
+        van:       linked_ride.van,      # Keep the van from the original ride
+        driver_id: linked_ride.driver_id # Keep the driver from the original ride
+      }
+    end
+
+    # 5. Setup GON variables (Identical to 'new' action)
+    # This is required for the frontend dropdowns to work on this page
+    load_gon_data
+
+    # 6. Render the 'new' template
+    # This reuses existing 'new' form. Since @ride.new_record? is true (because we used .dup),
+    # the form will automatically submit to the 'create' action
+    render :new
+  end
+
+
+  private
+
   def set_ride
     @ride = Ride.find(params[:id])
+  end
+
+  def load_gon_data
+    @drivers = Driver.order(:name)
+    passengers_with_data = Passenger.includes(:address, :rides)
+
+    gon.passengers = passengers_with_data.map { |p| {
+      label: p.name, id: p.id, phone: p.phone, alt_phone: p.alternative_phone, wheelchair: p.wheelchair,
+      disabled: p.disabled, need_caregiver: p.need_caregiver, low_income: p.low_income, lmv_member: p.lmv_member,
+      notes: p.notes, ride_count: p.rides.length,
+      street: p.address&.street, city: p.address&.city
+    } }
+    gon.addresses = Address.all.map { |a| { name: a.name, street: a.street, city: a.city, phone: a.phone } }
+    gon.drivers = @drivers.map { |d| { id: d.id, name: d.name } }
+  end
+
+  def sync_passenger_health_data
+    return unless @ride.passenger
+
+    @ride.wheelchair      = @ride.passenger.wheelchair
+    @ride.disabled        = @ride.passenger.disabled
+    @ride.need_caregiver  = @ride.passenger.need_caregiver
   end
 
   def ride_params
