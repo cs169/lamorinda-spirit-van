@@ -387,12 +387,6 @@
                 <% end %>
               </div>
 
-              <!-- Add/Delete Stop Buttons -->
-              <div class="text-center mt-4">
-                <button type="button" class="btn btn-success" id="add-stop-button">Add Stop</button>
-                <button type="button" class="btn btn-danger" id="delete-stop-button">Delete Stop</button>
-              </div>
-
               <!-- Hidden Template for Additional Destination -->
               <template id="destination-template">
                 <div class="col-md-12 mb-4">
@@ -459,6 +453,15 @@
                         </div>
                       </div>
                     </div>
+                  </div>
+                  <div class="text-center mt-4 mb-4">
+                    <!-- Swap Up/Down Stop Button -->
+                    <button type="button" class="btn btn-outline-secondary swap-up-button">↑ Up</button>
+                    <button type="button" class="btn btn-outline-secondary swap-down-button">↓ Down</button>
+
+                    <!-- Add/Delete Stop Button -->
+                    <button type="button" class="btn btn-success add-stop-button">Add Stop</button>
+                    <button type="button" class="btn btn-danger delete-stop-button">Delete Stop</button>
                   </div>
                 </div>
               </template>

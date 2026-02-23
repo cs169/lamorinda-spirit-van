@@ -1,11 +1,9 @@
 document.addEventListener("turbo:load", function () {
-  const addButton = document.getElementById("add-stop-button");
-  const deleteButton = document.getElementById("delete-stop-button");
   const addressGrid = document.getElementById("address-grid");
   const stopsContainer = document.getElementById("stops-container");
   const template = document.getElementById("destination-template");
 
-  if (!addButton || !deleteButton || !stopsContainer || !template) {
+  if (!stopsContainer || !template) {
     return;
   }
 
@@ -13,61 +11,137 @@ document.addEventListener("turbo:load", function () {
 
   // Get drivers data from gon
   let driversData = [];
-  if (typeof gon !== 'undefined' && gon.drivers) {
+  if (typeof gon !== "undefined" && gon.drivers) {
     driversData = gon.drivers;
   }
 
   function populateDriverSelect(selectElement) {
     // Clear existing options except the first one
     selectElement.innerHTML = '<option value="">Select a Driver</option>';
-    
+
     // Add driver options
-    driversData.forEach(function(driver) {
-      const option = document.createElement('option');
+    driversData.forEach(function (driver) {
+      const option = document.createElement("option");
       option.value = driver.id;
       option.textContent = driver.name;
       selectElement.appendChild(option);
     });
   }
 
-  addButton.addEventListener("click", function () {
+  stopsContainer.addEventListener("click", function (e) {
+    const btn = e.target.closest(".add-stop-button");
+    if (!btn) return;
+
     try {
+      const stopUnit = btn.closest(".col-md-12.mb-4");
+      if (!stopUnit) return;
+
       const html = template.innerHTML.replace(/__INDEX__/g, index);
       const wrapper = document.createElement("div");
       wrapper.innerHTML = html;
 
-      if (wrapper.firstElementChild) {
-        // Populate driver dropdown in the new stop
-        const driverSelect = wrapper.querySelector('.driver-select');
-        if (driverSelect && driversData.length > 0) {
-          populateDriverSelect(driverSelect);
-        }
+      const newStop = wrapper.querySelector(".col-md-12.mb-4");
+      if (!newStop) return;
 
-        // Add the new stop card to the stops container
-        stopsContainer.appendChild(wrapper.firstElementChild);
-        
-        index += 1;
-        if (addressGrid) {
-          addressGrid.dataset.lastIndex = index - 1;
-        }
+      // Populate driver dropdown in the new stop
+      const driverSelect = newStop.querySelector(".driver-select");
+      if (driverSelect && driversData.length > 0) {
+        populateDriverSelect(driverSelect);
       }
+
+      // Insert directly under the clicked stop
+      stopUnit.insertAdjacentElement("afterend", newStop);
+
+      // Renumber + fix ids + update global index
+      reindexStops();
+
+      if (addressGrid) addressGrid.dataset.lastIndex = index - 1;
     } catch (error) {
       console.error("Error adding stop:", error);
     }
   });
 
-  deleteButton.addEventListener("click", function () {
+  // Delete button event
+  stopsContainer.addEventListener("click", function (e) {
+    const btn = e.target.closest(".delete-stop-button");
+    if (!btn) return;
+
     try {
-      // Remove the last stop card if there's more than one stop
-      if (stopsContainer.children.length > 1) {
-        stopsContainer.removeChild(stopsContainer.lastElementChild);
-        index -= 1;
-        if (addressGrid) {
-          addressGrid.dataset.lastIndex = index - 1;
-        }
-      }
+      const stopUnit = btn.closest(".col-md-12.mb-4");
+      if (!stopUnit) return;
+
+      const units = stopsContainer.querySelectorAll(".col-md-12.mb-4");
+      if (units.length <= 1) return; // Need at least one stop
+
+      stopUnit.remove();
+
+      reindexStops();
     } catch (error) {
       console.error("Error deleting stop:", error);
     }
   });
+
+  stopsContainer.addEventListener("click", function (e) {
+    const upBtn = e.target.closest(".swap-up-button");
+    const downBtn = e.target.closest(".swap-down-button");
+    if (!upBtn && !downBtn) return;
+
+    e.preventDefault();
+
+    const stopUnit = e.target.closest(".col-md-12.mb-4");
+    if (!stopUnit) return;
+
+    if (upBtn) {
+      // find previous stop card (skip non-elements if any)
+      const prev = stopUnit.previousElementSibling;
+      if (!prev) return;
+      // move current before previous
+      stopsContainer.insertBefore(stopUnit, prev);
+    } else {
+      const next = stopUnit.nextElementSibling;
+      if (!next) return;
+      // move current after next
+      stopsContainer.insertBefore(next, stopUnit);
+    }
+
+    reindexStops();
+  });
+
+  function reindexStops() {
+    const units = stopsContainer.querySelectorAll(".col-md-12.mb-4");
+
+    units.forEach((unit, i) => {
+      const newIndex = i + 1;
+
+      const header = unit.querySelector(".card-header h6");
+      if (header) header.textContent = `Stop ${newIndex}`;
+
+      // Update ids inside this unit
+      unit.querySelectorAll("[id]").forEach((el) => {
+        el.id = rewriteIndexedId(el.id, newIndex);
+      });
+
+      // Update labels' for attributes
+      unit.querySelectorAll("label[for]").forEach((label) => {
+        label.htmlFor = rewriteIndexedId(label.htmlFor, newIndex);
+      });
+
+      const up = unit.querySelector(".swap-up-button");
+      const down = unit.querySelector(".swap-down-button");
+      if (up) up.disabled = i === 0;
+      if (down) down.disabled = i === units.length - 1;
+    });
+
+    // Next index used for Add Stop
+    index = units.length + 1;
+  }
+
+  function rewriteIndexedId(str, newIndex) {
+    return str
+      .replace(
+        /ride_dest_address_attributes_\d+_/g,
+        `ride_dest_address_attributes_${newIndex}_`,
+      )
+      .replace(/stop_\d+_/g, `stop_${newIndex}_`);
+  }
 });
