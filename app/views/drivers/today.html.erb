@@ -33,7 +33,9 @@
           <% @rides.each do |ride| %>
             <tr>
               <td><%= ride.passenger.name %></td>
-              <td><%= ride.passenger.phone %></td>
+              <td>
+                <%= link_to ride.passenger.phone, "tel:#{ride.passenger.phone.gsub(/[^\d+]/, '')}" %>
+              </td>
               <td>
                 <% 
                   all_rides = ride.get_all_linked_rides

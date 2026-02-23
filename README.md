@@ -14,8 +14,7 @@
 ## saasbook/lamorinda-spirit-van Badges
 
 ## Description
-The Lamorinda Spirit Van provides rides to Lamorinda older adults age 60+ and persons with disabilities to destinations in Lafayette, Moraga, Orinda, Concord, Martinez, Pleasant Hill, and Walnut Creek.
-[Lafayette City Hall Page](https://www.lovelafayette.org/city-hall/city-departments/parks-trails-recreation/senior-services/lamorinda-spirit-van)
+The [Lamorinda Spirit Van] (https://www.lovelafayette.org/city-hall/city-departments/parks-trails-recreation/senior-services/lamorinda-spirit-van) provides rides to Lamorinda older adults age 60+ and persons with disabilities to destinations in Lafayette, Moraga, Orinda, Concord, Martinez, Pleasant Hill, and Walnut Creek.
 
 ## Project Status
 Currently under development. Source Repo: [saasbook/lamorinda-spirit-van](https://github.com/saasbook/lamorinda-spirit-van)
