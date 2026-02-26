@@ -33,7 +33,9 @@
           <% @rides.each do |ride| %>
             <tr>
               <td><%= ride.passenger.name %></td>
-              <td><%= ride.passenger.phone %></td>
+              <td>
+                <%= link_to ride.passenger.phone, "tel:#{ride.passenger.phone.gsub(/[^\d+]/, '')}" %>
+              </td>
               <td>
                 <% 
                   all_rides = ride.get_all_linked_rides
@@ -55,7 +57,7 @@
                   <span class="badge bg-secondary">One-way</span>
                 <% end %>
               </td>
-              <td style="width:160px"><%= ride.start_address&.full_address %></td>
+              <td style="width:160px"><%= clickable_address_with_options(ride.start_address&.full_address) %></td>
               <td data-order="<%= ride.appointment_time ? ride.appointment_time.strftime('%H:%M') : '99:99' %>">
                 <%= ride.appointment_time&.strftime('%-I:%M %p') %>
               </td>
@@ -64,12 +66,12 @@
                   <% addresses = [] %>
                   <% current_ride = ride %>
                   <% while current_ride do %>
-                    <% addresses << "<li>#{current_ride.dest_address&.address_no_zip}</li>" %>
+                    <% addresses << "<li>#{clickable_address_with_options(current_ride.dest_address&.full_address, label: current_ride.dest_address&.address_no_zip)}</li>" %>
                     <% current_ride = current_ride.next_ride %>
                   <% end %>
                   <%= addresses.join('').html_safe %>
                 <% else %>
-                  <%= ride.dest_address&.full_address || 'N/A' %>
+                  <%= clickable_address_with_options(ride.dest_address&.full_address) %>
                 <% end %>
               </td>
               <td>
@@ -129,7 +131,7 @@
               <% end %>
             </p>
 
-            <p><strong>Origin:</strong> <%= ride.start_address&.full_address || 'N/A' %></p>
+            <p><strong>Origin:</strong> <%= clickable_address_with_options(ride.start_address&.full_address) %></p>
             <p>
               <strong>Appointment Time:</strong> 
               <%= ride.appointment_time ? ride.appointment_time.strftime('%-I:%M %p') : 'N/A' %>
@@ -140,12 +142,12 @@
                 <% addresses = [] %>
                 <% current_ride = ride %>
                 <% while current_ride do %>
-                  <% addresses << "<li>#{current_ride.dest_address&.address_no_zip}</li>" %>
+                  <% addresses << "<li>#{clickable_address_with_options(current_ride.dest_address&.full_address, label: current_ride.dest_address&.address_no_zip)}</li>" %>
                   <% current_ride = current_ride.next_ride %>
                 <% end %>
                 <%= addresses.join('').html_safe %>
               <% else %>
-                <%= ride.dest_address&.full_address || 'N/A' %>
+                <%= clickable_address_with_options(ride.dest_address&.full_address) %>
               <% end %>
             </p>
             <%= link_to "Info", ride_path(ride.id), class: "btn btn-primary" %>
