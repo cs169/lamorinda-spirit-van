@@ -159,39 +159,36 @@ document.addEventListener("turbo:load", function() {
     }
 
     // === FIX FOR DUPLICATE RIDE (Stop 1 & Passenger) ===
-    if (gon.duplicate_info) {
+    if (typeof gon !== 'undefined' && gon.duplicate_info) {
         const info = gon.duplicate_info;
 
-        // 1. Find the passenger object in our existing list
-        const passengerObj = gon.passengers.find(p => p.id === info.passenger_id);
+        if (gon.passengers && info.passenger_id) {
+            const passengerObj = gon.passengers.find(p => p.id === info.passenger_id);
 
-        if (passengerObj) {
-            const passengerInput = $("#ride_passenger_name");
+            if (passengerObj) {
+                const passengerInput = $("#ride_passenger_name");
 
-            // A. Visually set the name
-            passengerInput.val(passengerObj.label);
+                // A. Visually set the name
+                passengerInput.val(passengerObj.label);
 
-            // B. TRIGGER our existing logic
-            // This manually fires the 'autocompleteselect' event.
-            // Our existing code will catch this and fill:
-            // - passenger_id hidden field
-            // - wheelchair/disabled/caregiver fields
-            // - It might also try to fill the Home Address (we will fix that in step C)
-            passengerInput.trigger("autocompleteselect", { item: passengerObj });
+                // B. TRIGGER autocomplete logic
+                // This manually fires the 'autocompleteselect' event.
+                // Our existing code will catch this and fill:
+                // - passenger_id hidden field
+                // - wheelchair/disabled/caregiver fields
+                // - It might also try to fill the Home Address (we will fix that in step C)
+                passengerInput.trigger("autocompleteselect", { item: passengerObj });
 
-            // C. Overwrite Start Address
-            // We wait 50ms to ensure we overwrite the "Home Address" that
-            // the trigger above might have just auto-filled.
-            setTimeout(() => {
+                // C. Overwrite Start Address
+                // We overwrite the "Home Address" immediately after trigger completes.
                 if (info.start_address) {
-                   const addr = info.start_address;
-                   // Using the IDs from our previous messages
-                   if(addr.name)   $("#ride_start_address_attributes_name").val(addr.name);
-                   if(addr.street) $("#ride_start_address_attributes_street").val(addr.street);
-                   if(addr.city)   $("#ride_start_address_attributes_city").val(addr.city);
-                   if(addr.phone)  $("#ride_start_address_attributes_phone").val(addr.phone);
+                    const addr = info.start_address;
+                    if(addr.name)   $("#ride_start_address_attributes_name").val(addr.name);
+                    if(addr.street) $("#ride_start_address_attributes_street").val(addr.street);
+                    if(addr.city)   $("#ride_start_address_attributes_city").val(addr.city);
+                    if(addr.phone)  $("#ride_start_address_attributes_phone").val(addr.phone);
                 }
-            }, 50);
+            }
         }
     }
 })
