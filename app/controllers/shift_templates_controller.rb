@@ -21,7 +21,7 @@ class ShiftTemplatesController < ApplicationController
   # POST /shift_templates or /shift_templates.json
   def create
     @shift_template = ShiftTemplate.new(shift_template_params)
-    @start_date = params[:start_date]
+    @start_date = params[:start_date].presence || Time.zone.today.to_s
     respond_to do |format|
       if @shift_template.save
         format.html { redirect_to shifts_path(start_date: @start_date), notice: "Shift template was successfully created." }
@@ -36,7 +36,7 @@ class ShiftTemplatesController < ApplicationController
 
   # PATCH/PUT /shift_templates/1 or /shift_templates/1.json
   def update
-    @start_date = params[:start_date]
+    @start_date = params[:start_date].presence || Time.zone.today.to_s
     respond_to do |format|
       if @shift_template.update(shift_template_params)
         format.html { redirect_to shifts_path(start_date: @start_date), notice: "Shift template was successfully updated." }

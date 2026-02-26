@@ -9,7 +9,7 @@
 <div id="shifts-calendar">
   <%# The following line starts with the following parameter which can be replaced by
   'week_calendar' or 'month_calendar' or 'calendar' %>
-  <%= month_calendar(attribute: :shift_date, events: @shifts) do |date, shifts| %>
+  <%= month_calendar(attribute: :shift_date, events: @shifts, start_date: @date) do |date, shifts| %>
     <%= date %>
 
     <% if date.month == @date.month && date.year == @date.year && (current_user.admin? || current_user.dispatcher?) %>
