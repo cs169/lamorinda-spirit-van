@@ -164,7 +164,6 @@ class RidesController < ApplicationController
 
 
   private
-
   def set_ride
     @ride = Ride.find(params[:id])
   end
