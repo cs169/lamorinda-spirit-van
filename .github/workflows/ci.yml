@@ -91,13 +91,6 @@ jobs:
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
   
-    - name: Upload coverage to Code Climate
-      uses: paambaati/codeclimate-action@v9.0.0
-      env:
-        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-      with:
-        coverageLocations: |
-          ${{github.workspace}}/coverage/.resultset.json:simplecov
     - name: Run before-build command
       run: ./cc-test-reporter before-build
     - name: Run after-build command
