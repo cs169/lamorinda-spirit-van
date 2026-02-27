@@ -49,10 +49,8 @@ document.addEventListener("turbo:load", function () {
         populateDriverSelect(driverSelect);
       }
 
-      // Insert directly under the clicked stop
       stopUnit.insertAdjacentElement("afterend", newStop);
 
-      // Renumber + fix ids + update global index
       reindexStops();
 
       if (addressGrid) addressGrid.dataset.lastIndex = index - 1;
@@ -81,6 +79,7 @@ document.addEventListener("turbo:load", function () {
     }
   });
 
+  // Add Button Event
   stopsContainer.addEventListener("click", function (e) {
     const upBtn = e.target.closest(".swap-up-button");
     const downBtn = e.target.closest(".swap-down-button");
@@ -92,15 +91,12 @@ document.addEventListener("turbo:load", function () {
     if (!stopUnit) return;
 
     if (upBtn) {
-      // find previous stop card (skip non-elements if any)
       const prev = stopUnit.previousElementSibling;
       if (!prev) return;
-      // move current before previous
       stopsContainer.insertBefore(stopUnit, prev);
     } else {
       const next = stopUnit.nextElementSibling;
       if (!next) return;
-      // move current after next
       stopsContainer.insertBefore(next, stopUnit);
     }
 
@@ -116,12 +112,10 @@ document.addEventListener("turbo:load", function () {
       const header = unit.querySelector(".card-header h6");
       if (header) header.textContent = `Stop ${newIndex}`;
 
-      // Update ids inside this unit
       unit.querySelectorAll("[id]").forEach((el) => {
         el.id = rewriteIndexedId(el.id, newIndex);
       });
 
-      // Update labels' for attributes
       unit.querySelectorAll("label[for]").forEach((label) => {
         label.htmlFor = rewriteIndexedId(label.htmlFor, newIndex);
       });
@@ -132,7 +126,7 @@ document.addEventListener("turbo:load", function () {
       if (down) down.disabled = i === units.length - 1;
     });
 
-    // Next index used for Add Stop
+    // Update global index
     index = units.length + 1;
   }
 
