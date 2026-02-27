@@ -90,14 +90,6 @@ jobs:
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-  
-    - name: Run before-build command
-      run: ./cc-test-reporter before-build
-    - name: Run after-build command
-      run: |
-        ./cc-test-reporter after-build --exit-code $? --coverage-input-type simplecov
-      env:
-        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
 
   build_and_deploy_docs:
     runs-on: ubuntu-latest
