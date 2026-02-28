@@ -31,7 +31,11 @@ Rails.application.routes.draw do
   resources :feedbacks
   resources :passengers
 
-  resources :rides
+  resources :rides do
+    member do
+      get :duplicate # Creates route: /rides/:id/duplicate
+    end
+  end
 
   resources :shifts do
     collection do

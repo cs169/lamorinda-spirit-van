@@ -11,63 +11,81 @@ document.addEventListener("turbo:load", function () {
 
   let index = parseInt(addressGrid?.dataset?.lastIndex, 10) + 1 || 2;
 
-  // Get drivers data from gon
-  let driversData = [];
-  if (typeof gon !== 'undefined' && gon.drivers) {
-    driversData = gon.drivers;
-  }
+  // 1. Helper to Populate Driver Dropdown
+  function populateDriverSelect(selectElement, selectedDriverId = null) {
+    let driversData = (typeof gon !== 'undefined' && gon.drivers) ? gon.drivers : [];
 
-  function populateDriverSelect(selectElement) {
-    // Clear existing options except the first one
     selectElement.innerHTML = '<option value="">Select a Driver</option>';
-    
     // Add driver options
     driversData.forEach(function(driver) {
       const option = document.createElement('option');
       option.value = driver.id;
       option.textContent = driver.name;
+      if (selectedDriverId && String(driver.id) === String(selectedDriverId)) {
+        option.selected = true;
+      }
       selectElement.appendChild(option);
     });
   }
 
-  addButton.addEventListener("click", function () {
+  // 2. The Core Logic: Adds a stop row and fills it with data
+  function addStopRow(data = null) {
     try {
       const html = template.innerHTML.replace(/__INDEX__/g, index);
       const wrapper = document.createElement("div");
       wrapper.innerHTML = html;
+      const newRow = wrapper.firstElementChild;
 
-      if (wrapper.firstElementChild) {
-        // Populate driver dropdown in the new stop
-        const driverSelect = wrapper.querySelector('.driver-select');
-        if (driverSelect && driversData.length > 0) {
-          populateDriverSelect(driverSelect);
+      if (newRow) {
+        // A. Handle Driver Dropdown
+        const driverSelect = newRow.querySelector('.driver-select');
+        if (driverSelect) {
+          populateDriverSelect(driverSelect, data ? data.driver_id : null);
+        }
+
+        // B. Handle Address Pre-fill (If data is provided from Duplicate)
+        if (data) {
+          // Selectors match `name="ride[addresses_attributes][2][name]"` style
+          const nameInput   = newRow.querySelector('[name$="[name]"]');
+          const phoneInput  = newRow.querySelector('[name$="[phone]"]');
+          const streetInput = newRow.querySelector('[name$="[street]"]');
+          const cityInput   = newRow.querySelector('[name$="[city]"]');
+          const vanInput    = newRow.querySelector('[name$="[van]"]');
+
+          if (nameInput)   nameInput.value   = data.name || '';
+          if (phoneInput)  phoneInput.value  = data.phone || '';
+          if (streetInput) streetInput.value = data.street || '';
+          if (cityInput)   cityInput.value   = data.city || '';
+          if (vanInput)    vanInput.value    = data.van || '';
         }
 
         // Add the new stop card to the stops container
-        stopsContainer.appendChild(wrapper.firstElementChild);
-        
-        index += 1;
-        if (addressGrid) {
-          addressGrid.dataset.lastIndex = index - 1;
-        }
+        stopsContainer.appendChild(newRow);
+
+        if (addressGrid) addressGrid.dataset.lastIndex = index;
+        index++;
       }
     } catch (error) {
       console.error("Error adding stop:", error);
     }
-  });
+  }
+
+  // 3. Event Listeners
+  addButton.addEventListener("click", () => addStopRow()); // Manual click = empty row
 
   deleteButton.addEventListener("click", function () {
-    try {
-      // Remove the last stop card if there's more than one stop
-      if (stopsContainer.children.length > 1) {
+    // Prevent deleting the initial destination
+    if (stopsContainer.children.length > 1) {
         stopsContainer.removeChild(stopsContainer.lastElementChild);
-        index -= 1;
-        if (addressGrid) {
-          addressGrid.dataset.lastIndex = index - 1;
-        }
-      }
-    } catch (error) {
-      console.error("Error deleting stop:", error);
+        if (addressGrid) addressGrid.dataset.lastIndex = index;
+        index--;
     }
   });
+
+  // 4. AUTO-GENERATION: Check for 'duplicated_stops' from Controller
+  if (typeof gon !== 'undefined' && gon.duplicated_stops && gon.duplicated_stops.length > 0) {
+    gon.duplicated_stops.forEach(stopData => {
+      addStopRow(stopData);
+    });
+  }
 });

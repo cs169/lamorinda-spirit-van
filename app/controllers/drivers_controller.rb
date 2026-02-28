@@ -2,7 +2,7 @@
 
 class DriversController < ApplicationController
   before_action :set_driver, only: %i[ edit update destroy today ]
-  before_action -> { require_role("admin", "dispatcher") }, only: [:new, :edit, :create, :update, :destroy]
+  before_action -> { require_role("admin", "dispatcher") }, only: %i[ new edit create update destroy ]
 
   # Currently the "capture_return_to" method is used for redirect from the drivers index page to /drivers/id/today?date=XXX page
   before_action -> { capture_return_to(:return_to_drivers_today_from_drivers_index) }, only: :index
