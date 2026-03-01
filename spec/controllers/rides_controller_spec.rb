@@ -309,6 +309,8 @@ RSpec.describe RidesController, type: :controller do
 
   describe "GET #duplicate" do
     it "successfully initializes a duplicated ride in memory" do
+      Gon.clear
+
       # Link ride1 to ride2 to test the chain of stops
       @ride1.update!(next_ride: @ride2)
 
@@ -320,7 +322,7 @@ RSpec.describe RidesController, type: :controller do
       expect(assigns(:ride)).to be_a_new_record
       expect(assigns(:ride).passenger_id).to eq(@ride1.passenger_id)
 
-      gon_data = request.env["gon"]
+      gon_data = Gon.all_variables
 
       # Verify the JS data (gon) is prepared for autocomplete.js
       expect(gon_data[:duplicate_info][:passenger_id]).to eq(@passenger1.id)
@@ -329,6 +331,13 @@ RSpec.describe RidesController, type: :controller do
       # Verify Stops 2..N are captured
       expect(gon_data[:duplicated_stops].length).to eq(1)
       expect(gon_data[:duplicated_stops].first[:driver_id]).to eq(@driver2.id)
+    end
+
+    it "resets specific fields on the main ride object" do
+      get :duplicate, params: { id: @ride1.id }
+
+      duplicated_ride = assigns(:ride)
+      expect(duplicated_ride.status).to eq("Pending")
     end
   end
 
