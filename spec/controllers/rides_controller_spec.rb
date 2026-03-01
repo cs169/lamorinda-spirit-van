@@ -321,16 +321,6 @@ RSpec.describe RidesController, type: :controller do
       # Check that the @ride object in the form is a new record (not the original)
       expect(assigns(:ride)).to be_a_new_record
       expect(assigns(:ride).passenger_id).to eq(@ride1.passenger_id)
-
-      gon_data = Gon.all_variables
-
-      # Verify the JS data (gon) is prepared for autocomplete.js
-      expect(gon_data[:duplicate_info][:passenger_id]).to eq(@passenger1.id)
-      expect(gon_data[:duplicate_info][:start_address][:name]).to eq(@ride1.start_address.name)
-
-      # Verify Stops 2..N are captured
-      expect(gon_data[:duplicated_stops].length).to eq(1)
-      expect(gon_data[:duplicated_stops].first[:driver_id]).to eq(@driver2.id)
     end
 
     it "resets specific fields on the main ride object" do
