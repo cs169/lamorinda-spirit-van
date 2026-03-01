@@ -312,7 +312,7 @@ RSpec.describe RidesController, type: :controller do
       # Link ride1 to ride2 to test the chain of stops
       @ride1.update!(next_ride: @ride2)
 
-      get duplicate_ride_path(@ride1)
+      get :duplicate, params: { id: @ride1.id }
 
       expect(response).to have_http_status(:success)
 
