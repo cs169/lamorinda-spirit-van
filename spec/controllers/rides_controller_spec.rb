@@ -314,19 +314,21 @@ RSpec.describe RidesController, type: :controller do
 
       get :duplicate, params: { id: @ride1.id }
 
-      expect(response).to have_http_status(:success)
+      expect(response).to render_template(:new)
 
       # Check that the @ride object in the form is a new record (not the original)
       expect(assigns(:ride)).to be_a_new_record
       expect(assigns(:ride).passenger_id).to eq(@ride1.passenger_id)
 
+      gon = request.env['gon']
+
       # Verify the JS data (gon) is prepared for autocomplete.js
-      expect(gon.duplicate_info[:passenger_id]).to eq(@passenger1.id)
-      expect(gon.duplicate_info[:start_address][:name]).to eq(@ride1.start_address.name)
+      expect(gon[duplicate_info][:passenger_id]).to eq(@passenger1.id)
+      expect(gon[duplicate_info][:start_address][:name]).to eq(@ride1.start_address.name)
 
       # Verify Stops 2..N are captured
-      expect(gon.duplicated_stops.length).to eq(1)
-      expect(gon.duplicated_stops.first[:driver_id]).to eq(@driver2.id)
+      expect(gon[duplicated_stops].length).to eq(1)
+      expect(gon[duplicated_stops].first[:driver_id]).to eq(@driver2.id)
     end
   end
 
