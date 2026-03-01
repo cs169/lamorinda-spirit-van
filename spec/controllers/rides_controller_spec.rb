@@ -4,28 +4,28 @@ require "rails_helper"
 
 RSpec.describe RidesController, type: :controller do
   before(:each) do
-     @user = FactoryBot.create(:user, :dispatcher)
-     sign_in @user
+    @user = FactoryBot.create(:user, :dispatcher)
+    sign_in @user
 
-     @driver1 = FactoryBot.create(:driver)
-     @driver2 = FactoryBot.create(:driver)
+    @driver1 = FactoryBot.create(:driver)
+    @driver2 = FactoryBot.create(:driver)
 
-     @address1 = FactoryBot.create(:address)
+    @address1 = FactoryBot.create(:address)
 
-     @passenger1 = FactoryBot.create(:passenger)
-     @ride1 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1)
-     @ride2 = FactoryBot.create(:ride, driver: @driver2, passenger: @passenger1)
-     @ride3 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1)
-     @ride4 = FactoryBot.create(:ride, date: 5.days.ago)
-   end
+    @passenger1 = FactoryBot.create(:passenger)
+    @ride1 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1)
+    @ride2 = FactoryBot.create(:ride, driver: @driver2, passenger: @passenger1)
+    @ride3 = FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1)
+    @ride4 = FactoryBot.create(:ride, date: 5.days.ago)
+  end
 
   describe "GET #index" do
-   it "assigns all rides to @rides and renders the index template" do
-     get :index
-     expect(response).to be_successful
-     expect(assigns(:rides)).to match_array([@ride1, @ride2, @ride3, @ride4])
-   end
- end
+    it "assigns all rides to @rides and renders the index template" do
+      get :index
+      expect(response).to be_successful
+      expect(assigns(:rides)).to match_array([@ride1, @ride2, @ride3, @ride4])
+    end
+  end
 
   describe "POST #create" do
     context "with valid attributes" do
@@ -304,6 +304,30 @@ RSpec.describe RidesController, type: :controller do
 
       expect(response).to redirect_to(root_path)
       expect(flash[:notice]).to eq("Ride(s) were successfully removed.")
+    end
+  end
+
+  describe "GET #duplicate" do
+    it "successfully initializes a duplicated ride in memory" do
+      Gon.clear
+
+      # Link ride1 to ride2 to test the chain of stops
+      @ride1.update!(next_ride: @ride2)
+
+      get :duplicate, params: { id: @ride1.id }
+
+      expect(response).to render_template(:new)
+
+      # Check that the @ride object in the form is a new record (not the original)
+      expect(assigns(:ride)).to be_a_new_record
+      expect(assigns(:ride).passenger_id).to eq(@ride1.passenger_id)
+    end
+
+    it "resets specific fields on the main ride object" do
+      get :duplicate, params: { id: @ride1.id }
+
+      duplicated_ride = assigns(:ride)
+      expect(duplicated_ride.status).to eq("Pending")
     end
   end
 

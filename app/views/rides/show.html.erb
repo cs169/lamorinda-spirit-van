@@ -72,7 +72,7 @@
         <%= link_to "Edit Ride", edit_ride_path(@ride), class: "btn btn-primary w-100" %>
       </div>
       <div class="col-12 mb-2 col-md-auto">
-        <%= link_to "Duplicate", duplicate_ride_path(@ride), class: "btn btn-primary w-100" %>
+        <%= link_to "Duplicate", duplicate_ride_path(@ride), data: { turbo: false }, class: "btn btn-primary w-100" %>
       </div>
       <div class="col-12 mb-2 col-md-auto">
         <%= link_to "Back to All Rides", rides_path, class: "btn btn-secondary w-100" %>
