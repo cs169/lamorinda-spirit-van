@@ -40,5 +40,26 @@ RSpec.describe PassengersController, type: :controller do
       expect(response).to redirect_to(edit_passenger_path(@passenger1))
       expect(flash[:notice]).to eq("Passenger updated.")
     end
+
+    it "hits the error branch when the address is invalid" do
+      # Address validates presence of street and city, so we crash one of them
+      invalid_params = {
+        id: @passenger1.id,
+        passenger: {
+          name: "Valid Name",
+          address_attributes: {
+            id: @passenger1.address.id,
+            street: "Valid Street 999" # Invalid City
+          }
+        }
+      }
+
+      put :update, params: invalid_params
+
+      # This hits: format.html { render :edit, status: :unprocessable_entity }
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to render_template(:edit)
+    end
+
   end
 end
