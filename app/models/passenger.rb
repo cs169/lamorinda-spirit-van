@@ -3,7 +3,7 @@
 class Passenger < ApplicationRecord
   # since passenger has the associated address_id, it should have the belongs_to
   belongs_to :address
-  # for new address record whne creating new passenger
+  # for new address record when creating new passenger
   accepts_nested_attributes_for :address
   has_many :rides, dependent: :nullify
   delegate :full_address, to: :address, allow_nil: true
