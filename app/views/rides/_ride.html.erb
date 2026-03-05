@@ -6,9 +6,7 @@
           <table id="rides-table" class="table table-striped table-bordered table-hover mb-0 small">
           <thead class="table-dark" style="position: sticky; top: 0; z-index: 1;">
             <tr class="border-0">
-              <th class="border-0"></th> <!-- Feedback Button -->
-              <th class="border-0"></th> <!-- Info Button -->
-              <th class="border-0"></th> <!-- Delete Button -->
+              <th class="border-0"></th> <!-- Feedback & Info & Delete Button -->
               <th class="border-0 text-filter">Date</th>
               <th class="border-0 text-filter">Driver(s)</th>
               <th class="border-0 text-filter">Van(s)</th>
@@ -38,19 +36,17 @@
                 
                 <!-- Actions should remain separate -->
                 <td>
+                  <div class="d-flex flex-column gap-2 align-item-center">
                     <% if ride.feedback %>
                       <%= link_to 'Feedback', feedback_path(ride.feedback), class: "btn btn-sm btn-primary" %>
                     <% else %>
                       No Feedback
                     <% end %>
-                </td>
-                <td>
-                  <%= link_to 'Edit', edit_ride_path(ride), class: "btn btn-sm btn-primary" %>
-                </td>
-                <td>
-                  <%= link_to 'Delete', ride,
+                    <%= link_to 'Edit', edit_ride_path(ride), class: "btn btn-sm btn-primary" %>
+                    <%= link_to 'Delete', ride,
                       data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' },
                       class: "btn btn-sm btn-danger" %>
+                  </div>
                 </td>
 
                 <td data-order="<%= ride.date.strftime('%Y-%m-%d') %>">
@@ -124,7 +120,7 @@
           </tbody>
           <tfoot>
             <tr class="border-0">
-              <% 23.times do %>
+              <% 21.times do %>
                 <th class="border-0"></th>
               <% end %>
             </tr>
