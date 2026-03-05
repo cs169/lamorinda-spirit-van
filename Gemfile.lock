@@ -557,6 +557,13 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
+    sentry-rails (6.4.1)
+      railties (>= 5.2.0)
+      sentry-ruby (~> 6.4.1)
+    sentry-ruby (6.4.1)
+      bigdecimal
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      logger
     shellany (0.0.1)
     simple_calendar (3.1.0)
       rails (>= 6.1)
@@ -673,6 +680,8 @@ DEPENDENCIES
   rubocop-rails-omakase
   rubocop-rspec
   selenium-webdriver
+  sentry-rails
+  sentry-ruby
   simple_calendar
   simplecov
   simplecov_json_formatter

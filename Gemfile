@@ -119,3 +119,6 @@ group :test do
   gem "database_cleaner" # required by Cucumber
   gem "rails-controller-testing"
 end
+
+gem "sentry-ruby"
+gem "sentry-rails"
