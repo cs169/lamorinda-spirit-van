@@ -8,14 +8,14 @@ class ShiftTemplatesController < ApplicationController
   def new
     @shift_template = ShiftTemplate.new(params.permit(:day_of_week))
     @drivers = Driver.order(:name)
-    @start_date = params[:start_date].presence || Time.zone.today.to_s
+    @start_date = params[:start_date]
   end
 
   # GET /shift_templates/1/edit
   def edit
     @shift_template = ShiftTemplate.find(params[:id])
     @drivers = Driver.order(:name)
-    @start_date = params[:start_date].presence || Time.zone.today.to_s
+    @start_date = params[:start_date]
   end
 
   # POST /shift_templates or /shift_templates.json
