@@ -65,13 +65,15 @@ class Ride < ApplicationRecord
   end
 
   def get_all_linked_rides
-    chain = [self]
-    current = self
-    while current.next_ride
-      chain << current.next_ride
-      current = current.next_ride
+    @linked_rides ||= begin
+      chain = [self]
+      current = self
+      while (nxt = current.next_ride)
+        chain << nxt
+        current = nxt
+      end
+      chain
     end
-    chain
   end
 
   def walk_to_root

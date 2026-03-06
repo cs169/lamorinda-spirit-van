@@ -20,12 +20,41 @@ RSpec.describe RidesController, type: :controller do
    end
 
   describe "GET #index" do
-   it "assigns all rides to @rides and renders the index template" do
-     get :index
-     expect(response).to be_successful
-     expect(assigns(:rides)).to match_array([@ride1, @ride2, @ride3, @ride4])
-   end
- end
+    it "assigns all rides to @rides and renders the index template" do
+      get :index
+      expect(response).to be_successful
+      expect(assigns(:rides)).to match_array([@ride1, @ride2, @ride3, @ride4])
+    end
+  end
+
+  describe "GET #index pagination" do
+    before do
+      # 4 rides already exist from the outer before block.
+      # Create 47 more with distinct past dates so total = 51 (spans 2 pages).
+      47.times { |i| FactoryBot.create(:ride, driver: @driver1, passenger: @passenger1, date: (i + 10).days.ago) }
+    end
+
+    it "assigns a pagy object" do
+      get :index
+      expect(assigns(:pagy)).to be_present
+    end
+
+    it "limits page 1 to 50 rides" do
+      get :index
+      expect(assigns(:rides).count).to eq(50)
+    end
+
+    it "returns the remaining ride on page 2" do
+      get :index, params: { page: 2 }
+      expect(assigns(:rides).count).to eq(1)
+    end
+
+    it "orders rides by date descending" do
+      get :index
+      dates = assigns(:rides).map(&:date)
+      expect(dates).to eq(dates.sort.reverse)
+    end
+  end
 
   describe "POST #create" do
     context "with valid attributes" do
