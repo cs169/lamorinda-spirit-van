@@ -2,6 +2,7 @@
 
 class ApplicationController < ActionController::Base
   include ApplicationHelper
+  include Pagy::Backend
 
   # Ensures that all actions (except Devise controllers) require a logged-in user.
   # Unauthenticated users will be redirected to the sign-in page.

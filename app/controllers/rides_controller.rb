@@ -8,8 +8,10 @@ class RidesController < ApplicationController
   # "Give me all rides whose id is not someone else's next_ride_id
   # — i.e., they're not the continuation of another ride."
   def index
-    @rides = Ride.includes(:feedback, :driver, :passenger, :start_address, :dest_address, :next_ride)
-                .where.not(id: Ride.select(:next_ride_id).where.not(next_ride_id: nil))
+    base = Ride.includes(:feedback, :driver, :passenger, :start_address, :dest_address, :next_ride)
+               .where.not(id: Ride.select(:next_ride_id).where.not(next_ride_id: nil))
+               .order(date: :desc)
+    @pagy, @rides = pagy(base, limit: 50)
   end
 
   def show
