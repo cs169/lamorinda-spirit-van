@@ -15,27 +15,24 @@ document.addEventListener("turbo:load", function () {
     driversData = gon.drivers;
   }
 
-  function populateDriverSelect(selectElement) {
-    // Clear existing options except the first one
+  // Helper to populate driver dropdown
+  function populateDriverSelect(selectElement, selectedDriverId = null) {
     selectElement.innerHTML = '<option value="">Select a Driver</option>';
 
-    // Add driver options
     driversData.forEach(function (driver) {
       const option = document.createElement("option");
       option.value = driver.id;
       option.textContent = driver.name;
+      if (selectedDriverId && String(driver.id) === String(selectedDriverId)) {
+        option.selected = true;
+      }
       selectElement.appendChild(option);
     });
   }
 
-  stopsContainer.addEventListener("click", function (e) {
-    const btn = e.target.closest(".add-stop-button");
-    if (!btn) return;
-
+  // Add a stop row, optionally prefilled with duplicated-stop data
+  function addStopRow(data = null, insertAfterStopUnit = null) {
     try {
-      const stopUnit = btn.closest(".col-md-12.mb-4");
-      if (!stopUnit) return;
-
       const html = template.innerHTML.replace(/__INDEX__/g, index);
       const wrapper = document.createElement("div");
       wrapper.innerHTML = html;
@@ -45,15 +42,49 @@ document.addEventListener("turbo:load", function () {
 
       // Populate driver dropdown in the new stop
       const driverSelect = newStop.querySelector(".driver-select");
-      if (driverSelect && driversData.length > 0) {
-        populateDriverSelect(driverSelect);
+      if (driverSelect) {
+        populateDriverSelect(driverSelect, data ? data.driver_id : null);
       }
 
-      stopUnit.insertAdjacentElement("afterend", newStop);
+      // Prefill duplicated stop data
+      if (data) {
+        const nameInput = newStop.querySelector('[name$="[name]"]');
+        const phoneInput = newStop.querySelector('[name$="[phone]"]');
+        const streetInput = newStop.querySelector('[name$="[street]"]');
+        const cityInput = newStop.querySelector('[name$="[city]"]');
+        const vanInput = newStop.querySelector('[name$="[van]"]');
+
+        if (nameInput) nameInput.value = data.name || "";
+        if (phoneInput) phoneInput.value = data.phone || "";
+        if (streetInput) streetInput.value = data.street || "";
+        if (cityInput) cityInput.value = data.city || "";
+        if (vanInput) vanInput.value = data.van || "";
+      }
+
+      if (insertAfterStopUnit) {
+        insertAfterStopUnit.insertAdjacentElement("afterend", newStop);
+      } else {
+        stopsContainer.appendChild(newStop);
+      }
 
       reindexStops();
 
       if (addressGrid) addressGrid.dataset.lastIndex = index - 1;
+    } catch (error) {
+      console.error("Error adding stop:", error);
+    }
+  }
+
+  // Add stop button event (delegated)
+  stopsContainer.addEventListener("click", function (e) {
+    const btn = e.target.closest(".add-stop-button");
+    if (!btn) return;
+
+    try {
+      const stopUnit = btn.closest(".col-md-12.mb-4");
+      if (!stopUnit) return;
+
+      addStopRow(null, stopUnit);
     } catch (error) {
       console.error("Error adding stop:", error);
     }
@@ -72,14 +103,13 @@ document.addEventListener("turbo:load", function () {
       if (units.length <= 1) return; // Need at least one stop
 
       stopUnit.remove();
-
       reindexStops();
     } catch (error) {
       console.error("Error deleting stop:", error);
     }
   });
 
-  // Add Button Event
+  // Swap up / down event
   stopsContainer.addEventListener("click", function (e) {
     const upBtn = e.target.closest(".swap-up-button");
     const downBtn = e.target.closest(".swap-down-button");
@@ -137,5 +167,16 @@ document.addEventListener("turbo:load", function () {
         `ride_dest_address_attributes_${newIndex}_`,
       )
       .replace(/stop_\d+_/g, `stop_${newIndex}_`);
+  }
+
+  // Auto-generate duplicated stops from controller
+  if (
+    typeof gon !== "undefined" &&
+    gon.duplicated_stops &&
+    gon.duplicated_stops.length > 0
+  ) {
+    gon.duplicated_stops.forEach((stopData) => {
+      addStopRow(stopData);
+    });
   }
 });

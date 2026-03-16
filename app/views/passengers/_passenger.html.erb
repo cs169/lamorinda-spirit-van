@@ -6,8 +6,7 @@
           <table id="passengers-table" class="table table-striped table-bordered table-hover mb-0 small">
             <thead class="table-dark" style="position: sticky; top: 0; z-index: 1;">
               <tr class="border-0">
-                <th class="border-0"></th> <!-- Info -->
-                <th class="border-0"></th> <!-- Delete -->
+                <th class="border-0"></th> <!-- Info & Delete -->
                 <th class="border-0 text-filter">Last Name</th>
                 <th class="border-0 text-filter">First Name</th>
                 <th class="border-0 text-filter">Address</th>
@@ -36,9 +35,12 @@
             <tbody>
               <% @passengers.each do |passenger| %>
                 <tr class="clickable-row" data-href="<%= edit_passenger_path(passenger) %>">
-                  <td><%= link_to 'Edit', edit_passenger_path(passenger, return_url: request.fullpath), class: "btn btn-sm btn-primary" %></td>
-                  <td><%= link_to 'Delete', passenger, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: "btn btn-sm btn-danger" %></td>
-
+                  <td>
+                    <div class="d-flex flex-column gap-2 align-item-center">
+                      <%= link_to 'Edit', edit_passenger_path(passenger, return_url: request.fullpath), class: "btn btn-sm btn-primary" %>
+                      <%= link_to 'Delete', passenger, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: "btn btn-sm btn-danger" %>
+                    </div>
+                  </td>
                   <% full_name = passenger&.name.to_s.strip %>
                   <% name_parts = full_name.split(' ') %>
                   <% last_name = name_parts.length > 1 ? name_parts.last : nil %>
@@ -111,7 +113,7 @@
 
             <tfoot>
               <tr class="border-0">
-                <% 23.times do %>
+                <% 21.times do %>
                   <th class="border-0" id = "custom-search-bars"></th>
                 <% end %>
               </tr>

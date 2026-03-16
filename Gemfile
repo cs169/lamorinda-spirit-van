@@ -95,8 +95,9 @@ group :development, :test do
   # selenium webdriver - for headful cucumber tests
   gem "selenium-webdriver"
 
-  # factory bot
+  # factory bot & faker
   gem "factory_bot_rails"
+  gem "faker"
 
   gem "byebug"
 end
@@ -122,3 +123,6 @@ group :test do
   gem "database_cleaner" # required by Cucumber
   gem "rails-controller-testing"
 end
+
+gem "sentry-ruby"
+gem "sentry-rails"

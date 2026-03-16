@@ -271,10 +271,10 @@ RSpec.describe Ride, type: :model do
     end
 
     it "creates rides with and links them correctly" do
-      address0 = FactoryBot.create(:address, street: "789 Broadway", city: "San Francisco")
-      address1 = FactoryBot.create(:address, street: "1000 Dwight", city: "Berkeley")
-      address2 = FactoryBot.create(:address, street: "100 Bancroft", city: "Berkeley")
-      address3 = FactoryBot.create(:address, street: "80 University", city: "Berkeley")
+      address0 = FactoryBot.create(:address, street: "789 Broadway", city: "San Francisco", name: "Kaiser")
+      address1 = FactoryBot.create(:address, street: "1000 Dwight", city: "Berkeley", name: "Kaiser")
+      address2 = FactoryBot.create(:address, street: "100 Bancroft", city: "Berkeley", name: "Kaiser")
+      address3 = FactoryBot.create(:address, street: "80 University", city: "Berkeley", name: "Kaiser")
 
       addrs = [address0, address1, address2, address3]
 

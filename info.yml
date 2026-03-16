@@ -1,0 +1,32 @@
+project:
+  name: 'lamorinda-spirit-van' # Your project name, e.g. Cue-to-cue
+  owner: 'CS169L-23' # Do not change
+  teamId: '01' # Your team number, e.g. 02
+  identities:
+    heroku: 'https://sp26-01-spiritvan-74f6391ab24d.herokuapp.com/'
+  members:
+    member1: # Add all project members
+      name: 'Ariel' # Member 1 name
+      surname: 'Shehter' # Member 1 last name
+      githubUsername: 'AlisaIsGodly' # Member 1 GitHub username
+      herokuEmail: 'arielshehter@berkeley.edu' # Member 1 Heroku username
+    member2:
+      name: 'Ryan'
+      surname: 'Tran'
+      githubUsername: 'rytradmin1'
+      herokuEmail: 'ryanmtran@berkeley.edu'
+    member3: # Add all project members
+      name: 'Nick' # Member 1 name
+      surname: 'Yin' # Member 1 last name
+      githubUsername: 'n1qqq' # Member 1 GitHub username
+      herokuEmail: 'n1qqq@berkeley.edu' # Member 1 Heroku username
+    member4: # Add all project members
+      name: 'Merlin' # Member 1 name
+      surname: 'Mo' # Member 1 last name
+      githubUsername: 'mmmmerlin' # Member 1 GitHub username
+      herokuEmail: '15127332796@163.com' # Member 1 Heroku username
+    member5: # Add all project members
+      name: 'Jiajun' # Member 1 name
+      surname: 'Liu' # Member 1 last name
+      githubUsername: 'jliu6184' # Member 1 GitHub username
+      herokuEmail: 'jliu618@berkeley.edu' # Member 1 Heroku username

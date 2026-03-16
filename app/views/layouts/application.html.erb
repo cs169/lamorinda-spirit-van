@@ -61,6 +61,7 @@
 
     <!-- gon gem integration -->
     <%= include_gon %>
+    <%= Sentry.get_trace_propagation_meta.html_safe %>
   </head>
 
   <body>

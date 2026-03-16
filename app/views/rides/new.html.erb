@@ -1,5 +1,6 @@
-<%= javascript_importmap_tags %>
-
+<% content_for :head do %>
+  <meta name="turbo-cache-control" content="no-cache">
+<% end %>
 <!-- app/views/rides/new.html.erb -->
 <div class="row justify-content-center">
   <div class="col-md-12">
@@ -71,7 +72,7 @@
               <div class="mb-3">
                 <%= f.label :status, "Status" %> <span class="text-danger">*</span>
                 <%= f.select :status,
-                             [["Requested"], ['Pending'], ['Scheduled'], ['Confirmed'], ['Email sent'], ["Waitlisted"], ['Cancelled']],
+                             [["Requested"], ["Pending"], ["Scheduled"], ["Confirmed"], ["Email sent"], ["Waitlisted"], ["Cancelled"]],
                              {},
                              class: "form-select", required: true %>
               </div>
@@ -89,7 +90,7 @@
               <div class="mb-3">
                 <%= f.label :passenger_name, "Passenger" %> <span class="text-danger">*</span>
                 <div class="input-group">
-                  <%= f.text_field :passenger_name, class: "form-control", required: true %>
+                  <%= f.text_field :passenger_name, class: 'form-control', required: true %>
                   <%= link_to new_passenger_path(return_url: request.fullpath), class: "btn btn-success" do %>
                     <i class="bi bi-person-plus"></i> Create
                   <% end %>
@@ -224,6 +225,7 @@
                   <div class="mb-3">
                     <label class="form-label" for="ride_start_address_attributes_name">Address Name</label>
                     <input type="text"
+                           value="<%= @ride.start_address&.name %>"
                            name="ride[addresses_attributes][][name]"
                            class="form-control"
                            id="ride_start_address_attributes_name"
@@ -234,6 +236,7 @@
                     <label class="form-label" for="ride_start_address_attributes_street">Street</label>
                     <span class="text-danger">*</span>
                     <input type="text"
+                           value="<%= @ride.start_address&.street %>"
                            name="ride[addresses_attributes][][street]"
                            class="form-control"
                            id="ride_start_address_attributes_street"
@@ -245,6 +248,7 @@
                     <label class="form-label" for="ride_start_address_attributes_city">City</label>
                     <span class="text-danger">*</span>
                     <input type="text"
+                           value="<%= @ride.start_address&.city %>"
                            name="ride[addresses_attributes][][city]"
                            class="form-control"
                            id="ride_start_address_attributes_city"
@@ -255,6 +259,7 @@
                   <div class="mb-3">
                     <label class="form-label" for="ride_start_address_attributes_phone">Phone</label>
                     <input type="text"
+                           value="<%= @ride.start_address&.phone %>"
                            name="ride[addresses_attributes][][phone]"
                            class="form-control"
                            id="ride_start_address_attributes_phone"
@@ -265,7 +270,13 @@
 
               <!-- Stops Container -->
               <div id="stops-container">
-                <%= render partial: "stop_fields", locals: {index: 1, address: nil, drivers: @drivers, selected_driver_id: @ride.driver_id} %>
+                <%= render partial: "stop_fields", locals: {
+                  index: 1,
+                  address: @ride.dest_address,
+                  drivers: @drivers,
+                  selected_driver_id: @ride.driver_id,
+                  selected_van: @ride.van
+                } %>
               </div>
 
               <!-- Hidden Template for Additional Destination -->
