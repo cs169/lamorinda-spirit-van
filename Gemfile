@@ -59,6 +59,9 @@ gem "omniauth-rails_csrf_protection"
 # blazer (data reporting)
 gem "blazer"
 
+# pagination
+gem "pagy", "~> 9.0"
+
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
