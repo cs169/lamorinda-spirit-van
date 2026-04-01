@@ -8,10 +8,10 @@ class RidesController < ApplicationController
   # "Give me all rides whose id is not someone else's next_ride_id
   # — i.e., they're not the continuation of another ride."
   def index
-    base = Ride.includes(:feedback, :driver, :passenger, :start_address, :dest_address, :next_ride)
-               .where.not(id: Ride.select(:next_ride_id).where.not(next_ride_id: nil))
-               .order(date: :desc)
-    @pagy, @rides = pagy(base, limit: 50)
+    respond_to do |format|
+      format.html
+      format.json { render json: rides_datatable }
+    end
   end
 
   def show
@@ -165,6 +165,181 @@ class RidesController < ApplicationController
 
 
   private
+
+  # ---------------------------------------------------------------------------
+  # DataTables server-side processing
+  # ---------------------------------------------------------------------------
+
+  # Maps DataTables column index → SQL expression for ORDER BY
+  DT_SORT_COLUMNS = {
+    1  => "rides.date",
+    2  => "drivers.name",
+    3  => "rides.van",
+    4  => "passengers.name",
+    5  => "passengers.name",
+    7  => "start_addresses.city",
+    8  => "rides.appointment_time",
+    10 => "rides.ride_type",
+    11 => "rides.wheelchair",
+    12 => "rides.disabled",
+    13 => "rides.need_caregiver",
+    14 => "rides.fare_type",
+    15 => "rides.fare_amount",
+    16 => "rides.notes_to_driver",
+    17 => "rides.notes",
+    18 => "rides.hours",
+    19 => "rides.amount_paid",
+    20 => "rides.status"
+  }.freeze
+
+  # Maps DataTables column index → SQL expression for WHERE LIKE filtering
+  DT_FILTER_COLUMNS = {
+    2  => "drivers.name",
+    3  => "CAST(rides.van AS TEXT)",
+    4  => "passengers.name",
+    5  => "passengers.name",
+    7  => "start_addresses.city",
+    10 => "rides.ride_type",
+    14 => "rides.fare_type",
+    16 => "rides.notes_to_driver",
+    17 => "rides.notes",
+    20 => "rides.status"
+  }.freeze
+
+  def rides_datatable
+    base = head_rides_base_scope
+
+    records_total = base.count
+
+    base = apply_dt_column_filters(base)
+    records_filtered = base.count
+
+    col_idx   = params.dig(:order, "0", :column).to_i
+    direction = params.dig(:order, "0", :dir) == "asc" ? "ASC" : "DESC"
+    sort_col  = DT_SORT_COLUMNS[col_idx] || "rides.date"
+    base      = base.order(Arel.sql("#{sort_col} #{direction}"))
+
+    start  = params[:start].to_i
+    length = [params[:length].to_i, 1].max
+
+    rides = base
+              .includes(:feedback, :driver, :passenger, :start_address, :dest_address, :next_ride)
+              .offset(start)
+              .limit(length)
+
+    {
+      draw:            params[:draw].to_i,
+      recordsTotal:    records_total,
+      recordsFiltered: records_filtered,
+      data:            rides.map { |ride| dt_ride_row(ride) }
+    }
+  end
+
+  # Base scope with the JOINs needed for sorting/filtering on associated columns.
+  # Uses LEFT JOINs so rides without a driver/passenger/address still appear.
+  def head_rides_base_scope
+    Ride
+      .left_outer_joins(:driver, :passenger)
+      .joins("LEFT JOIN addresses AS start_addresses ON start_addresses.id = rides.start_address_id")
+      .where.not(id: Ride.select(:next_ride_id).where.not(next_ride_id: nil))
+  end
+
+  def apply_dt_column_filters(scope)
+    cols = params[:columns] || {}
+
+    # Column 1: date range encoded as "YYYY-MM-DD|YYYY-MM-DD"
+    date_val = cols.dig("1", :search, :value).to_s.strip
+    if date_val.include?("|")
+      from, to = date_val.split("|")
+      scope = scope.where("rides.date >= ?", from) if from.present?
+      scope = scope.where("rides.date <= ?", to) if to.present?
+    end
+
+    # All other filterable columns: case-insensitive LIKE
+    DT_FILTER_COLUMNS.each do |idx, sql_col|
+      val = cols.dig(idx.to_s, :search, :value).to_s.strip
+      next if val.blank?
+
+      scope = scope.where("LOWER(#{sql_col}) LIKE LOWER(?)", "%#{val}%")
+    end
+
+    scope
+  end
+
+  def dt_ride_row(ride)
+    all_rides    = ride.get_all_linked_rides
+    full_name    = ride.passenger&.name.to_s.strip
+    name_parts   = full_name.split(" ")
+    last_name    = name_parts.length > 1 ? name_parts.last : nil
+    first_name   = name_parts.length > 1 ? name_parts[0...-1].join(" ") : name_parts.first
+
+    stop_count    = all_rides.length
+    first_start   = all_rides.first&.start_address&.full_address
+    last_dest     = all_rides.last&.dest_address&.full_address
+    is_round_trip = first_start == last_dest && first_start.present?
+
+    [
+      dt_actions_cell(ride),
+      ride.date.strftime("%m/%d/%Y"),
+      all_rides.map { |r| r.driver&.name || "Unknown" }.uniq.join(", ").presence || "N/A",
+      all_rides.filter_map(&:van).uniq.join(", ").presence || "N/A",
+      last_name  || "N/A",
+      first_name || "N/A",
+      dt_stops_cell(stop_count, is_round_trip),
+      ride.start_address&.full_address || "N/A",
+      ride.appointment_time ? ride.appointment_time.strftime("%-I:%M %p") : "",
+      dt_destinations_cell(ride, all_rides),
+      ride.ride_type.to_s,
+      dt_bool_badge(ride.wheelchair),
+      dt_bool_badge(ride.disabled),
+      dt_bool_badge(ride.need_caregiver),
+      ride.fare_type.to_s,
+      helpers.number_to_currency(ride.fare_amount),
+      ride.notes_to_driver || "N/A",
+      ride.notes || "N/A",
+      ride.hours || 0,
+      helpers.number_to_currency(ride.amount_paid),
+      ride.status || "N/A"
+    ]
+  end
+
+  def dt_actions_cell(ride)
+    feedback = if ride.feedback
+      %(<a href="#{feedback_path(ride.feedback)}" class="btn btn-sm btn-primary">Feedback</a>)
+    else
+      "No Feedback"
+    end
+    edit      = %(<a href="#{edit_ride_path(ride)}" class="btn btn-sm btn-primary">Edit</a>)
+    duplicate = %(<a href="#{duplicate_ride_path(ride)}" data-turbo="false" class="btn btn-sm btn-primary">Duplicate</a>)
+    delete    = %(<a href="#{ride_path(ride)}" data-turbo-method="delete" data-turbo-confirm="Are you sure?" class="btn btn-sm btn-danger">Delete</a>)
+    %(<div class="d-flex flex-column gap-2 align-items-center">#{feedback}#{edit}#{duplicate}#{delete}</div>)
+  end
+
+  def dt_stops_cell(stop_count, is_round_trip)
+    html = +""
+    html << %(<span class="badge bg-info text-dark">#{stop_count} stops</span>) if stop_count > 1
+    html << %(<span class="badge bg-warning text-dark">Rt</span>)               if is_round_trip
+    html << %(<span class="badge bg-secondary">One-way</span>)                  if stop_count == 1 && !is_round_trip
+    html
+  end
+
+  def dt_destinations_cell(ride, all_rides)
+    if ride.next_ride_id?
+      items = all_rides.map { |r| "<li>#{r.dest_address&.address_no_zip}</li>" }.join
+      "<ul class='mb-0 ps-3'>#{items}</ul>"
+    else
+      ride.dest_address&.full_address || "N/A"
+    end
+  end
+
+  def dt_bool_badge(value)
+    css   = value ? "bg-success" : "bg-danger"
+    label = value ? "Yes" : "No"
+    %(<span class="badge #{css}">#{label}</span>)
+  end
+
+  # ---------------------------------------------------------------------------
+
   def set_ride
     @ride = Ride.find(params[:id])
   end
