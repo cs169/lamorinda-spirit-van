@@ -36,9 +36,10 @@ class PassengersController < ApplicationController
 
     respond_to do |format|
       if @passenger.save
-        format.html { redirect_to passengers_path, notice: "Passenger created." }
+        format.html { redirect_to passenger_create_redirect_url, notice: "Passenger created." }
         format.json { render :show, status: :created, location: @passenger }
       else
+        @safe_return_url = safe_return_url || passengers_path
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @passenger.errors, status: :unprocessable_entity }
       end
@@ -81,5 +82,17 @@ class PassengersController < ApplicationController
     params.require(:passenger).permit(:name, :phone, :alternative_phone, :birthday, :race, :hispanic, :wheelchair, :low_income, :disabled, :need_caregiver, :email, :notes, :date_registered, :audit,
                                       :lmv_member, :mail_updates, :rqsted_newsletter,
                                       address_attributes: [:street, :city, :zip_code])
+  end
+
+  def passenger_create_redirect_url
+    return passengers_path unless safe_return_url
+
+    uri = URI.parse(safe_return_url)
+    query_params = Rack::Utils.parse_nested_query(uri.query)
+    query_params["selected_passenger_id"] = @passenger.id
+    uri.query = query_params.to_query
+    uri.to_s
+  rescue URI::InvalidURIError
+    passengers_path
   end
 end

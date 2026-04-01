@@ -54,7 +54,7 @@ class RidesController < ApplicationController
 
   def edit
     # For driver dropdown list in creating / updating
-    @ride = Ride.find(params[:id])
+    set_ride
     @all_rides = @ride.get_all_linked_rides
 
     # Load all passengers with their associations at once
@@ -65,7 +65,7 @@ class RidesController < ApplicationController
   end
 
   def update
-    @ride = Ride.find(params[:id])
+    set_ride
     @drivers = Driver.order(:name)
 
     # Before destroying, copy feedback

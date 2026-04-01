@@ -2,8 +2,7 @@ project:
   name: 'lamorinda-spirit-van' # Your project name, e.g. Cue-to-cue
   owner: 'CS169L-23' # Do not change
   teamId: '01' # Your team number, e.g. 02
-  identities:
-    heroku: 'https://sp26-01-spiritvan-74f6391ab24d.herokuapp.com/'
+  identities: {}
   members:
     member1: # Add all project members
       name: 'Ariel' # Member 1 name

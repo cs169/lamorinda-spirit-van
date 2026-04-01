@@ -67,16 +67,10 @@ jobs:
         bundle exec rake db:migrate
         bundle exec rake db:test:prepare
     - name: Install Chrome & Chromedriver
-      run: |
-          sudo apt-get update
-          sudo apt-get install -y wget unzip
-          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-          sudo dpkg -i google-chrome-stable_current_amd64.deb || sudo apt-get -f install -y
-          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+\.\d+')
-          wget -O chromedriver.zip "https://storage.googleapis.com/chrome-for-testing-public/$CHROME_VERSION/linux64/chromedriver-linux64.zip"
-          unzip chromedriver.zip
-          sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
-          sudo chmod +x /usr/local/bin/chromedriver
+      uses: browser-actions/setup-chrome@v1
+      with:
+        chrome-version: stable
+        # install-chromedriver: true  # Let Selenium Manager silently fetch the correct driver ver.
     - name: Run rspec Tests
       env:
         RAILS_ENV: test

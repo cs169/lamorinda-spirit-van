@@ -15,6 +15,7 @@
 <% end %>
 
 <%= form_with(model: @passenger, local: true) do |form| %>
+  <%= hidden_field_tag :return_url, @safe_return_url if @safe_return_url.present? %>
   <div class="row">
     <!-- TOP ROW - 2 Cards -->
     <div class="col-md-6">
