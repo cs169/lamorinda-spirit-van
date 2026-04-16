@@ -270,7 +270,7 @@ RSpec.describe Ride, type: :model do
       expect(rides[0].next_ride).to eq(nil)
     end
 
-    it "creates rides with and links them correctly" do
+    it "creates rides with many addresses and links them correctly" do
       address0 = FactoryBot.create(:address, street: "789 Broadway", city: "San Francisco", name: "Kaiser")
       address1 = FactoryBot.create(:address, street: "1000 Dwight", city: "Berkeley", name: "Kaiser")
       address2 = FactoryBot.create(:address, street: "100 Bancroft", city: "Berkeley", name: "Kaiser")

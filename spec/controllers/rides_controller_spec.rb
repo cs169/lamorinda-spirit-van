@@ -248,7 +248,7 @@ RSpec.describe RidesController, type: :controller do
       }
 
       put :update, params: { id: @ride1.id, ride: update_attrs }
-      new_ride = Ride.order(:created_at).last
+      new_ride = Ride.order(:id).last
       expect(response).to redirect_to(edit_ride_path(new_ride))
       expect(flash[:notice]).to eq("Ride was successfully updated.")
     end
@@ -258,13 +258,46 @@ RSpec.describe RidesController, type: :controller do
       expect(response).to render_template(:edit)
     end
 
+    it "immediately flashes error message when same Street gets assigned different name fields" do
+      update_attrs = {
+        date: Time.zone.tomorrow,
+        driver_id: @driver1.id,
+        passenger_id: @passenger1.id,
+        addresses_attributes: [
+          {
+            name: "Royal Palace",
+            street: "100 Main St",
+            city: "Palettia",
+            state: "PA",
+            zip: "90000"
+          },
+          {
+            name: "Downtown",
+            street: "100 Powell St",
+            city: "Palettia",
+            state: "PA",
+            zip: "90100"
+          }
+        ]
+      }
+
+      put :update, params: { id: @ride1.id, ride: update_attrs }
+      new_ride = Ride.order(:id).last
+      expect(response).to redirect_to(edit_ride_path(new_ride))
+      expect(flash[:notice]).to eq("Ride was successfully updated.")
+
+      update_attrs[:addresses_attributes][1][:name] = "Downtown Workshop"
+      put :update, params: { id: @ride1.id, ride: update_attrs }
+      expect(flash.now[:alert]).to eq("Update failed: Street has already been taken")
+      expect(response).to render_template(:edit)
+    end
+
     it "raises error when a generic system error occurs" do
       allow(Ride).to receive(:build_linked_rides!).and_raise(StandardError, "Unknown Error!")
       expect {
         post :update, params: { id: @ride1.id, ride: { driver_id: nil } }
       }.to raise_error
     end
-
     it "adds a new destination to the ride chain" do
       # Start with 2 stops
       ride1 = FactoryBot.create(:ride, passenger: @passenger1, driver: @driver1)
