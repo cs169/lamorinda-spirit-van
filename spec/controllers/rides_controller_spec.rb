@@ -277,19 +277,31 @@ RSpec.describe RidesController, type: :controller do
             city: "Palettia",
             state: "PA",
             zip: "90100"
+          },
+          {
+            name: "Royal Palace",
+            street: "100 Main St",
+            city: "Palettia",
+            state: "PA",
+            zip: "90000"
           }
+        ],
+        stops_attributes: [
+          { driver_id: @driver1.id, van: 1 },
+          { driver_id: @driver2.id, van: 2 }
         ]
       }
 
       put :update, params: { id: @ride1.id, ride: update_attrs }
-      new_ride = Ride.order(:id).last
-      expect(response).to redirect_to(edit_ride_path(new_ride))
+      new_rides = Ride.order(id: :desc).limit(2)
+      expect(response).to redirect_to(edit_ride_path(new_rides[0]))
       expect(flash[:notice]).to eq("Ride was successfully updated.")
 
       update_attrs[:addresses_attributes][1][:name] = "Downtown Workshop"
-      put :update, params: { id: new_ride.id, ride: update_attrs }
+      put :update, params: { id: new_rides[0].id, ride: update_attrs }
       expect(flash.now[:alert]).to eq("Update failed: Street has already been taken")
       expect(response).to render_template(:edit)
+      expect(new_rides[0].dest_address_id).to eq(new_rides[1].start_address_id)
     end
 
     it "raises error when a generic system error occurs" do
