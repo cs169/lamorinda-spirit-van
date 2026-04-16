@@ -287,7 +287,7 @@ RSpec.describe RidesController, type: :controller do
       expect(flash[:notice]).to eq("Ride was successfully updated.")
 
       update_attrs[:addresses_attributes][1][:name] = "Downtown Workshop"
-      put :update, params: { id: @ride1.id, ride: update_attrs }
+      put :update, params: { id: new_ride.id, ride: update_attrs }
       expect(flash.now[:alert]).to eq("Update failed: Street has already been taken")
       expect(response).to render_template(:edit)
     end
