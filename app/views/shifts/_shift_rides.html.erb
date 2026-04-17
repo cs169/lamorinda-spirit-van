@@ -30,6 +30,7 @@
                       No Feedback
                     <% end %>
                     <%= link_to 'Edit', edit_ride_path(ride), class: "btn btn-sm btn-primary" %>
+                    <%= link_to 'Duplicate', duplicate_ride_path(ride), data: { turbo: false }, class: "btn btn-sm btn-primary" %>
                     <%= link_to 'Delete', ride,
                         data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' },
                         class: "btn btn-sm btn-danger" %>
