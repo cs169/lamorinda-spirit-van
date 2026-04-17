@@ -35,18 +35,25 @@ class RidesController < ApplicationController
 
   def create
     ride_attrs, addresses, stops_data = Ride.extract_attrs_from_params(ride_params)
-    result_rides, success = Ride.build_linked_rides(ride_attrs, addresses, stops_data)
 
-    if success
-      @ride = result_rides[0]
+    begin
+      new_rides = Ride.build_linked_rides!(ride_attrs, addresses, stops_data)
+
+      new_rides.each(&:save!)
+      @ride = new_rides.first
+
       session[:return_to] ||= rides_path
       redirect_to session[:return_to], notice: "Ride was successfully created."
-    else
+
+    rescue ActiveRecord::RecordInvalid => e
       @ride = Ride.new(ride_attrs)
-      @ride.valid?
-      flash[:alert] = @ride.errors.full_messages.join
-      Rails.logger.info("Ride creation failed: #{@ride.errors.full_messages}")
-      render :new
+      flash.now[:alert] = "Creation failed: #{e.record.errors.full_messages.join('! ')}"
+      render :new, status: :unprocessable_entity
+
+    rescue => e
+      flash[:alert] = "A system error occurred: #{e.message}"
+      Rails.logger.error("System Error: #{e.backtrace.first(5)}")
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -70,31 +77,37 @@ class RidesController < ApplicationController
     @feedback = @ride.feedback
     old_feedback_attrs = @feedback.attributes.except("id", "created_at", "updated_at", "ride_id") if @feedback
 
+    all_rides = @ride.get_all_linked_rides
     ride_attrs, addresses, stops_data = Ride.extract_attrs_from_params(ride_params)
 
-    # Destroy old ride chain
-    all_rides = @ride.get_all_linked_rides
-    ActiveRecord::Base.transaction do
-      all_rides.reverse_each(&:destroy!)
-    end
+    begin
+      new_rides = Ride.build_linked_rides!(ride_attrs, addresses, stops_data)
 
-    # Rebuild new ride chain
-    result_rides, success = Ride.build_linked_rides(ride_attrs, addresses, stops_data)
+      ActiveRecord::Base.transaction do
+        # Destroy old ride chain
+        all_rides.reverse_each(&:destroy!)
 
-    if success
-      @ride = result_rides[0]
-      @ride.feedback.destroy if @ride.feedback && old_feedback_attrs
-      @ride.create_feedback!(old_feedback_attrs) if old_feedback_attrs
-      @ride.save!
+        new_rides.each(&:save!)
+        @ride = new_rides.first
+
+        if old_feedback_attrs
+          @ride.feedback&.destroy!
+          @ride.create_feedback!(old_feedback_attrs)
+        end
+      end
+
       flash[:notice] = "Ride was successfully updated."
       redirect_to edit_ride_path(@ride)
-    else
-      @all_rides = @ride.get_all_linked_rides
+
+    rescue ActiveRecord::RecordInvalid => e
+      @all_rides = all_rides
       @ride = Ride.new(ride_attrs)
-      @ride.valid?
-      flash[:alert] = @ride.errors.full_messages.join
-      Rails.logger.info("Ride update failed: #{@ride.errors.full_messages}")
-      render :edit
+      flash.now[:alert] = "Update failed: #{e.record.errors.full_messages.join('! ')}"
+      render :edit, status: :unprocessable_entity
+
+    rescue => e
+      Rails.logger.error("System Error: #{e.backtrace.first(5)}")
+      raise e
     end
   end
 

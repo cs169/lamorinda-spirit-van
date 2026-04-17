@@ -258,10 +258,10 @@ RSpec.describe Ride, type: :model do
 
       addrs = [a1, a2]
 
-      rides, success = Ride.build_linked_rides(ride_attrs, addrs)
+      rides = Ride.build_linked_rides!(ride_attrs, addrs)
 
+      expect { rides.each(&:save!) }.not_to raise_error
       expect(rides.length).to eq(1)
-      expect(success).to eq(true)
 
       expect(rides[0].start_address).to eq(a1)
       expect(rides[0].dest_address).to eq(a2)
@@ -270,7 +270,7 @@ RSpec.describe Ride, type: :model do
       expect(rides[0].next_ride).to eq(nil)
     end
 
-    it "creates rides with and links them correctly" do
+    it "creates rides with many addresses and links them correctly" do
       address0 = FactoryBot.create(:address, street: "789 Broadway", city: "San Francisco", name: "Kaiser")
       address1 = FactoryBot.create(:address, street: "1000 Dwight", city: "Berkeley", name: "Kaiser")
       address2 = FactoryBot.create(:address, street: "100 Bancroft", city: "Berkeley", name: "Kaiser")
@@ -278,10 +278,10 @@ RSpec.describe Ride, type: :model do
 
       addrs = [address0, address1, address2, address3]
 
-      rides, success  = Ride.build_linked_rides(ride_attrs, addrs)
+      rides = Ride.build_linked_rides!(ride_attrs, addrs)
 
+      expect { rides.each(&:save!) }.not_to raise_error
       expect(rides.length).to eq(3)
-      expect(success).to eq(true)
 
       expect(rides[0].start_address.address_no_zip).to eq("(Kaiser) 789 Broadway, San Francisco")
       expect(rides[0].dest_address.address_no_zip).to eq("(Kaiser) 1000 Dwight, Berkeley")
@@ -308,9 +308,9 @@ RSpec.describe Ride, type: :model do
 
       addrs = [shared_address, another_address, shared_address] # same address used again
 
-      rides, success = Ride.build_linked_rides(ride_attrs, addrs)
+      rides = Ride.build_linked_rides!(ride_attrs, addrs)
 
-      expect(success).to eq(true)
+      expect { rides.each(&:save!) }.not_to raise_error
       expect(rides.length).to eq(2)
 
       expect(rides[0].start_address_id).to eq(shared_address.id)
@@ -335,9 +335,9 @@ RSpec.describe Ride, type: :model do
           { driver_id: @driver2.id, van: 2 }
         ]
 
-        rides, success = Ride.build_linked_rides(ride_attrs, addrs, stops_data)
+        rides = Ride.build_linked_rides!(ride_attrs, addrs, stops_data)
 
-        expect(success).to eq(true)
+        expect { rides.each(&:save!) }.not_to raise_error
         expect(rides.length).to eq(2)
 
         # First ride: address1 -> address2 with driver1 and van 1
@@ -368,9 +368,9 @@ RSpec.describe Ride, type: :model do
           # Only one stop specified, second should use base attributes
         ]
 
-        rides, success = Ride.build_linked_rides(ride_attrs, addrs, stops_data)
+        rides = Ride.build_linked_rides!(ride_attrs, addrs, stops_data)
 
-        expect(success).to eq(true)
+        expect { rides.each(&:save!) }.not_to raise_error
         expect(rides.length).to eq(2)
 
         # First ride uses stops_data
@@ -391,10 +391,11 @@ RSpec.describe Ride, type: :model do
           { driver_id: @driver2.id } # van not specified
         ]
 
-        rides, success = Ride.build_linked_rides(ride_attrs, addrs, stops_data)
+        rides = Ride.build_linked_rides!(ride_attrs, addrs, stops_data)
 
-        expect(success).to eq(true)
+        expect { rides.each(&:save!) }.not_to raise_error
         expect(rides.length).to eq(1)
+
         expect(rides[0].driver_id).to eq(@driver2.id)
         expect(rides[0].van).to be_nil # not specified in stops_data
       end
@@ -408,10 +409,11 @@ RSpec.describe Ride, type: :model do
           { van: 3 } # driver_id not specified
         ]
 
-        rides, success = Ride.build_linked_rides(ride_attrs, addrs, stops_data)
+        rides = Ride.build_linked_rides!(ride_attrs, addrs, stops_data)
 
-        expect(success).to eq(true)
+        expect { rides.each(&:save!) }.not_to raise_error
         expect(rides.length).to eq(1)
+
         expect(rides[0].driver_id).to eq(ride_attrs[:driver_id]) # uses base
         expect(rides[0].van).to eq(3)
       end
@@ -427,9 +429,9 @@ RSpec.describe Ride, type: :model do
           { driver_id: @driver2.id, van: 7 }
         ]
 
-        rides, success = Ride.build_linked_rides(ride_attrs, addrs, stops_data)
+        rides = Ride.build_linked_rides!(ride_attrs, addrs, stops_data)
 
-        expect(success).to eq(true)
+        expect { rides.each(&:save!) }.not_to raise_error
         expect(rides.length).to eq(2)
 
         # First ride uses base attributes (empty stops_data entry ignored)
@@ -446,10 +448,11 @@ RSpec.describe Ride, type: :model do
 
         addrs = [address1, address2]
 
-        rides, success = Ride.build_linked_rides(ride_attrs, addrs) # no stops_data
+        rides = Ride.build_linked_rides!(ride_attrs, addrs) # no stops_data
 
-        expect(success).to eq(true)
+        expect { rides.each(&:save!) }.not_to raise_error
         expect(rides.length).to eq(1)
+
         expect(rides[0].driver_id).to eq(ride_attrs[:driver_id])
       end
     end
@@ -477,8 +480,9 @@ RSpec.describe Ride, type: :model do
           { driver_id: @driver2.id, van: 2 }
         ]
 
-        rides, success = Ride.build_linked_rides({ driver_id: @driver1.id, date: Date.current }, addrs, stops_data)
-        expect(success).to eq(true)
+        rides = Ride.build_linked_rides!({ driver_id: @driver1.id, date: Date.current }, addrs, stops_data)
+
+        expect { rides.each(&:save!) }.not_to raise_error
 
         # Test from first ride in chain
         expect(rides[0].all_drivers_names).to eq("#{@driver1.name}, #{@driver2.name}")
@@ -495,8 +499,9 @@ RSpec.describe Ride, type: :model do
           { driver_id: @driver1.id, van: 3 } # Same driver, different van
         ]
 
-        rides, success = Ride.build_linked_rides({ driver_id: @driver1.id, date: Date.current }, addrs, stops_data)
-        expect(success).to eq(true)
+        rides = Ride.build_linked_rides!({ driver_id: @driver1.id, date: Date.current }, addrs, stops_data)
+
+        expect { rides.each(&:save!) }.not_to raise_error
 
         expect(rides[0].all_drivers_names).to eq(@driver1.name)
       end
@@ -519,8 +524,9 @@ RSpec.describe Ride, type: :model do
           { driver_id: @driver2.id, van: 5 }
         ]
 
-        rides, success = Ride.build_linked_rides({ driver_id: @driver1.id, date: Date.current }, addrs, stops_data)
-        expect(success).to eq(true)
+        rides = Ride.build_linked_rides!({ driver_id: @driver1.id, date: Date.current }, addrs, stops_data)
+
+        expect { rides.each(&:save!) }.not_to raise_error
 
         # Test from first ride in chain
         expect(rides[0].all_vans_numbers).to eq("2, 5")
@@ -537,8 +543,9 @@ RSpec.describe Ride, type: :model do
           { driver_id: @driver2.id, van: 3 } # Same van, different driver
         ]
 
-        rides, success = Ride.build_linked_rides({ driver_id: @driver1.id, date: Date.current }, addrs, stops_data)
-        expect(success).to eq(true)
+        rides = Ride.build_linked_rides!({ driver_id: @driver1.id, date: Date.current }, addrs, stops_data)
+
+        expect { rides.each(&:save!) }.not_to raise_error
 
         expect(rides[0].all_vans_numbers).to eq("3")
       end
@@ -578,8 +585,9 @@ RSpec.describe Ride, type: :model do
           { driver_id: @driver3.id, van: 3 }
         ]
 
-        rides, success = Ride.build_linked_rides({ driver_id: @driver1.id, date: Date.current }, addrs, stops_data)
-        expect(success).to eq(true)
+        rides = Ride.build_linked_rides!({ driver_id: @driver1.id, date: Date.current }, addrs, stops_data)
+
+        expect { rides.each(&:save!) }.not_to raise_error
         expect(rides.length).to eq(3)
 
         # Test from any ride in the chain

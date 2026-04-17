@@ -23,43 +23,39 @@ class Ride < ApplicationRecord
     self.dest_address = get_or_generate_address(attrs)
   end
 
-  def self.build_linked_rides(ride_attrs, addrs, stops_data = [])
+  def self.build_linked_rides!(ride_attrs, addrs, stops_data = [])
     created_rides = []
     prev_ride = nil
 
-    ActiveRecord::Base.transaction do
-      i = 0
-      while i < (addrs.length - 1)
-        origin = addrs[i]
-        destination = addrs[i + 1]
+    addrs&.each_cons(2)&.with_index do |(origin, destination), i|
+      # Create ride with base attributes
+      ride = Ride.new(ride_attrs)
 
-        # Create ride with base attributes
-        ride = Ride.new(ride_attrs)
-        ride.start_address_attributes = origin
-        ride.dest_address_attributes = destination
+      # These setters use find_or_create_by! and would raise ActiveRecord::RecordInvalid if necessary
+      ride.start_address_attributes = origin
+      ride.dest_address_attributes = destination
 
-        # Override driver and van if provided in stops_data
-        if stops_data.present? && stops_data[i].present?
-          stop_data = stops_data[i]
-          ride.driver_id = stop_data[:driver_id] if stop_data[:driver_id].present?
-          ride.van = stop_data[:van] if stop_data[:van].present?
-        end
-
-        if prev_ride
-          prev_ride.next_ride = ride
-          prev_ride.save!
-        end
-
-        ride.save!
-        created_rides << ride
-        prev_ride = ride
-        i += 1
+      # Override driver and van if provided in stops_data
+      if stops_data&.[](i)
+        stop_data = stops_data[i]
+        ride.driver_id = stop_data[:driver_id] if stop_data[:driver_id].present?
+        ride.van = stop_data[:van] if stop_data[:van].present?
       end
+
+      if prev_ride
+        prev_ride.next_ride = ride
+      end
+
+      ride.validate!
+      created_rides << ride
+      prev_ride = ride
     end
 
-    [created_rides, true]
-  rescue => e
-    [e, false]
+    if created_rides.empty?
+      raise ActiveRecord::RecordInvalid.new(Ride.new)
+    end
+
+    created_rides
   end
 
   def get_all_linked_rides

@@ -86,6 +86,12 @@ RSpec.describe RidesController, type: :controller do
         expect(response).to render_template(:new)
       end
 
+      it "renders new when a generic system error occurs" do
+        allow(Ride).to receive(:build_linked_rides!).and_raise(StandardError, "Unknown Error!")
+        post :create, params: { ride: valid_attributes }
+        expect(response).to render_template(:new)
+      end
+
       it "creates a new ride with 3 addresses" do
         valid_attributes[:addresses_attributes] << {
           street: "789 Third Ave",
@@ -124,17 +130,17 @@ RSpec.describe RidesController, type: :controller do
             { street: "456 Second Ave", city: "Berkeley", state: "CA", zip: "94704" },
             { street: "789 Third Ave", city: "San Francisco", state: "CA", zip: "94105" }
           ],
-                  stops_attributes: [
-          { driver_id: @driver1.id, van: 1 },
-          { driver_id: @driver2.id, van: 2 }
-        ]
+          stops_attributes: [
+            { driver_id: @driver1.id, van: 1 },
+            { driver_id: @driver2.id, van: 2 }
+          ]
         )
 
         expect {
           post :create, params: { ride: attributes_with_stops }
         }.to change(Ride, :count).by(2)
 
-        created_rides = Ride.order(:created_at).last(2)
+        created_rides = Ride.order(id: :desc).limit(2)
 
         # First ride should use first stop's driver and van
         expect(created_rides[0].driver_id).to eq(@driver1.id)
@@ -173,14 +179,67 @@ RSpec.describe RidesController, type: :controller do
       }
 
       put :update, params: { id: @ride1.id, ride: update_attrs }
-      new_ride = Ride.order(:created_at).last
+      new_ride = Ride.order(:id).last
       expect(response).to redirect_to(edit_ride_path(new_ride))
       expect(flash[:notice]).to eq("Ride was successfully updated.")
     end
 
-    it "renders edit on failure" do
+    it "renders edit on RecordInvalid failure" do
       put :update, params: { id: @ride1.id, ride: { driver_id: nil } }
       expect(response).to render_template(:edit)
+    end
+
+    it "immediately flashes error message when same Street gets assigned different name fields" do
+      update_attrs = {
+        date: Time.zone.tomorrow,
+        driver_id: @driver1.id,
+        passenger_id: @passenger1.id,
+        addresses_attributes: [
+          {
+            name: "Royal Palace",
+            street: "100 Main St",
+            city: "Palettia",
+            state: "PA",
+            zip: "90000"
+          },
+          {
+            name: "Downtown",
+            street: "100 Powell St",
+            city: "Palettia",
+            state: "PA",
+            zip: "90100"
+          },
+          {
+            name: "Royal Palace",
+            street: "100 Main St",
+            city: "Palettia",
+            state: "PA",
+            zip: "90000"
+          }
+        ],
+        stops_attributes: [
+          { driver_id: @driver1.id, van: 1 },
+          { driver_id: @driver2.id, van: 2 }
+        ]
+      }
+
+      put :update, params: { id: @ride1.id, ride: update_attrs }
+      new_rides = Ride.order(id: :desc).limit(2)
+      expect(response).to redirect_to(edit_ride_path(new_rides[0]))
+      expect(flash[:notice]).to eq("Ride was successfully updated.")
+
+      update_attrs[:addresses_attributes][1][:name] = "Downtown Workshop"
+      put :update, params: { id: new_rides[0].id, ride: update_attrs }
+      expect(flash.now[:alert]).to eq("Update failed: Street has already been taken")
+      expect(response).to render_template(:edit)
+      expect(new_rides[0].dest_address_id).to eq(new_rides[1].start_address_id)
+    end
+
+    it "raises error when a generic system error occurs" do
+      allow(Ride).to receive(:build_linked_rides!).and_raise(StandardError, "Unknown Error!")
+      expect {
+        post :update, params: { id: @ride1.id, ride: { driver_id: nil } }
+      }.to raise_error
     end
 
     it "adds a new destination to the ride chain" do
@@ -260,7 +319,7 @@ RSpec.describe RidesController, type: :controller do
       put :update, params: { id: ride1.id, ride: update_attrs }
 
       # Should create 2 new rides (3 addresses = 2 ride segments)
-      updated_rides = Ride.order(:created_at).last(2)
+      updated_rides = Ride.order(id: :desc).limit(2)
 
       expect(updated_rides[0].driver_id).to eq(@driver1.id)
       expect(updated_rides[0].van).to eq(5)
