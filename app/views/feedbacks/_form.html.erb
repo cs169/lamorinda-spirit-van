@@ -27,7 +27,7 @@
 
         <div class="mb-3">
           <%= form.label :mobility, class: "form-label" %>
-          <%= form.text_field :mobility, class: "form-control" %>
+          <%= form.select :mobility, Feedback::MOBILITY_OPTIONS, { include_blank: "Select mobility aid" }, class: "form-select" %>
         </div>
 
         <div class="mb-3">
