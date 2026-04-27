@@ -30,6 +30,81 @@ RSpec.describe Shift, type: :model do
       expect(shift).not_to be_valid
       expect(shift.errors[:driver]).to include("must exist")
     end
+
+    context "odometer fields" do
+      it "is valid when both odometer fields are blank" do
+        shift = Shift.new(shift_date: Time.zone.today, shift_type: "am", driver: @driver,
+                          odometer_pre: nil, odometer_post: nil)
+        expect(shift).to be_valid
+      end
+
+      it "is invalid with a non-numeric odometer_pre" do
+        shift = Shift.new(shift_date: Time.zone.today, shift_type: "am", driver: @driver,
+                          odometer_pre: "abc", odometer_post: "100")
+        expect(shift).not_to be_valid
+        expect(shift.errors[:odometer_pre]).to include("is not a number")
+      end
+
+      it "is invalid with a non-numeric odometer_post" do
+        shift = Shift.new(shift_date: Time.zone.today, shift_type: "am", driver: @driver,
+                          odometer_pre: "100", odometer_post: "xyz")
+        expect(shift).not_to be_valid
+        expect(shift.errors[:odometer_post]).to include("is not a number")
+      end
+
+      it "is invalid with a negative odometer_pre" do
+        shift = Shift.new(shift_date: Time.zone.today, shift_type: "am", driver: @driver,
+                          odometer_pre: "-5", odometer_post: "100")
+        expect(shift).not_to be_valid
+        expect(shift.errors[:odometer_pre]).to include("must be greater than or equal to 0")
+      end
+
+      it "is invalid with a negative odometer_post" do
+        shift = Shift.new(shift_date: Time.zone.today, shift_type: "am", driver: @driver,
+                          odometer_pre: "0", odometer_post: "-1")
+        expect(shift).not_to be_valid
+        expect(shift.errors[:odometer_post]).to include("must be greater than or equal to 0")
+      end
+
+      it "is invalid when odometer_post is less than odometer_pre" do
+        shift = Shift.new(shift_date: Time.zone.today, shift_type: "am", driver: @driver,
+                          odometer_pre: "200", odometer_post: "150")
+        expect(shift).not_to be_valid
+        expect(shift.errors[:odometer_post])
+          .to include("must be greater than or equal to the pre-trip odometer reading")
+      end
+
+      it "is valid when odometer_post equals odometer_pre" do
+        shift = Shift.new(shift_date: Time.zone.today, shift_type: "am", driver: @driver,
+                          odometer_pre: "100", odometer_post: "100")
+        expect(shift).to be_valid
+      end
+
+      it "is valid when odometer_post is greater than odometer_pre" do
+        shift = Shift.new(shift_date: Time.zone.today, shift_type: "am", driver: @driver,
+                          odometer_pre: "100", odometer_post: "150")
+        expect(shift).to be_valid
+      end
+
+      it "skips comparison when only one odometer value is present" do
+        shift = Shift.new(shift_date: Time.zone.today, shift_type: "am", driver: @driver,
+                          odometer_pre: "100", odometer_post: nil)
+        expect(shift).to be_valid
+      end
+
+      it "accepts decimal odometer values" do
+        shift = Shift.new(shift_date: Time.zone.today, shift_type: "am", driver: @driver,
+                          odometer_pre: "100.5", odometer_post: "150.25")
+        expect(shift).to be_valid
+      end
+    end
+  end
+
+  describe "SHIFT_TYPES" do
+    it "is a frozen array of the expected shift type values" do
+      expect(Shift::SHIFT_TYPES).to eq(%w[AM PM Volunteer CC])
+      expect(Shift::SHIFT_TYPES).to be_frozen
+    end
   end
 
   describe ".shifts_by_date" do
