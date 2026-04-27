@@ -65,6 +65,13 @@
                               class: "form-control", 
                               required: true %>
           </div>
+
+          <!-- Active Status -->
+          <div class="mb-3 form-check">
+            <%= form.check_box :active, class: "form-check-input", id: "passenger_active" %>
+            <%= form.label :active, "Active Passenger", class: "form-check-label" %>
+            <div class="form-text">Inactive passengers will not appear in new/edit/duplicate Rides' passenger dropdown.</div>
+          </div>
         </div>
       </div>
     </div>

@@ -7,6 +7,7 @@ class Passenger < ApplicationRecord
   accepts_nested_attributes_for :address
   has_many :rides, dependent: :nullify
   delegate :full_address, to: :address, allow_nil: true
+  scope :active, -> { where(active: true) }
 
   # Override the default nested-attributes setter to "find or create" the Address.
   def address_attributes=(attrs)
