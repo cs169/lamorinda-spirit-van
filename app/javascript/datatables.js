@@ -257,6 +257,70 @@ const initiateRidesSearchbars = (table) => {
   });
 };
 
+// Server-side variant of initiateSearchbars for the passengers table.
+// Birthday range: saves to localStorage and calls draw() — the ajax.data callback
+// encodes the stored range into column 9's search value on each request.
+const initiatePassengersSearchbars = (table) => {
+  $(table.table().footer()).find("th").empty();
+
+  table.columns(".text-filter").every(function () {
+    const column = this;
+    const $cell = $(column.footer()).empty();
+    const header = column.header().textContent.trim();
+    const tableId = table.table().node().id;
+
+    if (header === "Birthday") {
+      const { fromDate, toDate } = loadDateState(`${tableId}_birthday`);
+
+      const $wrap = $(
+        '<div style="display:flex;flex-direction:column;gap:2px;"></div>',
+      );
+      const $from = dateInput(fromDate);
+      const $to = dateInput(toDate);
+      $wrap.append($from, $to);
+
+      const applyBirthdayFilter = () => {
+        saveDateState(`${tableId}_birthday`, { fromDate: $from.val(), toDate: $to.val() });
+        table.draw();
+        updateFilterIndicator(table, `#${tableId}`);
+      };
+
+      const clearBirthdayFilter = () => {
+        saveDateState(`${tableId}_birthday`, { fromDate: "", toDate: "" });
+        $from.val("");
+        $to.val("");
+        table.draw();
+        updateFilterIndicator(table, `#${tableId}`);
+      };
+
+      $from.on("change", applyBirthdayFilter);
+      $to.on("change", applyBirthdayFilter);
+
+      const $clearBtn = $(
+        '<button type="button" title="Clear birthday filter" ' +
+          'style="width:100%;margin-top:2px;padding:2px;font-size:0.7rem;' +
+          'background:#f8f9fa;border:1px solid #ddd;border-radius:3px;">Clear</button>',
+      ).on("click", clearBirthdayFilter);
+
+      $cell.append($wrap, $clearBtn);
+
+      if (fromDate || toDate) table.draw();
+    } else {
+      const initial = column.search() || "";
+      const $input = textInput(`${header}...`, initial).on(
+        "input change",
+        function () {
+          if (column.search() !== this.value) {
+            column.search(this.value).draw();
+            updateFilterIndicator(table, `#${tableId}`);
+          }
+        },
+      );
+      $cell.append($input);
+    }
+  });
+};
+
 // Visual for when search has been applied
 function updateFilterIndicator(table, tableSelector) {
   // Check if any column search is applied
@@ -301,6 +365,33 @@ function updateFilterIndicator(table, tableSelector) {
   }
 }
 
+// Column definitions for the passengers table (server-side processing).
+const PASSENGERS_COLUMNS = [
+  { orderable: false, searchable: false }, // 0  actions
+  { orderable: true,  searchable: true  }, // 1  last name
+  { orderable: true,  searchable: true  }, // 2  first name
+  { orderable: false, searchable: false }, // 3  address (computed, not filterable)
+  { orderable: true,  searchable: true  }, // 4  street
+  { orderable: true,  searchable: true  }, // 5  city
+  { orderable: true,  searchable: true  }, // 6  zip
+  { orderable: true,  searchable: true  }, // 7  phone
+  { orderable: true,  searchable: true  }, // 8  alt phone
+  { orderable: true,  searchable: true  }, // 9  birthday (date range)
+  { orderable: true,  searchable: false }, // 10 race (integer, not filterable)
+  { orderable: true,  searchable: false }, // 11 hispanic
+  { orderable: true,  searchable: false }, // 12 wheelchair
+  { orderable: true,  searchable: false }, // 13 low income
+  { orderable: true,  searchable: false }, // 14 disabled
+  { orderable: true,  searchable: false }, // 15 caregiver
+  { orderable: true,  searchable: true  }, // 16 notes
+  { orderable: true,  searchable: true  }, // 17 email
+  { orderable: true,  searchable: false }, // 18 date registered
+  { orderable: true,  searchable: true  }, // 19 audit
+  { orderable: true,  searchable: false }, // 20 lmv member
+  { orderable: true,  searchable: true  }, // 21 mail updates
+  { orderable: true,  searchable: true  }, // 22 requested newsletter
+];
+
 // Column definitions for the rides table (server-side processing).
 // Columns spanning linked rides (drivers, vans, stops, destinations) are
 // non-orderable because they cannot be sorted at the DB level.
@@ -332,7 +423,6 @@ const RIDES_COLUMNS = [
 const initiateDatatables = () => {
   // ── Non-server-side tables ─────────────────────────────────────────────────
   const tables = [
-    { selector: "#passengers-table", order: [[2, "asc"]] },
     { selector: "#shift-rides-table", order: [[5, "asc"]] },
   ];
 
@@ -359,21 +449,55 @@ const initiateDatatables = () => {
         buttons: ["excel", "csv", "print"],
       });
 
-      // Hide (Street, City, Zip) cols after initialization for passenger table
-      if (table.selector == "#passengers-table") {
-        [5, 6, 7].forEach((idx) => newTable.column(idx).visible(false));
-      }
-
       initiateCheckboxes(newTable);
       initiateSearchbars(newTable);
       updateFilterIndicator(newTable, table.selector);
 
-      // Rebuild searchbars on column reorder
       newTable.on("column-reorder", function () {
         initiateSearchbars(newTable);
       });
     }
   });
+
+  // ── Passengers table — server-side processing ─────────────────────────────
+  const passengersElement = document.querySelector("#passengers-table");
+  if (passengersElement) {
+    if ($.fn.DataTable.isDataTable(passengersElement)) {
+      $(passengersElement).DataTable().destroy();
+    }
+
+    const passengersTable = $(passengersElement).DataTable({
+      serverSide: true,
+      processing: true,
+      autoWidth: false,
+      pageLength: 25,
+      order: [[2, "asc"]],
+      columns: PASSENGERS_COLUMNS,
+      ajax: {
+        url: "/passengers.json",
+        type: "GET",
+        data: function (d) {
+          const state = loadDateState("passengers-table_birthday");
+          if (state.fromDate || state.toDate) {
+            d.columns[9].search.value = `${state.fromDate}|${state.toDate}`;
+          }
+          return d;
+        },
+      },
+      dom:
+        "<'row'<'col-md-6'l><'col-md-6'Bp>>" +
+        "<'row'<'col-md-12'tr>>" +
+        "<'row'<'col-md-6'i><'col-md-6'>>",
+      buttons: ["excel", "csv", "print"],
+    });
+
+    // Hide Street, City, Zip columns (indices 4, 5, 6) by default
+    [4, 5, 6].forEach((idx) => passengersTable.column(idx).visible(false));
+
+    initiateCheckboxes(passengersTable);
+    initiatePassengersSearchbars(passengersTable);
+    updateFilterIndicator(passengersTable, "#passengers-table");
+  }
 
   // ── Rides table — server-side processing ──────────────────────────────────
   // Page loads instantly with an empty table; DataTables fetches only the
