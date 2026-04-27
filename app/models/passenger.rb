@@ -14,12 +14,17 @@ class Passenger < ApplicationRecord
     return super if attrs.values.all?(&:blank?)
 
     normalized = {}
-    normalized[:street] = attrs[:street].to_s.strip.titleize if attrs[:street].present?
-    normalized[:city]   = attrs[:city].to_s.strip.titleize   if attrs[:city].present?
-    normalized[:state]  = attrs[:state].to_s.strip.upcase    if attrs[:state].present?
-    normalized[:zip_code] = attrs[:zip_code].to_s.strip      if attrs[:zip_code].present?
+    normalized[:name]     = attrs[:name].to_s.strip          if attrs[:name].present?
+    normalized[:phone]    = attrs[:phone].to_s.strip         if attrs[:phone].present?
+    normalized[:street]   = attrs[:street].to_s.strip.titleize if attrs[:street].present?
+    normalized[:city]     = attrs[:city].to_s.strip.titleize   if attrs[:city].present?
+    normalized[:state]    = attrs[:state].to_s.strip.upcase    if attrs[:state].present?
+    normalized[:zip_code] = attrs[:zip_code].to_s.strip        if attrs[:zip_code].present?
 
-    existing = Address.find_by(normalized)
+    # Look up only by the DB unique key (street + city + zip_code).
+    # name and phone are metadata, not part of the uniqueness constraint.
+    lookup = normalized.slice(:street, :city, :zip_code)
+    existing = Address.find_by(lookup)
     if existing
       self.address = existing
     else
