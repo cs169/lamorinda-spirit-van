@@ -2,6 +2,7 @@
 
 class RidesController < ApplicationController
   before_action :set_ride, only: %i[ show edit update destroy ]
+  before_action :set_active_drivers, only: %i[ new edit create update duplicate ]
   before_action -> { require_role("admin", "dispatcher") }, only: %i[ index new edit create update destroy duplicate ]
 
   # Have only rides without previous rides (HEAD rides) be displayed
@@ -24,9 +25,6 @@ class RidesController < ApplicationController
     @ride = Ride.new(params.permit(:date, :driver_id))
     @ride.build_start_address
     @ride.build_dest_address
-
-    # For driver dropdown list in creating / updating
-    @drivers = Driver.order(:name)
 
     # For autofilling first stop's driver
     @ride.driver_id = params[:driver_id]
@@ -61,7 +59,6 @@ class RidesController < ApplicationController
 
   def edit
     # For driver dropdown list in creating / updating
-    set_ride
     @all_rides = @ride.get_all_linked_rides
 
     # Load all passengers with their associations at once
@@ -72,9 +69,6 @@ class RidesController < ApplicationController
   end
 
   def update
-    set_ride
-    @drivers = Driver.order(:name)
-
     # Before destroying, copy feedback
     @feedback = @ride.feedback
     old_feedback_attrs = @feedback.attributes.except("id", "created_at", "updated_at", "ride_id") if @feedback
@@ -367,8 +361,15 @@ class RidesController < ApplicationController
     @ride = Ride.find(params[:id])
   end
 
+  def set_active_drivers
+    @drivers = Driver.active
+                     .or(Driver.where(id: @ride.present? ? @ride.get_all_linked_rides.pluck(:driver_id) : []))
+                     .order(:name)
+                     .distinct
+    gon.drivers = @drivers.map { |d| { id: d.id, name: d.name } }
+  end
+
   def load_gon_data
-    @drivers = Driver.order(:name)
     passengers_with_data = Passenger.includes(:address, :rides)
 
     gon.passengers = passengers_with_data.map { |p| {
