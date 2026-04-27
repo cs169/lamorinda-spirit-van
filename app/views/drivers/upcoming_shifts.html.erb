@@ -13,7 +13,10 @@
             <span class="fw-bold">Shift Date:</span>
             <span><%= shift.shift_date.strftime('%A, %b %d, %Y') %></span>
           </div>
-          <%= link_to "View Shift", shift_path(shift), class: "btn btn-outline-secondary btn-sm" %>
+          <div class="d-flex gap-2">
+            <%= link_to "View Shift", shift_path(shift), class: "btn btn-outline-secondary btn-sm" %>
+            <%= link_to "Feedback", feedback_shift_path(shift), class: "btn btn-outline-primary btn-sm" %>
+          </div>
         </div>
         <div>
           <span class="fw-bold">Type:</span>
