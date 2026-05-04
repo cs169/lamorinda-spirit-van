@@ -51,7 +51,7 @@
         <li class="list-group-item"><strong>Wheelchair:</strong> <%= @ride.wheelchair ? "Yes" : "No" %></li>
         <li class="list-group-item"><strong>Disabled:</strong> <%= @ride.disabled ? "Yes" : "No" %></li>
         <li class="list-group-item"><strong>Needs Caregiver:</strong> <%= @ride.need_caregiver ? "Yes" : "No" %></li>
-        <li class="list-group-item"><strong>Accessibility Notes:</strong> <%= simple_format(@ride.passenger.notes) %></li>
+        <li class="list-group-item"><strong>Accessibility Notes:</strong> <%= simple_format(@ride.passenger&.notes) %></li>
       </ul>
     </div>
   </div>

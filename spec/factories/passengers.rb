@@ -20,5 +20,10 @@ FactoryBot.define do
     audit { Faker::Lorem.sentence }
     mail_updates { Faker::Lorem.sentence }
     rqsted_newsletter { ["Yes", "No"].sample }
+    active { true }
+
+    trait :inactive do
+      active { false }
+    end
   end
 end

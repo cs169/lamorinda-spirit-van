@@ -33,6 +33,7 @@ h1 {
     display: flex;
     gap: 10px;
     margin-top: 20px;
+    align-items: center;
 }
 
 .today-page .button-group .btn {
@@ -43,6 +44,28 @@ h1 {
     border-radius: 5px;
     cursor: pointer;
     text-decoration: none;
+}
+
+.today-page .date-jump {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.today-page .date-jump-form {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.today-page .date-jump-input {
+    width: 150px;
+    padding: 8px;
+}
+
+.today-page .date-jump-submit {
+    padding: 8px 12px;
 }
 
 .today-page .btn-primary {
@@ -56,7 +79,6 @@ h1 {
 }
 
 .today-page #btn-print {
-    margin-left: auto;
 }
 
 .shift-button {

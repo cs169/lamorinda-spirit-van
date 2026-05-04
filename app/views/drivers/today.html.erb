@@ -1,14 +1,22 @@
 <div class="today-page">
   <h1>Rides for <%= @current_date.strftime("%m/%d/%Y %A") %></h1>
   <h2>Driver: <%= @driver.name %></h2>
-  <form class="today-form">
+  <div class="today-form">
     <div class="button-group">
       <%= link_to "Prev. Day", today_driver_path(date: @current_date - 1.day), class: "btn btn-secondary" %>
       <%= link_to "Back to Today", today_driver_path(date: Time.zone.today), class: "btn btn-primary" %>
       <%= link_to "Next Day", today_driver_path(date: @current_date + 1.day), class: "btn btn-secondary" %>
+
+      <div class="date-jump">
+        <%= form_with url: today_driver_path, method: :get, local: true, class: "date-jump-form" do |f| %>
+          <%= f.date_field :date, value: @current_date, class: "form-control date-jump-input" %>
+          <%= f.submit "Search", class: "btn btn-outline-primary date-jump-submit" %>
+        <% end %>
+      </div>
+
       <button onclick="window.print()" class="btn btn-primary" id="btn-print">Print</button>
     </div>
-  </form>
+  </div>
 
   <% if @rides.any? %>
     <div class="rides-container">
@@ -32,9 +40,9 @@
         <tbody>
           <% @rides.each do |ride| %>
             <tr>
-              <td><%= ride.passenger.name %></td>
+              <td><%= ride.passenger&.name %></td>
               <td>
-                <%= clickable_phone(ride.passenger.phone) %>
+                <%= clickable_phone(ride.passenger&.phone) %>
               </td>
               <td>
                 <% 
@@ -97,7 +105,7 @@
       <div class="rides-list">
         <% @rides.each do |ride| %>
           <div class="ride-block">
-            <p><strong>Passenger:</strong> <%= ride.passenger.name %></p>
+            <p><strong>Passenger:</strong> <%= ride.passenger&.name %></p>
 
             <% if ride.wheelchair %>
               <p><strong>Wheelchair:</strong> Yes</p>

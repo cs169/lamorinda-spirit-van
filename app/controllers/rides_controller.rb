@@ -2,6 +2,8 @@
 
 class RidesController < ApplicationController
   before_action :set_ride, only: %i[ show edit update destroy ]
+  before_action :set_active_drivers, only: %i[ new edit create update duplicate ]
+  before_action :set_active_passengers, only: %i[ new edit create update duplicate ]
   before_action -> { require_role("admin", "dispatcher") }, only: %i[ index new edit create update destroy duplicate ]
 
   # Have only rides without previous rides (HEAD rides) be displayed
@@ -24,9 +26,6 @@ class RidesController < ApplicationController
     @ride = Ride.new(params.permit(:date, :driver_id))
     @ride.build_start_address
     @ride.build_dest_address
-
-    # For driver dropdown list in creating / updating
-    @drivers = Driver.order(:name)
 
     # For autofilling first stop's driver
     @ride.driver_id = params[:driver_id]
@@ -61,7 +60,6 @@ class RidesController < ApplicationController
 
   def edit
     # For driver dropdown list in creating / updating
-    set_ride
     @all_rides = @ride.get_all_linked_rides
 
     # Load all passengers with their associations at once
@@ -72,9 +70,6 @@ class RidesController < ApplicationController
   end
 
   def update
-    set_ride
-    @drivers = Driver.order(:name)
-
     # Before destroying, copy feedback
     @feedback = @ride.feedback
     old_feedback_attrs = @feedback.attributes.except("id", "created_at", "updated_at", "ride_id") if @feedback
@@ -141,7 +136,7 @@ class RidesController < ApplicationController
 
     # 3. DATA FOR STOP 1 & PASSENGER (The Fix)
     # We send this to JS to simulate the user typing/selecting
-    gon.duplicate_info = {
+    @duplicate_info = {
       passenger_id: @original_ride.passenger_id,
       start_address: {
         name:   @original_ride.start_address&.name,
@@ -154,7 +149,7 @@ class RidesController < ApplicationController
     # 4. Prepare "Extra Stops" (Stop 2, Stop 3, ...)
     # We skip the first ride (drop(1)) because its destination is already
     # handled by @ride.dest_address above
-    gon.duplicated_stops = original_chain.drop(1).map do |linked_ride|
+    @duplicated_stops = original_chain.drop(1).map do |linked_ride|
       dest = linked_ride.dest_address
       {
         name:      dest&.name,
@@ -221,6 +216,7 @@ class RidesController < ApplicationController
   }.freeze
 
   def rides_datatable
+    is_export = params[:length].to_i == -1
     base = head_rides_base_scope
 
     records_total = base.count
@@ -233,13 +229,16 @@ class RidesController < ApplicationController
     sort_col  = DT_SORT_COLUMNS[col_idx] || "rides.date"
     base      = base.order(Arel.sql("#{sort_col} #{direction}"))
 
-    start  = params[:start].to_i
-    length = [params[:length].to_i, 1].max
-
-    rides = base
-              .includes(:feedback, :driver, :passenger, :start_address, :dest_address, :next_ride)
-              .offset(start)
-              .limit(length)
+    rides = if is_export
+      base.includes(:feedback, :driver, :passenger, :start_address, :dest_address, :next_ride)
+    else
+      start  = params[:start].to_i
+      length = [params[:length].to_i, 1].max
+      base
+        .includes(:feedback, :driver, :passenger, :start_address, :dest_address, :next_ride)
+        .offset(start)
+        .limit(length)
+    end
 
     {
       draw:            params[:draw].to_i,
@@ -326,7 +325,7 @@ class RidesController < ApplicationController
 
   def dt_actions_cell(ride)
     btn = "btn btn-sm"
-    sty = "style=\"width:80px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\""
+    sty = "style=\"width:81.09px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\""
     feedback = if ride.feedback
       %(<a href="#{feedback_path(ride.feedback)}" class="#{btn} btn-primary" #{sty}>Feedback</a>)
     else
@@ -367,18 +366,32 @@ class RidesController < ApplicationController
     @ride = Ride.find(params[:id])
   end
 
-  def load_gon_data
-    @drivers = Driver.order(:name)
-    passengers_with_data = Passenger.includes(:address, :rides)
+  def set_active_drivers
+    @drivers = Driver.active
+                     .or(Driver.where(id: @ride.present? ? @ride.get_all_linked_rides.pluck(:driver_id) : []))
+                     .order(:name)
+                     .distinct
+    gon.drivers = @drivers.map { |d| { id: d.id, name: d.name } }
+  end
 
+  def set_active_passengers
+    @passengers = Passenger.active
+                           .or(Passenger.where(id: @ride&.passenger_id))
+                           .order(:name)
+                           .distinct
+    passengers_with_data = @passengers.includes(:address, :rides)
     gon.passengers = passengers_with_data.map { |p| {
       label: p.name, id: p.id, phone: p.phone, alt_phone: p.alternative_phone, wheelchair: p.wheelchair,
       disabled: p.disabled, need_caregiver: p.need_caregiver, low_income: p.low_income, lmv_member: p.lmv_member,
       notes: p.notes, ride_count: p.rides.length,
       street: p.address&.street, city: p.address&.city
     } }
+  end
+
+  def load_gon_data
     gon.addresses = Address.all.map { |a| { name: a.name, street: a.street, city: a.city, phone: a.phone } }
-    gon.drivers = @drivers.map { |d| { id: d.id, name: d.name } }
+    gon.duplicate_info = @duplicate_info if @duplicate_info
+    gon.duplicated_stops = @duplicated_stops if @duplicated_stops
   end
 
   def sync_passenger_health_data

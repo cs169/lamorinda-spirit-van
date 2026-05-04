@@ -9,7 +9,7 @@
     <div class="col-lg-10 offset-lg-1">
 
       <h1 class="display-5 fw-bold mb-4">
-        Feedback for <%= @passenger %>'s ride(s)<br>
+        Feedback for <%= @passenger&.name %>'s ride(s)<br>
         <small class="text-muted">
           on <%= @current_date.strftime("%A %m/%d/%Y") %>
         </small>

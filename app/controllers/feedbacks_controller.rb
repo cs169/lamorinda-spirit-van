@@ -11,7 +11,7 @@ class FeedbacksController < ApplicationController
   # GET /feedbacks/1 or /feedbacks/1.json
   def show
     @current_date = @feedback.ride.date
-    @passenger = @feedback.ride.passenger.name
+    @passenger = @feedback.ride.passenger
     @rides = @feedback.ride.get_all_linked_rides
   end
 
@@ -23,7 +23,7 @@ class FeedbacksController < ApplicationController
   # GET /feedbacks/1/edit
   def edit
     @current_date = @feedback.ride.date
-    @passenger = @feedback.ride.passenger.name
+    @passenger = @feedback.ride.passenger
     @rides = @feedback.ride.get_all_linked_rides
   end
 

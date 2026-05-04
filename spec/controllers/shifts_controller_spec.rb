@@ -205,4 +205,41 @@ RSpec.describe ShiftsController, type: :controller do
       expect(response).to redirect_to(shifts_path)
     end
   end
+
+  describe "POST #fill_from_template" do
+    before do
+      sign_out @user
+      sign_in FactoryBot.create(:user, :admin)
+    end
+
+    it "creates shifts from templates and redirects" do
+      FactoryBot.create(:shift_template, day_of_week: 1)
+      date = "2025-03-01"
+      post :fill_from_template, params: { date: date }
+      expect(response).to redirect_to(shifts_path(start_date: date))
+    end
+
+    it "sets a flash alert when template filling produces errors" do
+      FactoryBot.build(:shift_template, shift_type: nil).save(validate: false)
+      post :fill_from_template, params: { date: "2025-03-01" }
+      expect(flash[:alert]).to eq("Error with creating shifts from templates")
+    end
+  end
+
+  describe "POST #clear_month" do
+    before do
+      sign_out @user
+      sign_in FactoryBot.create(:user, :admin)
+    end
+
+    it "destroys shifts for the given month and redirects" do
+      date = "2025-03-01"
+      driver = FactoryBot.create(:driver)
+      FactoryBot.create(:shift, shift_date: Date.new(2025, 3, 10), driver: driver)
+      expect {
+        post :clear_month, params: { date: date }
+      }.to change(Shift, :count).by(-1)
+      expect(response).to redirect_to(shifts_path(start_date: date))
+    end
+  end
 end

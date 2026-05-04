@@ -65,6 +65,13 @@
                               class: "form-control", 
                               required: true %>
           </div>
+
+          <!-- Active Status -->
+          <div class="mb-3 form-check">
+            <%= form.check_box :active, class: "form-check-input", id: "passenger_active" %>
+            <%= form.label :active, "Active Passenger", class: "form-check-label" %>
+            <div class="form-text">Inactive passengers will not appear in new/edit/duplicate Rides' passenger dropdown.</div>
+          </div>
         </div>
       </div>
     </div>
@@ -78,30 +85,44 @@
         <div class="card-body">
           <%= form.fields_for :address do |address_form| %>
             <div class="mb-3">
+              <%= address_form.label :name, "Location Name", class: "form-label" %>
+              <%= address_form.text_field :name,
+                                        value: @passenger.address&.name,
+                                        class: "form-control" %>
+            </div>
+
+            <div class="mb-3">
               <%= address_form.label :street, "Street", class: "form-label" %>
               <span class="text-danger">*</span>
-              <%= address_form.text_field :street, 
+              <%= address_form.text_field :street,
                                         value: @passenger.address&.street,
-                                        class: "form-control", 
+                                        class: "form-control",
                                         required: true %>
             </div>
-  
+
             <div class="mb-3">
               <%= address_form.label :city, "City", class: "form-label" %>
               <span class="text-danger">*</span>
-              <%= address_form.text_field :city, 
+              <%= address_form.text_field :city,
                                         value: @passenger.address&.city,
-                                        class: "form-control", 
+                                        class: "form-control",
                                         required: true %>
             </div>
 
             <div class="mb-3">
               <%= address_form.label :zip_code, "Zip Code", class: "form-label" %>
               <span class="text-danger">*</span>
-              <%= address_form.text_field :zip_code, 
+              <%= address_form.text_field :zip_code,
                                         value: @passenger.address&.zip_code,
-                                        class: "form-control", 
+                                        class: "form-control",
                                         required: true %>
+            </div>
+
+            <div class="mb-3">
+              <%= address_form.label :phone, "Address Phone", class: "form-label" %>
+              <%= address_form.text_field :phone,
+                                        value: @passenger.address&.phone,
+                                        class: "form-control" %>
             </div>
           <% end %>
         </div>

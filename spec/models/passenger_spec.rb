@@ -75,11 +75,12 @@ RSpec.describe Passenger, type: :model do
 
     context "when updating a passenger with an already existing address record" do
       it "reuses existing address when updated with matching address fields" do
-        existing_address = create(:address, street: "123 Main St", city: "Orinda")
+        existing_address = create(:address, name: "Blueberry Cheese Creek", street: "123 Main St", city: "Orinda")
         passenger = create(:passenger)
 
         expect {
           passenger.update(address_attributes: {
+            name: "Blueberry Cheese Creek",
             street: "123 Main St",
             city: "Orinda",
           })
@@ -113,7 +114,7 @@ RSpec.describe Passenger, type: :model do
 
     context "when creating a passenger with an existing address" do
       it "reuses an existing address" do
-        existing_address = create(:address, street: "123 Shared St", city: "Orinda")
+        existing_address = create(:address, name: nil, street: "123 Shared St", city: "Orinda")
 
         passenger_attrs = {
           name: "Duplicate Address Tester",
@@ -135,6 +136,106 @@ RSpec.describe Passenger, type: :model do
 
         new_passenger = Passenger.last
         expect(new_passenger.address_id).to eq(existing_address.id)
+      end
+    end
+
+    context "address name and phone fields" do
+      let(:base_passenger_attrs) do
+        {
+          name: "Test Passenger",
+          race: 1,
+          hispanic: "Yes",
+          birthday: Time.zone.today,
+          date_registered: Time.zone.today
+        }
+      end
+
+      it "saves address name when creating a passenger" do
+        passenger = Passenger.create!(
+          base_passenger_attrs.merge(
+            address_attributes: {
+              name:     "Medical Center",
+              street:   "100 Health Ave",
+              city:     "Orinda",
+              zip_code: "94563"
+            }
+          )
+        )
+        expect(passenger.address.name).to eq("Medical Center")
+      end
+
+      it "saves address phone when creating a passenger" do
+        passenger = Passenger.create!(
+          base_passenger_attrs.merge(
+            address_attributes: {
+              phone:    "925-555-0001",
+              street:   "200 Contact Rd",
+              city:     "Lafayette",
+              zip_code: "94549"
+            }
+          )
+        )
+        expect(passenger.address.phone).to eq("925-555-0001")
+      end
+
+      it "does not create a duplicate when same street/city/zip/name already exists" do
+        existing = create(:address,
+          name: "Senior Center", street: "300 Oak St", city: "Moraga", zip_code: "94556")
+
+        expect {
+          Passenger.create!(
+            base_passenger_attrs.merge(
+              address_attributes: {
+                name:     "Senior Center",
+                street:   "300 Oak St",
+                city:     "Moraga",
+                zip_code: "94556"
+              }
+            )
+          )
+        }.not_to change(Address, :count)
+
+        expect(Passenger.last.address_id).to eq(existing.id)
+      end
+
+      it "creates a distinct address when given a different address name" do
+        existing = create(:address,
+          name: "Junior Center", street: "300 Oak St", city: "Moraga", zip_code: "94556")
+
+        expect {
+          Passenger.create!(
+            base_passenger_attrs.merge(
+              address_attributes: {
+                name:     "Senior Center",
+                street:   "300 Oak St",
+                city:     "Moraga",
+                zip_code: "94556"
+              }
+            )
+          )
+        }.to change(Address, :count).by(1)
+
+        expect(Passenger.last.address_id).not_to eq(existing.id)
+      end
+
+      it "reuses existing address when same street/city/name exists even if phone differs" do
+        existing = create(:address,
+          name: "Waldjaegerin", street: "400 Pine St", city: "Orinda", phone: "123.456.7890")
+
+        expect {
+          Passenger.create!(
+            base_passenger_attrs.merge(
+              address_attributes: {
+                name: "Waldjaegerin",
+                street: "400 Pine St",
+                city:   "Orinda",
+                phone:  "666.666.6666"
+              }
+            )
+          )
+        }.not_to change(Address, :count)
+
+        expect(Passenger.last.address_id).to eq(existing.id)
       end
     end
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_04_042345) do
+ActiveRecord::Schema[7.2].define(version: 2026_04_30_054235) do
   create_table "addresses", force: :cascade do |t|
     t.string "street"
     t.string "city"
@@ -19,7 +19,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_04_042345) do
     t.string "name"
     t.string "phone"
     t.string "zip_code"
-    t.index ["street", "city", "zip_code"], name: "index_addresses_on_full_address", unique: true
+    t.index ["street", "city", "zip_code", "name"], name: "index_addresses_on_full_location", unique: true
   end
 
   create_table "blazer_audits", force: :cascade do |t|
@@ -121,6 +121,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_04_042345) do
     t.text "mail_updates"
     t.string "rqsted_newsletter"
     t.boolean "lmv_member"
+    t.boolean "active", default: true, null: false
     t.index ["address_id"], name: "index_passengers_on_address_id"
   end
 

@@ -37,7 +37,7 @@
                   </div>
                 </td>
                 <td><%= ride.passenger&.name || 'N/A' %></td>
-                <td><%= link_to ride.passenger.phone || 'N/A', "tel:#{ride.passenger.phone.gsub(/[^\d+]/, '')}" %></td>
+                <td><%= link_to ride.passenger&.phone || 'N/A', "tel:#{ride.passenger&.phone&.gsub(/[^\d+]/, '')}" %></td>
                 <td>
                   <% 
                     all_rides = ride.get_all_linked_rides

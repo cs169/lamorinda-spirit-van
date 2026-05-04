@@ -162,7 +162,7 @@
               <div class="mb-3">
                 <%= f.label :passenger_name, "Passenger" %>
                   <div class="input-group">
-                    <%= f.text_field :passenger_name, class: "form-control", value: @ride.passenger&.name %>
+                    <%= f.text_field :passenger_name, class: "form-control", value: @ride.passenger&.name, required: true %>
                   </div>
                     <small class="form-text text-muted">Type to search existing passengers</small>
                   </div>
