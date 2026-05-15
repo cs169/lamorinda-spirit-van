@@ -36,6 +36,20 @@ RSpec.describe Ride, type: :model do
     end
   end
 
+  describe "RIDE_TYPES" do
+    it "is a frozen array containing the expected ride type values" do
+      expect(Ride::RIDE_TYPES).to eq(%w[EP EM ES EG Lunch Shop])
+      expect(Ride::RIDE_TYPES).to be_frozen
+    end
+  end
+
+  describe "FARE_TYPES" do
+    it "is a frozen array containing the expected fare type values" do
+      expect(Ride::FARE_TYPES).to eq(%w[R LI LMV CC Shop])
+      expect(Ride::FARE_TYPES).to be_frozen
+    end
+  end
+
   describe "Validations" do
     it "is valid with all required attributes" do
       expect(@ride1).to be_valid

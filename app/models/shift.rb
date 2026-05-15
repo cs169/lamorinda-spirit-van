@@ -3,6 +3,9 @@
 class Shift < ApplicationRecord
   belongs_to :driver
   validates :shift_date, :shift_type, presence: true
+  validates :odometer_pre, :odometer_post,
+            numericality: { greater_than_or_equal_to: 0, allow_blank: true }
+  validate :odometer_post_not_less_than_pre
 
   SHIFT_TYPES = %w[AM PM Volunteer CC].freeze
 
@@ -47,5 +50,17 @@ class Shift < ApplicationRecord
   private
   def self.shifts_for_month(month_date)
     Shift.where("shift_date >= ? AND shift_date <= ?", month_date.beginning_of_month, month_date.end_of_month)
+  end
+
+  def odometer_post_not_less_than_pre
+    return if odometer_pre.blank? || odometer_post.blank?
+
+    pre  = Float(odometer_pre,  exception: false)
+    post = Float(odometer_post, exception: false)
+    return if pre.nil? || post.nil?
+
+    if post < pre
+      errors.add(:odometer_post, "must be greater than or equal to the pre-trip odometer reading")
+    end
   end
 end
